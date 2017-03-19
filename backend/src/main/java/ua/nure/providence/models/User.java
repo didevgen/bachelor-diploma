@@ -42,15 +42,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "users_shifts",
-            joinColumns = @JoinColumn,
-            inverseJoinColumns = @JoinColumn)
-    private List<Shift> shifts = new ArrayList<>();
-
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy="users", fetch = FetchType.LAZY)
-    private List<ClubPreference> preferences = new ArrayList<>();
-
     public User() {
     }
 
@@ -118,14 +109,6 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
-    public List<Shift> getShifts() {
-        return shifts;
-    }
-
-    public void setShifts(List<Shift> shifts) {
-        this.shifts = shifts;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -134,11 +117,4 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public List<ClubPreference> getPreferences() {
-        return preferences;
-    }
-
-    public void setPreferences(List<ClubPreference> preferences) {
-        this.preferences = preferences;
-    }
 }

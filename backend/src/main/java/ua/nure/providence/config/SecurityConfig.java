@@ -30,13 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authProv);
     }
 
-    //Disable security at all for the sake of debugging
-    //REMOVE OVERRIDEN METHOD BEFORE RELEASE
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/**");
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin().loginPage("/login")

@@ -3,7 +3,7 @@ package ua.nure.providence.daos;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ua.malibu.ostpc.models.QUser;
+import ua.nure.providence.models.QUser;
 import ua.nure.providence.models.User;
 
 @Repository("userDao")
