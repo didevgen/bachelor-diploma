@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.nure.providence.models.QUser;
 import ua.nure.providence.models.User;
 
+import java.util.Optional;
+
 @Repository("userDao")
 @Transactional
 public class UserDAO extends BaseDAO<User>{
@@ -23,11 +25,11 @@ public class UserDAO extends BaseDAO<User>{
                 .where(QUser.user.email.eq(email).and(QUser.user.password.eq(password)))
                 .fetchCount() > 0;
     }
-    public User getByEmailAndPassword(String email, String password) {
-        return new JPAQuery<User>(entityManager)
+    public Optional<User> getByEmailAndPassword(String email, String password) {
+        return Optional.ofNullable(new JPAQuery<User>(entityManager)
                 .from(QUser.user)
                 .where(QUser.user.email.eq(email).and(QUser.user.password.eq(password)))
-                .fetchOne();
+                .fetchOne());
     }
     @Override
     public User get(String uuid) {

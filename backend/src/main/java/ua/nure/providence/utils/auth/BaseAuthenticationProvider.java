@@ -37,7 +37,7 @@ public class BaseAuthenticationProvider implements AuthenticationProvider {
                 throw new RestException(HttpStatus.UNAUTHORIZED, 401003, "Bad credentials!");
             }
         } catch (NoSuchAlgorithmException e) {
-            throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, 50000, "Encryption algorithm error");
+            throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, 500000, "Encryption algorithm error");
         }
         AuthToken authToken = new AuthToken(tokenGenerator.issueToken(user.getUuid()), user.getUuid());
         return new LoginToken(user.getEmail(), user.getPassword(), authToken, user);

@@ -26,7 +26,7 @@ public class RedisRepository implements IRedisRepository<String, String> {
 
     @Override
     public void insert(String key, String value) {
-        valueOps.set(key, value, 1000, TimeUnit.SECONDS);
+        valueOps.set(key, value, 1, TimeUnit.DAYS);
     }
 
     @Override
@@ -36,6 +36,6 @@ public class RedisRepository implements IRedisRepository<String, String> {
 
     @Override
     public void refreshExpirationTime(String key) {
-        valueOps.getOperations().expire(key, 1000, TimeUnit.SECONDS);
+        valueOps.getOperations().expire(key, 1, TimeUnit.DAYS);
     }
 }

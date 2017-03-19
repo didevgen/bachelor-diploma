@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import ua.nure.providence.utils.auth.BaseAuthenticationProvider;
 import ua.nure.providence.utils.auth.SuccessHandler;
@@ -26,16 +28,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private BaseAuthenticationProvider authProv;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProv);
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/login")
+        .and().ignoring().antMatchers(HttpMethod.POST, "/api/v1/logout");
     }
 
     @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authProv);
+    }
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login")
-                .successHandler(new SuccessHandler()).permitAll()
-        .and().authorizeRequests().anyRequest().authenticated()
-                .and().csrf().disable()
+        http
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/logout").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .anonymous()
+                .and()
+                .securityContext()
+                .and()
+                .rememberMe().disable()
+                .requestCache().disable()
+                .x509().disable()
+                .csrf().disable()
+                .httpBasic().disable()
+                .formLogin().disable()
+                .logout().disable()
                 .addFilterBefore(authFilter, BasicAuthenticationFilter.class);
     }
 

@@ -1,0 +1,61 @@
+package ua.nure.providence.controllers.login;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import ua.nure.providence.controllers.BaseController;
+import ua.nure.providence.daos.UserDAO;
+import ua.nure.providence.dtos.login.LoginDTO;
+import ua.nure.providence.dtos.user.UserDTO;
+import ua.nure.providence.exceptions.rest.RestException;
+import ua.nure.providence.models.User;
+import ua.nure.providence.services.AuthToken;
+import ua.nure.providence.services.redis.IRedisRepository;
+import ua.nure.providence.utils.MD5;
+import ua.nure.providence.utils.auth.LoginToken;
+import ua.nure.providence.utils.auth.TokenGenerator;
+
+import javax.servlet.http.HttpServletResponse;
+import java.security.NoSuchAlgorithmException;
+
+/**
+ * Created by Providence Team on 19.03.2017.
+ */
+@RestController
+public class LoginController extends BaseController {
+
+    @Autowired
+    private UserDAO dao;
+
+    @Autowired
+    private Environment env;
+
+    @Autowired
+    private IRedisRepository<String, String> redisRepository;
+
+    @Autowired
+    private TokenGenerator tokenGenerator;
+
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<UserDTO> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) throws NoSuchAlgorithmException {
+        User user = dao.getByEmailAndPassword(loginDTO.getEmail(), MD5.encrypt(loginDTO.getPassword()))
+                .orElseThrow(() ->
+                        new RestException(HttpStatus.NOT_FOUND, 404001, "Specified user not found"));
+        AuthToken authToken = new AuthToken(tokenGenerator.issueToken(user.getUuid()),
+                user.getUuid());
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(new LoginToken(user.getEmail(), user.getPassword(),
+                        authToken, user));
+
+        response.setHeader(env.getProperty("token.header"), authToken.getTokenValue());
+        return ResponseEntity.ok(new UserDTO().convert(user));
+    }
+}
