@@ -40,7 +40,7 @@ namespace ZKService.Services
             (Note: The connection parameters are case-sensitive)
         */
 
-        [DllImport("C:\\Program Files\\plcommpro.dll", EntryPoint = "Connect")]
+        [DllImport("plcommpro.dll", EntryPoint = "Connect")]
         public static extern IntPtr Connect(string Parameters);
 
         /*
