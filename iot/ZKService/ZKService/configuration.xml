@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<schema>
+  <gateway>
+    <url>localhost</url>
+    <port>8000</port>
+    <endpoint>api</endpoint>
+  </gateway>
+  <device>
+    <deviceId>1</deviceId>
+    <connection>
+      <protocol>TCP</protocol>
+      <port>4370</port>
+      <deviceid></deviceid>
+      <baudrate></baudrate>
+      <ipaddress>192.168.12.154</ipaddress>
+      <timeout>10000</timeout>
+      <passwd></passwd>
+    </connection>
+  </device>
+</schema>

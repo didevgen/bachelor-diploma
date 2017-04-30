@@ -1,4 +1,5 @@
-iot/ZKAccess/src/ZKAccess/bin/
-iot/ZKAccess/.vs/*
-iot/ZKAccess/src/ZKAccess/obj/
-iot/ZKAccess/src/ZKAccess/wwwroot/
+iot/ZKService/ZKService/bin/
+iot/ZKService/.vs/*
+iot/ZKService/ZKService/obj/
+iot/ZKAccessInstaller/Debug/
+iot/ZKAccessInstaller/Release/
