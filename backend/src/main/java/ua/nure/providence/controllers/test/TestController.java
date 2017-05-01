@@ -1,28 +1,17 @@
 package ua.nure.providence.controllers.test;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ua.nure.providence.daos.AccountDAO;
 import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.CategoryDAO;
-import ua.nure.providence.daos.RoomDAO;
-import ua.nure.providence.models.business.CardHolder;
-import ua.nure.providence.models.business.Room;
-import ua.nure.providence.models.hierarchy.StructuralCategory;
 import ua.nure.providence.services.UserService;
-import ua.nure.providence.stub.*;
-import ua.nure.providence.utils.auth.LoginToken;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 
 @RestController
@@ -39,36 +28,7 @@ public class TestController {
 
     @Transactional
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<Wrapper> test() throws Exception {
-        LoginToken auth = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
-        Wrapper university = new Gson().fromJson(sendGet("http://cist.nure.ua/ias/app/tt/P_API_FACULTIES_JSON"), Wrapper.class);
-        university.getUniversity().getFaculties().forEach(faculty -> {
-            StructuralCategory category = new StructuralCategory();
-            category.setName(faculty.getFull_name());
-            category.setAccount(auth.getAuthenticatedUser().getAccount());
-            dao.insert(category);
-            FacultyWrapper facItem = new Gson().fromJson(sendGet("http://cist.nure.ua/ias/app/tt/P_API_DEPARTMENTS_JSON?p_id_faculty="+faculty.getId()), FacultyWrapper.class);
-            facItem.getFaculty().getDepartments().forEach(department -> {
-                StructuralCategory depCategory = new StructuralCategory();
-                depCategory.setName(department.getFull_name());
-                depCategory.setParent(category);
-                depCategory.setAccount(auth.getAuthenticatedUser().getAccount());
-                dao.insert(depCategory);
-                DepartmentWrapper dep = new Gson().fromJson(sendGet("http://cist.nure.ua/ias/app/tt/P_API_TEACHERS_JSON?p_id_department="+department.getId()), DepartmentWrapper.class);
-                dep.getDepartment().getTeachers().forEach(teacher -> {
-                    CardHolder cardHolder = new CardHolder();
-                    if (!teacher.getFull_name().isEmpty()) {
-                        cardHolder.setFullName(teacher.getFull_name());
-                    } else {
-                        cardHolder.setFullName(teacher.getShort_name());
-                    }
-                    cardHolder.getCategories().add(depCategory);
-                    cardHolderDAO.insert(cardHolder);
-                    depCategory.getCardHolders().add(cardHolder);
-                });
-            });
-        });
-        return ResponseEntity.ok(university);
+    public void test() throws Exception {
     }
 
 
