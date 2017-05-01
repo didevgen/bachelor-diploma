@@ -19,7 +19,8 @@ public abstract class BaseEntity extends UUIDEntity implements IIndexed, Seriali
 
     @Id
     @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name="pk_sequence",sequenceName="messagesounds_id_seq", allocationSize=1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk_sequence")
     @JsonIgnore
     private Long id;
 
