@@ -5,8 +5,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <property name="uuid_function" value="uid.uuid_generate_v4()" dbms="postgresql"/>
-    <property name="uuid_type" value="uuid" dbms="postgresql"/>
     <include file="changelogs/init-accounts.xml"></include>
     <include file="changelogs/init-users.xml"></include>
+    <include file="changelogs/init-event-types.xml"></include>
 </databaseChangeLog>

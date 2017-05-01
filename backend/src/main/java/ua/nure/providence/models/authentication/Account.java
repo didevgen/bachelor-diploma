@@ -1,5 +1,6 @@
 package ua.nure.providence.models.authentication;
 
+import ua.nure.providence.models.business.Room;
 import ua.nure.providence.enums.AccountType;
 import ua.nure.providence.models.base.BaseEntity;
 
@@ -20,6 +21,9 @@ public class Account extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
     private List<User> users = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
+    private List<Room> rooms = new ArrayList<>();
 
     public Account() {
     }

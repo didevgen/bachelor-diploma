@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+    <changeSet id="1" author="evkovaljov">
+        <sql>
+            DROP EXTENSION IF EXISTS "uuid-ossp";
+            create extension "uuid-ossp";
+
+            INSERT INTO providence.event_types(id, uuid, code, eventName, description)
+            VALUES (1, uuid_generate_v4(), 0, 'Normal Punch Open', 'In [Card Only] verification mode, the person has open door permission punch the card and triggers this normal event of open the door.');
+
+            INSERT INTO providence.event_types(id, uuid, code, eventName, description)
+            VALUES (2, uuid_generate_v4(), 1, 'Punch during Normal Open Time Zone', 'At the normally open period (set to normally open period of a single door or the door open period after the first card normally open), or through the remote normal open operation, the person has open door permission punch the effective card at the opened door to trigger this normal events.');
+
+            INSERT INTO providence.event_types(id, uuid, code, eventName, description)
+            VALUES (3, uuid_generate_v4(), 2, 'First Card Normal Open (Punch Card) ', 'In [Card Only] verification mode, the person has first card normally open permission, punch card at the setting first card normally open period but the door is not opened, and trigger the normal event.');
+
+            INSERT INTO providence.event_types(id, uuid, code, eventName, description)
+            VALUES (4, uuid_generate_v4(), 3, 'Multi-Card Open (Punching Card)', 'In [Card Only] verification mode, multi-card combination can be used to open the door. After the last piece of card verified, the system trigger this normal event. ');
+
+            INSERT INTO providence.event_types(id, uuid, code, eventName, description)
+            VALUES (5, uuid_generate_v4(), 4, 'Emergency Password Open', 'The password (also known as the super password) set for the current door can be used for door open. It will trigger this normal event after the emergency password verified. ');
+
+            INSERT INTO providence.event_types(id, uuid, code, eventName, description)
+            VALUES (6, uuid_generate_v4(), 5, 'Open during Normal Open Time Zone ', 'If the current door is set a normally open period, the door will open automatically after the setting start time, and trigger this normal event. ');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
