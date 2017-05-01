@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Account account;
 
     public User() {

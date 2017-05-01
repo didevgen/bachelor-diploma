@@ -1,5 +1,6 @@
 package ua.nure.providence.models.business;
 
+import ua.nure.providence.models.authentication.Account;
 import ua.nure.providence.models.base.BaseEntity;
 
 import javax.persistence.*;
@@ -18,6 +19,9 @@ public class CardHolder extends BaseEntity {
 
     @Column(nullable = false)
     private String surname;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Account account;
 
     @OneToMany(fetch= FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="holder")
     private List<Card> cards = new ArrayList<>();
@@ -47,5 +51,13 @@ public class CardHolder extends BaseEntity {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

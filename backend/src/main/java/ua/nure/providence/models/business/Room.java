@@ -17,7 +17,13 @@ public class Room extends BaseEntity {
     @Column
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column
+    private String building;
+
+    @Column
+    private int floor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "room")
@@ -48,5 +54,21 @@ public class Room extends BaseEntity {
 
     public void setDoors(List<DoorLocker> doors) {
         this.doors = doors;
+    }
+
+    public String getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(String building) {
+        this.building = building;
+    }
+
+    public int getFloor() {
+        return floor;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
     }
 }

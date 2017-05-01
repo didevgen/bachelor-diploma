@@ -43,6 +43,9 @@ public class AuthFilter extends GenericFilterBean{
             redisRepository.refreshExpirationTime(curToken);
             AuthToken authToken = new AuthToken(curToken, uuid);
             User user = userDAO.get(uuid);
+            if (user == null) {
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "Token not found!");
+            }
             SecurityContextHolder.getContext()
                     .setAuthentication(new LoginToken(user.getEmail(), user.getPassword(), authToken, user));
             filterChain.doFilter(httpServletRequest, httpServletResponse);

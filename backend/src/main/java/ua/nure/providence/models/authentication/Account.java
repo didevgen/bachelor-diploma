@@ -1,5 +1,6 @@
 package ua.nure.providence.models.authentication;
 
+import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
 import ua.nure.providence.enums.AccountType;
 import ua.nure.providence.models.base.BaseEntity;
@@ -21,6 +22,9 @@ public class Account extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
     private List<User> users = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
+    private List<CardHolder> cardHolders = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
     private List<Room> rooms = new ArrayList<>();
@@ -50,5 +54,21 @@ public class Account extends BaseEntity {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public List<CardHolder> getCardHolders() {
+        return cardHolders;
+    }
+
+    public void setCardHolders(List<CardHolder> cardHolders) {
+        this.cardHolders = cardHolders;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 }
