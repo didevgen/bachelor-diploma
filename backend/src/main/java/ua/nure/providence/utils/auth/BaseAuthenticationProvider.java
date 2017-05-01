@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import ua.nure.providence.exceptions.rest.RestException;
-import ua.nure.providence.models.User;
+import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.services.AuthToken;
 import ua.nure.providence.services.UserService;
 import ua.nure.providence.utils.MD5;

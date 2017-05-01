@@ -4,7 +4,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.nure.providence.models.QUser;
-import ua.nure.providence.models.User;
+import ua.nure.providence.models.authentication.User;
 
 import java.util.Optional;
 

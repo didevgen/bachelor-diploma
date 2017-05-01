@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.exceptions.rest.RestException;
-import ua.nure.providence.models.User;
+import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.services.UserService;
 import ua.nure.providence.utils.MD5;
 

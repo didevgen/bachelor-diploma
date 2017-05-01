@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+    <changeSet id="2" author="evkovaljov">
+        <sql>
+            DROP EXTENSION IF EXISTS "uuid-ossp";
+            create extension "uuid-ossp";
+            INSERT INTO providence.users(
+            id, uuid, address, birthday, email, middle_name, name, password,
+            phone_number, role, surname, account_id)
+            VALUES (1, uuid_generate_v4(), null, null, 'didevgen@gmail.com', null, 'Eugene', '202cb962ac59075b964b07152d234b70',
+            null, 'ADMIN', 'Kovaljov', 1);
+            INSERT INTO providence.users(
+            id, uuid, address, birthday, email, middle_name, name, password,
+            phone_number, role, surname, account_id)
+            VALUES (2, uuid_generate_v4(), null, null, 'didevgen1@gmail.com', null, 'Paul', '202cb962ac59075b964b07152d234b70',
+            null, 'USER', 'Kauk', 1);
+            INSERT INTO providence.users(
+            id, uuid, address, birthday, email, middle_name, name, password,
+            phone_number, role, surname, account_id)
+            VALUES (3, uuid_generate_v4(), null, null, 'didevgen2@gmail.com', null, 'Kirill', '202cb962ac59075b964b07152d234b70',
+            null, 'USER', 'Chuklatii', 1);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

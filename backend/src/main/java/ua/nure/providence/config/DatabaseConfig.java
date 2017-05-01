@@ -1,6 +1,9 @@
 package ua.nure.providence.config;
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -95,5 +98,32 @@ public class DatabaseConfig{
         RedisTemplate<String, String> template = new StringRedisTemplate(jedisConnectionFactory());
         template.setEnableTransactionSupport(true);
         return template;
+    }
+
+    @Bean
+    @DependsOn("entityManagerFactory")
+    public SpringLiquibase liquibase() {
+        LiquibaseProperties liquibaseProperties = new LiquibaseProperties();
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setChangeLog(liquibaseProperties.getChangeLog());
+        liquibase.setContexts(liquibaseProperties.getContexts());
+        liquibase.setDataSource(getDataSource(liquibaseProperties));
+        liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
+        liquibase.setDropFirst(liquibaseProperties.isDropFirst());
+        liquibase.setShouldRun(true);
+        liquibase.setLabels(liquibaseProperties.getLabels());
+        liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
+        liquibase.setChangeLog("classpath:mainchangelog.xml");
+        liquibase.setDataSource(dataSource());
+        return liquibase;
+    }
+
+    private DataSource getDataSource(LiquibaseProperties liquibaseProperties) {
+        if (liquibaseProperties.getUrl() == null) {
+            return this.dataSource;
+        }
+        return DataSourceBuilder.create().url(liquibaseProperties.getUrl())
+                .username(liquibaseProperties.getUser())
+                .password(liquibaseProperties.getPassword()).build();
     }
 }

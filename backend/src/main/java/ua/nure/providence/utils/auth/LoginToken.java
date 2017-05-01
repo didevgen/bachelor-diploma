@@ -1,7 +1,7 @@
 package ua.nure.providence.utils.auth;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import ua.nure.providence.models.User;
+import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.services.AuthToken;
 
 import java.util.Collections;

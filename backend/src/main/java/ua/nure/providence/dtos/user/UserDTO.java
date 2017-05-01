@@ -2,7 +2,7 @@ package ua.nure.providence.dtos.user;
 
 import org.joda.time.DateTime;
 import ua.nure.providence.dtos.BaseUuidDTO;
-import ua.nure.providence.models.User;
+import ua.nure.providence.models.authentication.User;
 
 /**
  * Created by Providence Team on 19.03.2017.

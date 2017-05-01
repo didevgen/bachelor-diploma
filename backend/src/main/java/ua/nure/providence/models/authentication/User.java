@@ -1,4 +1,4 @@
-package ua.nure.providence.models;
+package ua.nure.providence.models.authentication;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -29,18 +29,21 @@ public class User extends BaseEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Account account;
 
     public User() {
     }
@@ -117,4 +120,11 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 }

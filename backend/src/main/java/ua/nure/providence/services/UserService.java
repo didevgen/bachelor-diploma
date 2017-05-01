@@ -3,7 +3,7 @@ package ua.nure.providence.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.providence.daos.UserDAO;
-import ua.nure.providence.models.User;
+import ua.nure.providence.models.authentication.User;
 
 @Service
 public class UserService {
