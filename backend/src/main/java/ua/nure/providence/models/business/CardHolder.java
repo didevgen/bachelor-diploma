@@ -2,6 +2,7 @@ package ua.nure.providence.models.business;
 
 import ua.nure.providence.models.authentication.Account;
 import ua.nure.providence.models.base.BaseEntity;
+import ua.nure.providence.models.hierarchy.StructuralCategory;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,34 +16,24 @@ import java.util.List;
 public class CardHolder extends BaseEntity {
 
     @Column(nullable = false)
-    private String name;
+    private String fullName;
 
-    @Column(nullable = false)
-    private String surname;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Account account;
-
-    @OneToMany(fetch= FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="holder")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "holder")
     private List<Card> cards = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "cardHolders", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<StructuralCategory> categories = new ArrayList<>();
+
 
     public CardHolder() {
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public List<Card> getCards() {
@@ -53,11 +44,11 @@ public class CardHolder extends BaseEntity {
         this.cards = cards;
     }
 
-    public Account getAccount() {
-        return account;
+    public List<StructuralCategory> getCategories() {
+        return categories;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setCategories(List<StructuralCategory> categories) {
+        this.categories = categories;
     }
 }

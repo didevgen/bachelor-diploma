@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+    <changeSet id="6" author="evkovaljov">
+        <sql>
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (1, '8435c63d-0fde-4f0b-8053-db1412990bf2', 'Відділ аспiрантури та докторантури', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (2, '2c6b8274-3a85-4f1e-bb7b-80042f5494fe', 'Факультет автоматики і комп''ютеризованих технологій', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (3, 'e2158fa4-2a93-4c4e-be54-73bfe648adba', 'Кафедра інженерії вбудованих систем управління', 1, 2);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (13, 'c5a71e89-ba29-467e-b8aa-42932adf73b6', 'Кафедра комп’ютерно-інтегрованих технологій, автоматизації та мехатроніки', 1, 2);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (51, 'd95c3539-e47a-49f0-88b4-06474ef175fe', 'Кафедра охорони праці', 1, 2);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (61, '681b6f23-7578-4b18-8035-2aa1339a2979', 'Кафедра фізики', 1, 2);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (72, '1816d51c-ea29-4a19-9180-3773e3338400', 'Факультет електронної та бiомедичної інженерії', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (73, '6c86ee10-cb11-4db0-9407-db421421f336', 'Кафедра біомедичних електронних пристроїв та систем', 1, 72);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (109, '335ad7d7-d84d-42f3-a256-ee5696874fcb', 'Кафедра мікроелектроніки і електронних приладів та пристроїв', 1, 72);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (128, '8e04002f-7a5f-4e5d-bb86-8c443841b13f', 'Кафедра фізичного виховання та спорту', 1, 72);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (132, 'c352d2c6-9476-4363-8eaf-84affb708967', 'Кафедра фотоніки та лазерної інженерії', 1, 72);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (148, '411be099-00f6-4c37-80d7-334bb615abab', 'Факультет заочної форми навчання', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (149, '468a934a-f212-45d8-8b71-85867b018cfe', 'Факультет інфокомунікацій', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (150, '248e0a86-60cb-471a-9bdf-a722f1ea4cb5', 'Кафедра інфокомунікаційної інженерії', 1, 149);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (194, '7691455f-a5c9-4235-8bc2-a6b6f287cc2d', 'Кафедра інформаційно-мережної інженерії', 1, 149);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (226, '3b018e81-4cf1-4bb1-a2bc-e3c2e420f7dd', 'Кафедра метрології та технічної експертизи', 1, 149);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (244, '295abcc6-a570-4b4a-9b4f-11200ad05877', 'Факультет інформаційних радіотехнологій і технічного захисту інформації', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (245, 'e2f0c0b2-255b-4e3f-bc5f-397e5cc407f1', 'Кафедра іноземних мов', 1, 244);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (267, 'ba688e18-8658-4028-90b5-8384af35d15d', 'Кафедра комп''ютерної радіоінженерії та систем технічного захисту інформації', 1, 244);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (304, 'ee5edb78-47a2-4f12-96ef-552c7c45d147', 'Кафедра медіа інженерії та інформаційних радіоелектронних систем', 1, 244);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (324, '9f02ccf8-b227-4633-95a3-30c1c40cbcd0', 'Кафедра радіотехнологій інформаційно-комунікаційних систем', 1, 244);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (337, '33ca338c-c727-44f8-aada-ff459c4890c1', 'Факультет інформаційно - аналітичних технологій та менеджменту', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (338, '9b557528-7d0e-464d-a25b-16b516e791fa', 'Кафедра вищої математики', 1, 337);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (354, 'f17e055c-0735-4c45-ace8-b87538fdd35b', 'Кафедра економічної кібернетики', 1, 337);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (396, 'd173e695-0f80-41cc-8fb3-861050a86e55', 'Кафедра інформатики', 1, 337);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (420, 'cf78af90-3614-4d0d-96c8-ad21187a63d6', 'Кафедра прикладної математики', 1, 337);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (445, '40311388-f7f4-40f3-ab9f-31170798bdc2', 'Кафедра соціальної інформатики', 1, 337);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (454, '62374d6b-5af6-4258-b749-c3742bed39bb', 'Факультет комп`ютерних наук', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (455, 'e37790a2-d2de-42e9-9523-17c4f39b8252', 'Кафедра інформаційних управляючих систем', 1, 454);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (473, '1da92556-d8f0-42ec-ad40-3ad568b0b4c5', 'Кафедра медіасистеми та технології', 1, 454);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (500, '4248d800-86cc-4c31-ac96-30e6008a8602', 'Кафедра програмної інженерії', 1, 454);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (552, '9f6adf73-0645-47d2-80eb-e2cb18756e84', 'Кафедра системотехніки', 1, 454);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (580, '3e44a4f3-5480-49d2-92d8-f174034fc88d', 'Кафедра штучного інтелекту', 1, 454);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (600, 'b01b34f9-3b4f-40dc-bf96-7a2f5221e4bc', 'Факультет комп`ютерної інженерії та управління', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (601, '7ee1c4bb-414d-4c63-aab3-7a7862e5f10c', 'Кафедра автоматизації проектування обчислювальної техніки', 1, 600);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (621, '85553a76-ed6e-4998-a10b-ced013c62f50', 'Кафедра безпеки інформаційних технологій', 1, 600);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (648, 'f40e2f6c-9f45-44b2-9422-60799340d21c', 'Кафедра електронних обчислювальних машин', 1, 600);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (704, '6196024a-a65b-4649-a07a-33c5833b1466', 'Кафедра філософії', 1, 600);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (722, 'ab5c81dc-dfb7-4a97-bd65-4718d9990b89', 'Факультет навчання іноземних громадян', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (723, 'dd7853ef-1df3-4a61-ae9f-8e0d5ad8dc96', 'Кафедра мовної підготовки', 1, 722);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (785, '7787da06-b97f-4e47-aeb8-1b7261e71e5b', 'Кафедра природознавчих наук', 1, 722);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (831, 'b2294710-c507-42ad-8d25-d0e6a36542de', 'Кафедра українознавства', 1, 722);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (842, '0b8d6202-13a5-45b8-9695-e48bb1484461', 'Факультет післядипломної освіти', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (843, 'c658ea11-148a-4805-9e90-fc677484b504', 'Центр довузівської підготовки', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (844, '6a26710f-daca-4e6f-b710-68f6a724f54e', 'Центр довузівської підготовки', 1, 843);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (845, 'a03b20f2-8293-471a-83df-2822a5337767', 'Центр навчання студентів іноземою мовою', 1, NULL);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (846, 'c0366ee6-4ebf-45cc-83bb-71b3ff8456fc', 'Центр навчання студентів іноземою мовою', 1, 845);
+            INSERT INTO categories (id, uuid, name, account_id, parent_id) VALUES (916, 'f9c05028-bf4b-40a4-a5bb-8616c7e9b14f', 'Інші', 1, NULL);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

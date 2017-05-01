@@ -45,6 +45,7 @@ public class AuthFilter extends GenericFilterBean{
             User user = userDAO.get(uuid);
             if (user == null) {
                 response.sendError(HttpStatus.UNAUTHORIZED.value(), "Token not found!");
+                return;
             }
             SecurityContextHolder.getContext()
                     .setAuthentication(new LoginToken(user.getEmail(), user.getPassword(), authToken, user));

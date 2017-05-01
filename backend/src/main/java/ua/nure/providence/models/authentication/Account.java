@@ -4,6 +4,7 @@ import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
 import ua.nure.providence.enums.AccountType;
 import ua.nure.providence.models.base.BaseEntity;
+import ua.nure.providence.models.hierarchy.StructuralCategory;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,10 +25,10 @@ public class Account extends BaseEntity {
     private List<User> users = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
-    private List<CardHolder> cardHolders = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
-    private List<Room> rooms = new ArrayList<>();
+    private List<StructuralCategory> categories = new ArrayList<>();
 
     public Account() {
     }
@@ -56,19 +57,19 @@ public class Account extends BaseEntity {
         this.users = users;
     }
 
-    public List<CardHolder> getCardHolders() {
-        return cardHolders;
-    }
-
-    public void setCardHolders(List<CardHolder> cardHolders) {
-        this.cardHolders = cardHolders;
-    }
-
     public List<Room> getRooms() {
         return rooms;
     }
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public List<StructuralCategory> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<StructuralCategory> categories) {
+        this.categories = categories;
     }
 }
