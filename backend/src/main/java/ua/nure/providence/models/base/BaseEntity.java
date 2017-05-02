@@ -2,10 +2,8 @@ package ua.nure.providence.models.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
-import ua.nure.providence.models.annotations.CloneIgnoreField;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
     Designates a class whose mapping information is applied to the
@@ -16,7 +14,8 @@ public abstract class BaseEntity extends UUIDEntity implements IIndexed, ITransf
 
     @Id
     @Column(name="id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name="autoincr", allocationSize=1, initialValue = 1000)
+    @GeneratedValue(strategy=GenerationType.IDENTITY, generator="autoincr")
     @JsonIgnore
     private Long id;
 
