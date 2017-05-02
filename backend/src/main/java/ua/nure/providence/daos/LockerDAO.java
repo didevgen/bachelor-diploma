@@ -19,9 +19,6 @@ import java.util.List;
 @Transactional
 public class LockerDAO extends BaseDAO<DoorLocker> {
 
-    @Autowired
-    private EntityManager entityManager;
-
     @Override
     public DoorLocker get(String uuid) {
         return new JPAQuery<DoorLocker>(entityManager)

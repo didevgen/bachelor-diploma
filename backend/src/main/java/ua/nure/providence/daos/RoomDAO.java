@@ -4,8 +4,11 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ua.nure.providence.models.authentication.Account;
+import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.QRoom;
 import ua.nure.providence.models.business.Room;
+import ua.nure.providence.utils.auth.LoginToken;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -17,9 +20,6 @@ import java.util.List;
 @Transactional
 public class RoomDAO extends BaseDAO<Room> {
 
-    @Autowired
-    private EntityManager entityManager;
-
     @Override
     public Room get(String uuid) {
         return new JPAQuery<Room>(entityManager)
@@ -28,9 +28,12 @@ public class RoomDAO extends BaseDAO<Room> {
                 .fetchOne();
     }
 
-    public List<Room> getAll(long limit, long offset) {
+    public List<Room> getAll(Account account, long limit, long offset) {
         return new JPAQuery<Room>(entityManager)
-                .from(QRoom.room).limit(limit).offset(offset).fetch();
+                .from(QRoom.room)
+                .where(QRoom.room.account.eq(account))
+                .orderBy(QRoom.room.name.asc())
+                .limit(limit).offset(offset).fetch();
     }
 
 }

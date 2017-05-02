@@ -1,6 +1,5 @@
 package ua.nure.providence.models.business;
 
-import ua.nure.providence.models.authentication.Account;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.base.BaseEntity;
 import ua.nure.providence.models.hierarchy.StructuralCategory;

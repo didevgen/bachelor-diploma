@@ -49,8 +49,9 @@ public class RoomController extends BaseController {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
 
-        List<RoomDTO> result = dao.getAll(limit, offset).stream()
+        List<RoomDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), limit, offset).stream()
                         .map(room -> new RoomDTO().convert(room))
                         .collect(Collectors.toList());
         return ResponseEntity.ok(result);

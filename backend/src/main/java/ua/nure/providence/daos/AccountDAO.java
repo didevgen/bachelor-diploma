@@ -16,9 +16,6 @@ import javax.persistence.EntityManager;
 @Transactional
 public class AccountDAO extends BaseDAO<Account> {
 
-    @Autowired
-    private EntityManager entityManager;
-
     @Override
     public Account get(String uuid) {
         return new JPAQuery<Account>(entityManager)
