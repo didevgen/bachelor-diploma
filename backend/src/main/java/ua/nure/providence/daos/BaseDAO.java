@@ -22,7 +22,7 @@ public abstract class BaseDAO<T extends BaseEntity> implements IDAO<T>{
 
     @Override
     public void delete(T o) {
-        entityManager.detach(o);
+        entityManager.remove(o);
     }
 
     public EntityManager getEntityManager() {

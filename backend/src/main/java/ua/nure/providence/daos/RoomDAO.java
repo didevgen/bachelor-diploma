@@ -8,6 +8,7 @@ import ua.nure.providence.models.business.QRoom;
 import ua.nure.providence.models.business.Room;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 /**
  * Created by Providence Team on 01.05.2017.
@@ -25,6 +26,11 @@ public class RoomDAO extends BaseDAO<Room> {
                 .from(QRoom.room)
                 .where(QRoom.room.uuid.eq(uuid))
                 .fetchOne();
+    }
+
+    public List<Room> getAll(long limit, long offset) {
+        return new JPAQuery<Room>(entityManager)
+                .from(QRoom.room).limit(limit).offset(offset).fetch();
     }
 
 }

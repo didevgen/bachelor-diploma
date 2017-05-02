@@ -32,7 +32,7 @@ public class DoorConfiguration extends BaseEntity{
     @Column
     private String passwd;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "configuration", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "configuration")
     private DoorLocker locker;
 
     public DoorConfiguration() {

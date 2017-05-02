@@ -1,6 +1,7 @@
 package ua.nure.providence.models.business;
 
 import ua.nure.providence.models.authentication.Account;
+import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.base.BaseEntity;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
 
@@ -24,6 +25,8 @@ public class CardHolder extends BaseEntity {
     @ManyToMany(mappedBy = "cardHolders", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StructuralCategory> categories = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "holderSubscriptions", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<User> subscribers = new ArrayList<>();
 
     public CardHolder() {
     }
@@ -50,5 +53,13 @@ public class CardHolder extends BaseEntity {
 
     public void setCategories(List<StructuralCategory> categories) {
         this.categories = categories;
+    }
+
+    public List<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(List<User> subscribers) {
+        this.subscribers = subscribers;
     }
 }
