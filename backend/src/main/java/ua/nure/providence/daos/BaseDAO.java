@@ -25,6 +25,8 @@ public abstract class BaseDAO<T extends BaseEntity> implements IDAO<T>{
         entityManager.remove(o);
     }
 
+    public abstract boolean exists(String uuid);
+
     public EntityManager getEntityManager() {
         return entityManager;
     }

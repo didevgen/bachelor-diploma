@@ -35,10 +35,10 @@ public class RoomController extends BaseController {
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<RoomDTO> getRoom(@PathVariable(name = "uuid") String uuid) {
-        Room room = dao.get(uuid);
-        if (room == null) {
+        if (!dao.exists(uuid)) {
             throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified room not found");
         }
+        Room room = dao.get(uuid);
         return ResponseEntity.ok(new RoomDTO().convert(room));
     }
 
@@ -57,14 +57,14 @@ public class RoomController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.PUT)
+    @RequestMapping(value = "{uuid}", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity updateRoom(@RequestBody() RoomUpdateDTO roomUpdateDTO) {
-        Room previousRoom = this.dao.get(roomUpdateDTO.getUuid());
+    public ResponseEntity updateRoom(@PathVariable(name = "uuid") String uuid, @RequestBody() RoomUpdateDTO roomUpdateDTO) {
 
-        if (previousRoom == null) {
+        if (!dao.exists(uuid)) {
             throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified room not found");
         }
+        Room previousRoom = this.dao.get(uuid);
 
         roomUpdateDTO.fromDTO(previousRoom);
         previousRoom.setDoors(lockerDAO.getLockers(roomUpdateDTO.getLockers()));
@@ -88,10 +88,11 @@ public class RoomController extends BaseController {
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity deleteRoom(@PathVariable(name = "uuid") String uuid) {
-        Room room = dao.get(uuid);
-        if (room == null) {
+        if (!dao.exists(uuid)) {
             throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified room not found");
         }
+        Room room = dao.get(uuid);
+
         dao.delete(room);
         return new ResponseEntity(HttpStatus.OK);
     }

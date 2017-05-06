@@ -19,6 +19,14 @@ public class UserDAO extends BaseDAO<User>{
                 .fetchOne();
     }
 
+    @Override
+    public boolean exists(String uuid) {
+        return new JPAQuery<User>(entityManager)
+                .from(QUser.user)
+                .where(QUser.user.uuid.eq(uuid))
+                .fetchCount() > 0;
+    }
+
     public boolean exists(String email, String password) {
         return new JPAQuery<User>(entityManager)
                 .from(QUser.user)

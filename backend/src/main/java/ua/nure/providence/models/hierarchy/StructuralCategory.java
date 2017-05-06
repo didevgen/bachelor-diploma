@@ -7,6 +7,7 @@ import ua.nure.providence.models.business.CardHolder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Providence Team on 01.05.2017.
@@ -75,5 +76,13 @@ public class StructuralCategory extends BaseEntity {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    @PreRemove
+    private void preRemove() {
+        this.getCardHolders().forEach(cardHolder -> cardHolder.setCategories(cardHolder
+                .getCategories().stream().filter(category -> !this.getUuid().equals(category.getUuid()))
+                .collect(Collectors.toList())));
+        this.getChildren().forEach(child -> child.setParent(this.getParent()));
     }
 }

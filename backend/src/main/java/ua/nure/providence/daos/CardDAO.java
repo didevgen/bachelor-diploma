@@ -20,4 +20,12 @@ public class CardDAO extends BaseDAO<Card> {
                 .where(QCard.card.uuid.eq(uuid))
                 .fetchOne();
     }
+
+    @Override
+    public boolean exists(String uuid) {
+        return new JPAQuery<Card>(entityManager)
+                .from(QCard.card)
+                .where(QCard.card.uuid.eq(uuid))
+                .fetchCount() > 0;
+    }
 }

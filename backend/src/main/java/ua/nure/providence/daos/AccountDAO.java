@@ -30,4 +30,12 @@ public class AccountDAO extends BaseDAO<Account> {
                 .where(QAccount.account.id.eq(id))
                 .fetchOne();
     }
+
+    @Override
+    public boolean exists(String uuid) {
+        return new JPAQuery<Account>(entityManager)
+                .from(QAccount.account)
+                .where(QAccount.account.uuid.eq(uuid))
+                .fetchCount() > 0;
+    }
 }

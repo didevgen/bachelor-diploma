@@ -41,10 +41,10 @@ public class CardHolderController extends BaseController {
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CardHolderDTO> getCardHolder(@PathVariable(name = "uuid") String uuid) {
-        CardHolder holder = dao.get(uuid);
-        if (holder == null) {
+        if (!this.dao.exists(uuid)) {
             throw new RestException(HttpStatus.NOT_FOUND, 404005, "Specified holder not found");
         }
+        CardHolder holder = dao.get(uuid);
         return ResponseEntity.ok(new CardHolderDTO().convert(holder));
     }
 
@@ -62,14 +62,15 @@ public class CardHolderController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.PUT)
+    @RequestMapping(value = "{uuid}", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<CardHolderDTO> updateCardHolder(@RequestBody() CardHolderUpdateDTO dto) {
-        CardHolder cardHolder = this.dao.get(dto.getUuid());
+    public ResponseEntity<CardHolderDTO> updateCardHolder(@PathVariable(name = "uuid") String uuid, @RequestBody() CardHolderUpdateDTO dto) {
 
-        if (cardHolder == null) {
+        if (!this.dao.exists(uuid)) {
             throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified holder not found");
         }
+
+        CardHolder cardHolder = this.dao.get(uuid);
 
         dto.fromDTO(cardHolder);
         dto.getCards().stream()
@@ -113,10 +114,10 @@ public class CardHolderController extends BaseController {
         });
 
         dto.getCategories().forEach(item -> {
-            StructuralCategory category = categoryDAO.get(item);
-            if (category == null) {
+            if (!categoryDAO.exists(item)) {
                 throw new RestException(HttpStatus.BAD_REQUEST, 400007, "Invalid category was provided");
             }
+            StructuralCategory category = categoryDAO.get(item, token.getAuthenticatedUser());
             cardHolder.getCategories().add(category);
         });
 
@@ -126,10 +127,10 @@ public class CardHolderController extends BaseController {
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity deleteHolder(@PathVariable(name = "uuid") String uuid) {
-        CardHolder cardHolder = dao.get(uuid);
-        if (cardHolder == null) {
+        if (!dao.exists(uuid)) {
             throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified holder not found");
         }
+        CardHolder cardHolder = dao.get(uuid);
         dao.delete(cardHolder);
         return new ResponseEntity(HttpStatus.OK);
     }

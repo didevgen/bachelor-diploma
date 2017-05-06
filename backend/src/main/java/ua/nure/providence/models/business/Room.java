@@ -71,4 +71,9 @@ public class Room extends BaseEntity {
     public void setFloor(int floor) {
         this.floor = floor;
     }
+
+    @PreRemove
+    private void preRemove() {
+        this.getDoors().forEach(doorLocker -> doorLocker.setRoom(null));
+    }
 }

@@ -32,4 +32,12 @@ public class LockerDAO extends BaseDAO<DoorLocker> {
                 .from(QDoorLocker.doorLocker)
                 .where(QDoorLocker.doorLocker.uuid.in(uuids)).fetch();
     }
+
+    @Override
+    public boolean exists(String uuid) {
+        return new JPAQuery<DoorLocker>(entityManager)
+                .from(QDoorLocker.doorLocker)
+                .where(QDoorLocker.doorLocker.uuid.eq(uuid))
+                .fetchCount() > 0;
+    }
 }

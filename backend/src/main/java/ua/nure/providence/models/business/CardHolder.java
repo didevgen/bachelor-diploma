@@ -1,5 +1,6 @@
 package ua.nure.providence.models.business;
 
+import ua.nure.providence.daos.CardDAO;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.base.BaseEntity;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
@@ -60,5 +61,11 @@ public class CardHolder extends BaseEntity {
 
     public void setSubscribers(List<User> subscribers) {
         this.subscribers = subscribers;
+    }
+
+    @PreRemove
+    private void preRemove() {
+        CardDAO dao = new CardDAO();
+        this.getCards().forEach(dao::delete);
     }
 }

@@ -38,4 +38,12 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .orderBy(QCardHolder.cardHolder.fullName.asc())
                 .limit(limit).offset(offset).fetch();
     }
+
+    @Override
+    public boolean exists(String uuid) {
+        return new JPAQuery<CardHolder>(entityManager)
+                .from(QCardHolder.cardHolder)
+                .where(QCardHolder.cardHolder.uuid.eq(uuid))
+                .fetchCount() > 0;
+    }
 }

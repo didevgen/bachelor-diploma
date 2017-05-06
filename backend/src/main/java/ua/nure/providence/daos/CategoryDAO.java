@@ -1,15 +1,12 @@
 package ua.nure.providence.daos;
 
 import com.querydsl.jpa.impl.JPAQuery;
-
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.QCardHolder;
 import ua.nure.providence.models.hierarchy.QStructuralCategory;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
-import ua.nure.providence.utils.auth.LoginToken;
 
 import java.util.List;
 
@@ -25,6 +22,14 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
         return null;
     }
 
+    @Override
+    public boolean exists(String uuid) {
+        return new JPAQuery<StructuralCategory>(entityManager)
+                .from(QStructuralCategory.structuralCategory)
+                .where(QStructuralCategory.structuralCategory.uuid.eq(uuid))
+                .fetchCount() > 0;
+    }
+
     public StructuralCategory get(String uuid, User user) {
         QStructuralCategory category = new QStructuralCategory("source");
         QStructuralCategory parent = new QStructuralCategory("parent");
@@ -34,6 +39,16 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
                 .from(category)
                 .leftJoin(category.parent, parent)
                 .leftJoin(category.children, children)
+                .where(category.uuid.eq(uuid)
+                        .and(category.account.eq(user.getAccount())))
+                .fetchOne();
+    }
+
+    public StructuralCategory simpleGet(String uuid, User user) {
+        QStructuralCategory category = new QStructuralCategory("source");
+
+        return new JPAQuery<StructuralCategory>(entityManager)
+                .from(category)
                 .where(category.uuid.eq(uuid)
                         .and(category.account.eq(user.getAccount())))
                 .fetchOne();

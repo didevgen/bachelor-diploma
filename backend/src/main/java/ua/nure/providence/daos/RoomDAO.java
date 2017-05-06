@@ -36,4 +36,11 @@ public class RoomDAO extends BaseDAO<Room> {
                 .limit(limit).offset(offset).fetch();
     }
 
+    @Override
+    public boolean exists(String uuid) {
+        return new JPAQuery<Room>(entityManager)
+                .from(QRoom.room)
+                .where(QRoom.room.uuid.eq(uuid))
+                .fetchCount() > 0;
+    }
 }
