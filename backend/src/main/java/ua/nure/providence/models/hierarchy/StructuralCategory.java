@@ -18,7 +18,7 @@ public class StructuralCategory extends BaseEntity {
     @Column
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="category_cardholder",
             joinColumns=@JoinColumn(name="category_id", referencedColumnName="id"),
