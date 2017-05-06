@@ -12,29 +12,32 @@ import ua.nure.providence.models.zk.internal.EventType;
  */
 public class HistoryDTO extends BaseUuidDTO<History> {
 
-    private DateTime timestamp;
+    private String timestamp;
 
     private NamedHolderDTO cardHolder;
 
     private RoomDTO room;
 
-    private EventType event;
+    private EventTypeDTO event;
+
+    private int inOutState;
 
     @Override
     public HistoryDTO convert(History object) {
         super.convert(object);
-        setTimestamp(object.getTimeStamp());
+        setTimestamp(object.getTimeStamp().toString());
         setCardHolder(new NamedHolderDTO().convert(object.getCardHolder()));
-        setEvent(object.getEventType());
+        setEvent(new EventTypeDTO().convert(object.getEventType()));
         setRoom(new RoomDTO().convert(object.getRoom()));
+        setInOutState(object.getInOutState());
         return this;
     }
 
-    public DateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(DateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -54,11 +57,19 @@ public class HistoryDTO extends BaseUuidDTO<History> {
         this.room = room;
     }
 
-    public EventType getEvent() {
+    public EventTypeDTO getEvent() {
         return event;
     }
 
-    public void setEvent(EventType event) {
+    public void setEvent(EventTypeDTO event) {
         this.event = event;
+    }
+
+    public int getInOutState() {
+        return inOutState;
+    }
+
+    public void setInOutState(int inOutState) {
+        this.inOutState = inOutState;
     }
 }
