@@ -20,7 +20,7 @@ public class EventType extends BaseEntity {
     @Column
     private String eventName;
 
-    @Lob
+    @Column(length=10485760)
     private String description;
 
     public EventType() {

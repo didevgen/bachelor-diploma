@@ -10,6 +10,7 @@ import ua.nure.providence.models.business.QCardHolder;
 import ua.nure.providence.models.business.QRoom;
 import ua.nure.providence.models.history.History;
 import ua.nure.providence.models.history.QHistory;
+import ua.nure.providence.models.zk.internal.EventType;
 import ua.nure.providence.models.zk.internal.QEventType;
 
 import java.util.List;
@@ -118,6 +119,12 @@ public class HistoryDAO extends BaseDAO<History> {
                         .and(QHistory.history.timeStamp.loe(end)))
                 .limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
+                .fetch();
+    }
+
+    public List<EventType> getEventTypes() {
+        return new JPAQuery<EventType>(entityManager)
+                .from(QEventType.eventType)
                 .fetch();
     }
 

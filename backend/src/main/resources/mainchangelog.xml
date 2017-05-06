@@ -12,4 +12,5 @@
     <include file="changelogs/init-categories.xml"/>
     <include file="changelogs/init-cardholders.xml"/>
     <include file="changelogs/init-cardholder-categories.xml"/>
+    <include file="changelogs/init-history.xml"/>
 </databaseChangeLog>

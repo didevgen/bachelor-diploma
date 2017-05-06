@@ -14,7 +14,7 @@ public abstract class BaseEntity extends UUIDEntity implements IIndexed, ITransf
 
     @Id
     @Column(name="id", unique = true, nullable = false)
-    @SequenceGenerator(name="autoincr", allocationSize=1, initialValue = 1000)
+    @SequenceGenerator(name="autoincr", allocationSize=1, initialValue = 3000)
     @GeneratedValue(strategy=GenerationType.IDENTITY, generator="autoincr")
     @JsonIgnore
     private Long id;
