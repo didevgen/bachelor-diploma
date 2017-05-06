@@ -104,12 +104,14 @@ public class CardHolderController extends BaseController {
         CardHolder cardHolder = new CardHolder();
         dto.fromDTO(cardHolder);
         dao.insert(cardHolder);
+
         dto.getCards().forEach(item -> {
             Card card = new Card();
             card.setCardNumber(item.getCardNumber());
             card.setHolder(cardHolder);
             cardHolder.getCards().add(card);
         });
+
         dto.getCategories().forEach(item -> {
             StructuralCategory category = categoryDAO.get(item);
             if (category == null) {
@@ -117,6 +119,7 @@ public class CardHolderController extends BaseController {
             }
             cardHolder.getCategories().add(category);
         });
+
         return ResponseEntity.ok(new CardHolderDTO().convert(cardHolder));
     }
 

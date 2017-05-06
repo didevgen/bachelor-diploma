@@ -30,19 +30,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/login")
-        .and().ignoring().antMatchers(HttpMethod.POST, "/api/v1/logout");
-    }
+                .and().ignoring().antMatchers(HttpMethod.POST, "/api/v1/logout")
+                .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/swagger-ui.html")
+                .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/swagger-resources/**")
+                .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/v2/**")
+                .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/webjars/**");
+}
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProv);
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/logout").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
