@@ -48,4 +48,50 @@ public class HistoryController {
                 .collect(Collectors.toList()));
     }
 
+    @RequestMapping(value = "/room/{uuid}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<HistoryDTO>> getRoomHistory(@PathVariable("uuid") String uuid,
+                                                              @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                              @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+        if (limit == 0) {
+            limit = Long.MAX_VALUE;
+        }
+
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        List<History> histories = dao.getRoomHistory(uuid, token.getAuthenticatedUser(), limit, offset);
+        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
+                .collect(Collectors.toList()));
+    }
+
+    @RequestMapping(value = "/cardholder/{uuid}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<HistoryDTO>> getCardHolderHistory(@PathVariable("uuid") String uuid,
+                                                           @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                           @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+        if (limit == 0) {
+            limit = Long.MAX_VALUE;
+        }
+
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        List<History> histories = dao.getCardHolderHistory(uuid, token.getAuthenticatedUser(), limit, offset);
+        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
+                .collect(Collectors.toList()));
+    }
+
+    @RequestMapping(value = "/cardholder/{holderId}/room/{roomId}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<HistoryDTO>> getRoomCardHolderHistory(@PathVariable("holderId") String holderId,
+                                                                     @PathVariable("roomId") String roomId,
+                                                                 @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                 @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+        if (limit == 0) {
+            limit = Long.MAX_VALUE;
+        }
+
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        List<History> histories = dao.getCardHolderHistoryInRoom(holderId, roomId, token.getAuthenticatedUser(), limit, offset);
+        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
+                .collect(Collectors.toList()));
+    }
+
 }
