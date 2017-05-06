@@ -3,6 +3,7 @@ package ua.nure.providence.daos;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.QCardHolder;
 import ua.nure.providence.models.hierarchy.QStructuralCategory;
@@ -19,7 +20,7 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
 
     @Override
     public StructuralCategory get(String uuid) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
