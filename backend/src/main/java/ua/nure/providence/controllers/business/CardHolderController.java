@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @Transactional
-@RequestMapping("holder")
+@RequestMapping("holders")
 public class CardHolderController extends BaseController {
 
     @Autowired

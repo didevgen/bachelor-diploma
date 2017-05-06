@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Transactional
 @RestController
-@RequestMapping("room")
+@RequestMapping("rooms")
 public class RoomController extends BaseController {
 
     @Autowired

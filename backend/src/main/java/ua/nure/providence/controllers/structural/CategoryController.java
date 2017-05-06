@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Transactional
 @RestController
-@RequestMapping("category")
+@RequestMapping("categories")
 public class CategoryController {
 
     @Autowired
