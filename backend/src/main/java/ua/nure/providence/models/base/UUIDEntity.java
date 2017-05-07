@@ -4,6 +4,7 @@ import ua.nure.providence.models.annotations.CloneIgnoreField;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.xml.bind.annotation.XmlElement;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -16,6 +17,7 @@ public abstract class UUIDEntity  {
     @CloneIgnoreField
     private String uuid = UUID.randomUUID().toString();
 
+    @XmlElement
     public String getUuid() {
         return uuid;
     }

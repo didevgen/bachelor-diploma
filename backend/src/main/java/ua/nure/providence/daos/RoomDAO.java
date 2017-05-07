@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.nure.providence.models.authentication.Account;
 import ua.nure.providence.models.authentication.User;
+import ua.nure.providence.models.business.QDoorLocker;
 import ua.nure.providence.models.business.QRoom;
 import ua.nure.providence.models.business.Room;
 import ua.nure.providence.utils.auth.LoginToken;

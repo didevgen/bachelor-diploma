@@ -13,4 +13,5 @@
     <include file="changelogs/init-cardholders.xml"/>
     <include file="changelogs/init-cardholder-categories.xml"/>
     <include file="changelogs/init-history.xml"/>
+    <include file="changelogs/init-door-configurations.xml"/>
 </databaseChangeLog>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+    <changeSet id="52" author="evkovaljov">
+        <sql>
+            INSERT INTO door (id, uuid, room_id) VALUES (1, '79b198e6-1fe7-4730-856a-96733628313f', 160);
+
+            INSERT INTO door_config (id, uuid, baudrate, deviceid, ipaddress, passwd, port, protocol, timeout, locker_id) VALUES (1, 'df835156-52b5-4813-8b0b-75cf22ae3cc3', '', '', '192.168.12.154', '', '4370', 'TCP', '10000', 1);
+            INSERT INTO door_config (id, uuid, baudrate, deviceid, ipaddress, passwd, port, protocol, timeout, locker_id) VALUES (2, 'df835156-52b5-4813-8b0b-75cf22ae3cc4', '', '', '192.168.12.155', '', '4370', 'TCP', '10000', 1);
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

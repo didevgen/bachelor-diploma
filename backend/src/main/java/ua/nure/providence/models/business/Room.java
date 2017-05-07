@@ -4,6 +4,7 @@ import ua.nure.providence.models.authentication.Account;
 import ua.nure.providence.models.base.BaseEntity;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class Room extends BaseEntity {
     public Room() {
     }
 
+    @XmlTransient
     public String getName() {
         return name;
     }
@@ -40,6 +42,7 @@ public class Room extends BaseEntity {
         this.name = name;
     }
 
+    @XmlTransient
     public Account getAccount() {
         return account;
     }
@@ -48,6 +51,7 @@ public class Room extends BaseEntity {
         this.account = account;
     }
 
+    @XmlTransient
     public List<DoorLocker> getDoors() {
         return doors;
     }
@@ -56,6 +60,7 @@ public class Room extends BaseEntity {
         this.doors = doors;
     }
 
+    @XmlTransient
     public String getBuilding() {
         return building;
     }
@@ -64,6 +69,7 @@ public class Room extends BaseEntity {
         this.building = building;
     }
 
+    @XmlTransient
     public int getFloor() {
         return floor;
     }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
     Designates a class whose mapping information is applied to the
@@ -19,6 +20,7 @@ public abstract class BaseEntity extends UUIDEntity implements IIndexed, ITransf
     @JsonIgnore
     private Long id;
 
+    @XmlTransient
     @Override
     public Long getId() {
         return id;

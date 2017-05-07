@@ -5,11 +5,11 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import ua.nure.providence.models.authentication.Account;
 import ua.nure.providence.models.authentication.User;
-import ua.nure.providence.models.business.DoorLocker;
-import ua.nure.providence.models.business.QDoorConfiguration;
-import ua.nure.providence.models.business.QDoorLocker;
-import ua.nure.providence.models.business.QRoom;
+import ua.nure.providence.models.business.*;
+
+import java.util.List;
 
 /**
  * Created by Providence Team on 07.05.2017.
@@ -46,6 +46,28 @@ public class DoorDAO extends BaseDAO<DoorLocker> {
         new JPADeleteClause(entityManager, QDoorConfiguration.doorConfiguration)
                 .where(QDoorConfiguration.doorConfiguration.locker.eq(door))
                 .execute();
+    }
+
+    public List<DoorLocker> getAllDoorConfigurations(Account account, long limit, long offset) {
+        return new JPAQuery<DoorLocker>(entityManager)
+                .from(QDoorLocker.doorLocker)
+                .leftJoin(QDoorLocker.doorLocker.configuration, QDoorConfiguration.doorConfiguration)
+                .leftJoin(QDoorLocker.doorLocker.room, QRoom.room)
+                .where(QRoom.room.account.eq(account))
+                .orderBy(QRoom.room.name.asc())
+                .limit(limit).offset(offset)
+                .fetch();
+    }
+
+    public List<DoorLocker> getRoomDoorConfiguration(Account account, String uuid, long limit, long offset) {
+        return new JPAQuery<DoorLocker>(entityManager)
+                .from(QDoorLocker.doorLocker)
+                .leftJoin(QDoorLocker.doorLocker.configuration, QDoorConfiguration.doorConfiguration)
+                .leftJoin(QDoorLocker.doorLocker.room, QRoom.room)
+                .where(QRoom.room.account.eq(account)
+                        .and(QRoom.room.uuid.eq(uuid)))
+                .limit(limit).offset(offset)
+                .fetch();
     }
 
     @Override

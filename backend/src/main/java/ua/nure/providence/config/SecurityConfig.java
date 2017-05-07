@@ -34,7 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/swagger-ui.html")
                 .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/swagger-resources/**")
                 .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/v2/**")
-                .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/webjars/**");
+                .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/webjars/**")
+                .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/doors/windows/service");
 }
 
     @Override

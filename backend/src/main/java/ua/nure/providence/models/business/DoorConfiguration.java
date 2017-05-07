@@ -3,6 +3,8 @@ package ua.nure.providence.models.business;
 import ua.nure.providence.models.base.BaseEntity;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Created by Providence Team on 01.05.2017.
@@ -38,6 +40,7 @@ public class DoorConfiguration extends BaseEntity{
     public DoorConfiguration() {
     }
 
+    @XmlElement
     public String getProtocol() {
         return protocol;
     }
@@ -46,6 +49,7 @@ public class DoorConfiguration extends BaseEntity{
         this.protocol = protocol;
     }
 
+    @XmlElement
     public String getPort() {
         return port;
     }
@@ -54,6 +58,7 @@ public class DoorConfiguration extends BaseEntity{
         this.port = port;
     }
 
+    @XmlElement
     public String getDeviceId() {
         return deviceId;
     }
@@ -62,6 +67,7 @@ public class DoorConfiguration extends BaseEntity{
         this.deviceId = deviceId;
     }
 
+    @XmlElement
     public String getBaudrate() {
         return baudrate;
     }
@@ -70,6 +76,7 @@ public class DoorConfiguration extends BaseEntity{
         this.baudrate = baudrate;
     }
 
+    @XmlElement
     public String getIpAddress() {
         return ipAddress;
     }
@@ -78,6 +85,7 @@ public class DoorConfiguration extends BaseEntity{
         this.ipAddress = ipAddress;
     }
 
+    @XmlElement
     public String getTimeout() {
         return timeout;
     }
@@ -86,6 +94,7 @@ public class DoorConfiguration extends BaseEntity{
         this.timeout = timeout;
     }
 
+    @XmlElement
     public String getPasswd() {
         return passwd;
     }
@@ -94,6 +103,7 @@ public class DoorConfiguration extends BaseEntity{
         this.passwd = passwd;
     }
 
+    @XmlTransient
     public DoorLocker getLocker() {
         return locker;
     }

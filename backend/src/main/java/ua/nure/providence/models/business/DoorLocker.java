@@ -4,6 +4,8 @@ import ua.nure.providence.daos.DoorDAO;
 import ua.nure.providence.models.base.BaseEntity;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = "door")
+@XmlRootElement
 public class DoorLocker extends BaseEntity {
+
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Room room;
@@ -23,6 +27,7 @@ public class DoorLocker extends BaseEntity {
     public DoorLocker() {
     }
 
+    @XmlElement
     public Room getRoom() {
         return room;
     }
@@ -31,6 +36,7 @@ public class DoorLocker extends BaseEntity {
         this.room = room;
     }
 
+    @XmlElement
     public List<DoorConfiguration> getConfiguration() {
         return configuration;
     }
