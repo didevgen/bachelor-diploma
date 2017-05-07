@@ -1,5 +1,6 @@
 package ua.nure.providence.models.history;
 
+import com.google.common.base.Objects;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import ua.nure.providence.models.base.BaseEntity;
@@ -74,4 +75,5 @@ public class History extends BaseEntity {
     public void setInOutState(int inOutState) {
         this.inOutState = inOutState;
     }
+
 }

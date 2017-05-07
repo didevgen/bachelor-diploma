@@ -1,8 +1,11 @@
 package ua.nure.providence.models.business;
 
+import ua.nure.providence.daos.DoorDAO;
 import ua.nure.providence.models.base.BaseEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Providence Team on 01.05.2017.
@@ -14,8 +17,8 @@ public class DoorLocker extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Room room;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private DoorConfiguration configuration;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "locker")
+    private List<DoorConfiguration> configuration = new ArrayList<>();
 
     public DoorLocker() {
     }
@@ -28,11 +31,17 @@ public class DoorLocker extends BaseEntity {
         this.room = room;
     }
 
-    public DoorConfiguration getConfiguration() {
+    public List<DoorConfiguration> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(DoorConfiguration configuration) {
+    public void setConfiguration(List<DoorConfiguration> configuration) {
         this.configuration = configuration;
+    }
+
+    @PreRemove
+    private void preRemove() {
+        DoorDAO dao = new DoorDAO();
+        dao.deleteDoorConfigurations(this);
     }
 }

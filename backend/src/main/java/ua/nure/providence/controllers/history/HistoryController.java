@@ -94,4 +94,19 @@ public class HistoryController {
                 .collect(Collectors.toList()));
     }
 
+    @RequestMapping(value = "/room/{uuid}/online", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<HistoryDTO>> getPresentPeopleInRoom(@PathVariable("uuid") String uuid,
+                                                           @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                           @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+        if (limit == 0) {
+            limit = Long.MAX_VALUE;
+        }
+        //TODO assume today only
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        List<History> histories = dao.getRoomHistory(uuid, token.getAuthenticatedUser(), limit, offset);
+        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
+                .collect(Collectors.toList()));
+    }
+
 }

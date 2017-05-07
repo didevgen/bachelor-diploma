@@ -1,41 +1,50 @@
-package ua.nure.providence.models.business;
+package ua.nure.providence.dtos.doors;
 
-import ua.nure.providence.models.base.BaseEntity;
-
-import javax.persistence.*;
+import ua.nure.providence.dtos.BaseUuidDTO;
+import ua.nure.providence.dtos.IPostDTO;
+import ua.nure.providence.models.business.DoorConfiguration;
 
 /**
- * Created by Providence Team on 01.05.2017.
+ * Created by Providence Team on 07.05.2017.
  */
-@Entity
-@Table(name = "door_config")
-public class DoorConfiguration extends BaseEntity{
+public class DoorConfigurationDTO extends BaseUuidDTO<DoorConfiguration> implements IPostDTO<DoorConfiguration> {
 
-    @Column
     private String protocol;
 
-    @Column
     private String port;
 
-    @Column
     private String deviceId;
 
-    @Column
     private String baudrate;
 
-    @Column
     private String ipAddress;
 
-    @Column
     private String timeout;
 
-    @Column
     private String passwd;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private DoorLocker locker;
+    @Override
+    public void fromDTO(DoorConfiguration object) {
+        object.setBaudrate(this.getBaudrate());
+        object.setDeviceId(this.getDeviceId());
+        object.setIpAddress(this.getIpAddress());
+        object.setPasswd(this.getPasswd());
+        object.setPort(this.getPort());
+        object.setProtocol(this.getProtocol());
+        object.setTimeout(this.getTimeout());
+    }
 
-    public DoorConfiguration() {
+    @Override
+    public DoorConfigurationDTO convert(DoorConfiguration object) {
+        super.convert(object);
+        setBaudrate(object.getBaudrate());
+        setDeviceId(object.getDeviceId());
+        setIpAddress(object.getIpAddress());
+        setPasswd(object.getPasswd());
+        setPort(object.getPort());
+        setProtocol(object.getProtocol());
+        setTimeout(object.getTimeout());
+        return this;
     }
 
     public String getProtocol() {
@@ -92,13 +101,5 @@ public class DoorConfiguration extends BaseEntity{
 
     public void setPasswd(String passwd) {
         this.passwd = passwd;
-    }
-
-    public DoorLocker getLocker() {
-        return locker;
-    }
-
-    public void setLocker(DoorLocker locker) {
-        this.locker = locker;
     }
 }
