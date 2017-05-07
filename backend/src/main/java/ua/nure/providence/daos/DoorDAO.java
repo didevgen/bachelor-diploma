@@ -51,7 +51,6 @@ public class DoorDAO extends BaseDAO<DoorLocker> {
     public List<DoorLocker> getAllDoorConfigurations(Account account, long limit, long offset) {
         return new JPAQuery<DoorLocker>(entityManager)
                 .from(QDoorLocker.doorLocker)
-                .leftJoin(QDoorLocker.doorLocker.configuration, QDoorConfiguration.doorConfiguration)
                 .leftJoin(QDoorLocker.doorLocker.room, QRoom.room)
                 .where(QRoom.room.account.eq(account))
                 .orderBy(QRoom.room.name.asc())

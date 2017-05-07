@@ -14,20 +14,18 @@ import java.util.List;
  */
 @Entity
 @Table(name = "door")
-@XmlRootElement
 public class DoorLocker extends BaseEntity {
 
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Room room;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "locker")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "locker")
     private List<DoorConfiguration> configuration = new ArrayList<>();
 
     public DoorLocker() {
     }
 
-    @XmlElement
     public Room getRoom() {
         return room;
     }
@@ -36,7 +34,6 @@ public class DoorLocker extends BaseEntity {
         this.room = room;
     }
 
-    @XmlElement
     public List<DoorConfiguration> getConfiguration() {
         return configuration;
     }

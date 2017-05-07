@@ -16,6 +16,7 @@ import ua.nure.providence.daos.RoomDAO;
 import ua.nure.providence.daos.UserDAO;
 import ua.nure.providence.dtos.doors.DoorDTO;
 import ua.nure.providence.dtos.doors.DoorUpdateDTO;
+import ua.nure.providence.dtos.xml.WindowsServiceConfigurationDTO;
 import ua.nure.providence.exceptions.rest.RestException;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.DoorConfiguration;
@@ -151,25 +152,27 @@ public class ZKController extends BaseController {
             FileUtils.delete(new File("iot\\ZKService\\ZKAccessInstaller\\Debug"));
             String uuid = redisRepository.get(token);
             if (uuid == null) {
-                throw new RestException(HttpStatus.UNAUTHORIZED, 401001, "Token not found!");
+                lock.unlock();
+                return new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
 
             redisRepository.refreshExpirationTime(token);
             User user = userDAO.get(uuid);
             if (user == null) {
-                throw new RestException(HttpStatus.UNAUTHORIZED, 401001, "User not found!");
+                lock.unlock();
+                return new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
 
             List<DoorLocker> locker = dao.getAllDoorConfigurations(user.getAccount(),
                     Integer.MAX_VALUE, 0);
-
-            locker.forEach(doorLocker -> {
-                try {
-                    new XmlConverter<DoorLocker>().convert(doorLocker, DoorLocker.class);
-                } catch (JAXBException | FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            });
+            //TODO add RSA public key
+            try {
+                new XmlConverter<WindowsServiceConfigurationDTO>().convert(
+                        new WindowsServiceConfigurationDTO().convert(user.getAccount(), locker),
+                        WindowsServiceConfigurationDTO.class);
+            } catch (JAXBException | FileNotFoundException e) {
+                e.printStackTrace();
+            }
             Process p = Runtime.getRuntime().exec(MS_BUILD_COMMAND);
             p.waitFor();
 

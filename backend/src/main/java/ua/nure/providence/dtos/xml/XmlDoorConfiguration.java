@@ -1,45 +1,43 @@
-package ua.nure.providence.models.business;
+package ua.nure.providence.dtos.xml;
 
-import ua.nure.providence.models.base.BaseEntity;
+import ua.nure.providence.dtos.BaseUuidDTO;
+import ua.nure.providence.models.business.DoorConfiguration;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * Created by Providence Team on 01.05.2017.
+ * Created by Providence Team on 07.05.2017.
  */
-@Entity
-@Table(name = "door_config")
-public class DoorConfiguration extends BaseEntity{
+public class XmlDoorConfiguration extends BaseUuidDTO<DoorConfiguration> {
 
-    @Column
     private String protocol;
 
-    @Column
     private String port;
 
-    @Column
     private String deviceId;
 
-    @Column
     private String baudrate;
 
-    @Column
     private String ipAddress;
 
-    @Column
     private String timeout;
 
-    @Column
     private String passwd;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private DoorLocker locker;
-
-    public DoorConfiguration() {
+    @Override
+    public XmlDoorConfiguration convert(DoorConfiguration object) {
+        super.convert(object);
+        setBaudrate(object.getBaudrate());
+        setDeviceId(object.getDeviceId());
+        setIpAddress(object.getIpAddress());
+        setPasswd(object.getPasswd());
+        setPort(object.getPort());
+        setTimeout(object.getTimeout());
+        setProtocol(object.getProtocol());
+        return this;
     }
 
+    @XmlElement
     public String getProtocol() {
         return protocol;
     }
@@ -48,6 +46,7 @@ public class DoorConfiguration extends BaseEntity{
         this.protocol = protocol;
     }
 
+    @XmlElement
     public String getPort() {
         return port;
     }
@@ -56,6 +55,7 @@ public class DoorConfiguration extends BaseEntity{
         this.port = port;
     }
 
+    @XmlElement
     public String getDeviceId() {
         return deviceId;
     }
@@ -64,6 +64,7 @@ public class DoorConfiguration extends BaseEntity{
         this.deviceId = deviceId;
     }
 
+    @XmlElement
     public String getBaudrate() {
         return baudrate;
     }
@@ -72,6 +73,7 @@ public class DoorConfiguration extends BaseEntity{
         this.baudrate = baudrate;
     }
 
+    @XmlElement
     public String getIpAddress() {
         return ipAddress;
     }
@@ -80,6 +82,7 @@ public class DoorConfiguration extends BaseEntity{
         this.ipAddress = ipAddress;
     }
 
+    @XmlElement
     public String getTimeout() {
         return timeout;
     }
@@ -88,19 +91,12 @@ public class DoorConfiguration extends BaseEntity{
         this.timeout = timeout;
     }
 
+    @XmlElement
     public String getPasswd() {
         return passwd;
     }
 
     public void setPasswd(String passwd) {
         this.passwd = passwd;
-    }
-
-    public DoorLocker getLocker() {
-        return locker;
-    }
-
-    public void setLocker(DoorLocker locker) {
-        this.locker = locker;
     }
 }

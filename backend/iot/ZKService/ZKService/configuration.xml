@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<doorLocker>
-    <uuid>79b198e6-1fe7-4730-856a-96733628313f</uuid>
-    <configuration>
-        <uuid>df835156-52b5-4813-8b0b-75cf22ae3cc3</uuid>
-        <baudrate></baudrate>
-        <deviceId></deviceId>
-        <ipAddress>192.168.12.154</ipAddress>
-        <passwd></passwd>
-        <port>4370</port>
-        <protocol>TCP</protocol>
-        <timeout>10000</timeout>
-    </configuration>
-    <configuration>
-        <uuid>df835156-52b5-4813-8b0b-75cf22ae3cc4</uuid>
-        <baudrate></baudrate>
-        <deviceId></deviceId>
-        <ipAddress>192.168.12.155</ipAddress>
-        <passwd></passwd>
-        <port>4370</port>
-        <protocol>TCP</protocol>
-        <timeout>10000</timeout>
-    </configuration>
-    <room>
-        <uuid>e1be74f2-f288-4a3c-980d-5b90db992b9b</uuid>
-    </room>
-</doorLocker>
+<configuration>
+    <account>884dd991-d089-4bb8-a471-bbe1abeee3c7</account>
+    <doors>
+        <uuid>79b198e6-1fe7-4730-856a-96733628313f</uuid>
+        <roomConfiguration>
+            <uuid>df835156-52b5-4813-8b0b-75cf22ae3cc3</uuid>
+            <baudrate></baudrate>
+            <deviceId></deviceId>
+            <ipAddress>192.168.12.154</ipAddress>
+            <passwd></passwd>
+            <port>4370</port>
+            <protocol>TCP</protocol>
+            <timeout>10000</timeout>
+        </roomConfiguration>
+        <roomConfiguration>
+            <uuid>df835156-52b5-4813-8b0b-75cf22ae3cc4</uuid>
+            <baudrate></baudrate>
+            <deviceId></deviceId>
+            <ipAddress>192.168.12.155</ipAddress>
+            <passwd></passwd>
+            <port>4370</port>
+            <protocol>TCP</protocol>
+            <timeout>10000</timeout>
+        </roomConfiguration>
+    </doors>
+</configuration>
