@@ -1,5 +1,5 @@
-backend/iot/ZKService/ZKService/bin/
+backend/iot/ZKService/ZKService/bin/*
 backend/iot/ZKService/.vs/*
-backend/iot/ZKService/ZKService/obj/
-backend/iot/ZKAccessInstaller/Debug/
-backend/iot/ZKAccessInstaller/Release/
+backend/iot/ZKService/ZKService/obj/*
+backend/iot/ZKAccessInstaller/Debug
+backend/iot/ZKAccessInstaller/Release

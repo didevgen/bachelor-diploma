@@ -1,5 +1,6 @@
 package ua.nure.providence.controllers.zk;
 
+import com.querydsl.core.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -54,7 +55,7 @@ public class ZKController extends BaseController {
     @Autowired
     private IRedisRepository<String, String> redisRepository;
 
-    private static final String MS_BUILD_COMMAND = "cmd.exe /c  msbuild iot\\ZKService\\ZKService.sln /t:Build /p:Configuration=Release";
+    private static final String MS_BUILD_COMMAND = "cmd.exe /c start /wait devenv iot\\ZKService\\ZKService.sln /Build \"Debug\"";
 
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
     @ResponseBody
@@ -144,43 +145,56 @@ public class ZKController extends BaseController {
 
     @RequestMapping(value = "/windows/service", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getXMLConfiguration(@RequestParam(value = "token", required = true) String token) throws Exception {
-        lock.lock();
-        String uuid = redisRepository.get(token);
-        if (uuid == null) {
-            throw new RestException(HttpStatus.UNAUTHORIZED, 401001, "Token not found!");
-        }
-
-        redisRepository.refreshExpirationTime(token);
-        User user = userDAO.get(uuid);
-        if (user == null) {
-            throw new RestException(HttpStatus.UNAUTHORIZED, 401001, "User not found!");
-        }
-
-        List<DoorLocker> locker = dao.getAllDoorConfigurations(user.getAccount(),
-                Integer.MAX_VALUE, 0);
-
-        locker.forEach(doorLocker -> {
-            try {
-                new XmlConverter<DoorLocker>().convert(doorLocker, DoorLocker.class);
-            } catch (JAXBException | FileNotFoundException e) {
-                e.printStackTrace();
+    public ResponseEntity generateWindowsService(@RequestParam(value = "token", required = true) String token) throws Exception {
+        try {
+            lock.lock();
+            FileUtils.delete(new File("iot\\ZKService\\ZKAccessInstaller\\Debug"));
+            String uuid = redisRepository.get(token);
+            if (uuid == null) {
+                throw new RestException(HttpStatus.UNAUTHORIZED, 401001, "Token not found!");
             }
-        });
-        Process p = Runtime.getRuntime().exec(MS_BUILD_COMMAND);
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        while ((stdInput.readLine()) != null) {
+
+            redisRepository.refreshExpirationTime(token);
+            User user = userDAO.get(uuid);
+            if (user == null) {
+                throw new RestException(HttpStatus.UNAUTHORIZED, 401001, "User not found!");
+            }
+
+            List<DoorLocker> locker = dao.getAllDoorConfigurations(user.getAccount(),
+                    Integer.MAX_VALUE, 0);
+
+            locker.forEach(doorLocker -> {
+                try {
+                    new XmlConverter<DoorLocker>().convert(doorLocker, DoorLocker.class);
+                } catch (JAXBException | FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+            Process p = Runtime.getRuntime().exec(MS_BUILD_COMMAND);
+            p.waitFor();
+
+            File file = new File("iot\\ZKService\\ZKAccessInstaller\\Debug\\ZKAccessInstaller.msi");
+            long startTime = System.currentTimeMillis();
+            while (!file.exists()) {
+                if (startTime + 5000 > System.currentTimeMillis()) {
+                    lock.unlock();
+                    return new ResponseEntity(HttpStatus.REQUEST_TIMEOUT);
+                }
+            }
+            Path path = Paths.get(file.getAbsolutePath());
+            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+
+            lock.unlock();
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=\"ZKAccessInstaller.msi\"")
+                    .contentLength(file.length())
+                    .contentType(MediaType.parseMediaType("application/windows-installer-database"))
+                    .body(resource);
+        } catch (Exception ex){
+            lock.unlock();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        File file = new File("iot\\ZKService\\ZKAccessInstaller\\Debug\\ZKAccessInstaller.msi");
-        Path path = Paths.get(file.getAbsolutePath());
-        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 
-        lock.unlock();
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=\"ZKAccessInstaller.msi\"")
-                .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/windows-installer-database"))
-                .body(resource);
     }
 }
