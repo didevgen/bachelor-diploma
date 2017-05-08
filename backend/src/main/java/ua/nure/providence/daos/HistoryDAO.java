@@ -1,11 +1,14 @@
 package ua.nure.providence.daos;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.nure.providence.models.authentication.User;
+import ua.nure.providence.models.business.CardHolder;
+import ua.nure.providence.models.business.QCard;
 import ua.nure.providence.models.business.QCardHolder;
 import ua.nure.providence.models.business.QRoom;
 import ua.nure.providence.models.history.History;
@@ -91,7 +94,7 @@ public class HistoryDAO extends BaseDAO<History> {
     }
 
     public List<History> getRangedRoomHistory(String roomUuid, DateTime start, DateTime end,
-                                        User user, long limit, long offset) {
+                                              User user, long limit, long offset) {
         return new JPAQuery<History>(entityManager)
                 .from(QHistory.history)
                 .leftJoin(QHistory.history.room, QRoom.room)
@@ -107,7 +110,7 @@ public class HistoryDAO extends BaseDAO<History> {
     }
 
     public List<History> getRangedCardHolderHistory(String cardHolderUuid, User user, DateTime start,
-                                              DateTime end, long limit, long offset) {
+                                                    DateTime end, long limit, long offset) {
         return new JPAQuery<History>(entityManager)
                 .from(QHistory.history)
                 .leftJoin(QHistory.history.room, QRoom.room)
@@ -125,6 +128,27 @@ public class HistoryDAO extends BaseDAO<History> {
     public List<EventType> getEventTypes() {
         return new JPAQuery<EventType>(entityManager)
                 .from(QEventType.eventType)
+                .fetch();
+    }
+
+    public List<CardHolder> getPresentCardHoldersInRoom(String roomUuid) {
+        QHistory parent = new QHistory("parent");
+        QHistory child = new QHistory("child");
+        QCardHolder cardHolder = new QCardHolder("holder");
+        QRoom room = new QRoom("room");
+        return new JPAQuery<CardHolder>(entityManager)
+                .select(cardHolder)
+                .from(parent)
+                .leftJoin(parent.room, room)
+                .leftJoin(parent.cardHolder, cardHolder)
+                .where(room.uuid.eq(roomUuid).and(parent.inOutState.eq(1)))
+                .groupBy(cardHolder.id, cardHolder.uuid, cardHolder.fullName)
+                .having(parent.timeStamp.max().goe(
+                                JPAExpressions.select(child.timeStamp.max()).from(child)
+                                        .where(cardHolder.id.eq(child.cardHolder.id)
+                                                .and(child.room.uuid.eq(roomUuid))
+                                                .and(child.inOutState.eq(0))
+                                        )))
                 .fetch();
     }
 

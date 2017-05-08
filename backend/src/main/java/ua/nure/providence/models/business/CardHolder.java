@@ -1,9 +1,11 @@
 package ua.nure.providence.models.business;
 
 import ua.nure.providence.daos.CardDAO;
+import ua.nure.providence.daos.HistoryDAO;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.base.BaseEntity;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
+import ua.nure.providence.models.history.History;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ public class CardHolder extends BaseEntity {
 
     @ManyToMany(mappedBy = "holderSubscriptions", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> subscribers = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cardHolder")
+    private List<History> histories = new ArrayList<>();
 
     public CardHolder() {
     }
@@ -63,9 +68,19 @@ public class CardHolder extends BaseEntity {
         this.subscribers = subscribers;
     }
 
+    public List<History> getHistories() {
+        return histories;
+    }
+
+    public void setHistories(List<History> histories) {
+        this.histories = histories;
+    }
+
     @PreRemove
     private void preRemove() {
         CardDAO dao = new CardDAO();
+        HistoryDAO historyDAO = new HistoryDAO();
         this.getCards().forEach(dao::delete);
+        this.getHistories().forEach(historyDAO::delete);
     }
 }

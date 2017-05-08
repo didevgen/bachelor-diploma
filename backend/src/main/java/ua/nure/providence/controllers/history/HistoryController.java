@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.HistoryDAO;
 import ua.nure.providence.daos.RoomDAO;
+import ua.nure.providence.dtos.business.cardholder.NamedHolderDTO;
 import ua.nure.providence.dtos.history.HistoryDTO;
 import ua.nure.providence.exceptions.rest.RestException;
+import ua.nure.providence.models.business.Card;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
 import ua.nure.providence.models.history.History;
@@ -96,7 +98,7 @@ public class HistoryController {
 
     @RequestMapping(value = "/room/{uuid}/online", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<HistoryDTO>> getPresentPeopleInRoom(@PathVariable("uuid") String uuid,
+    public ResponseEntity<List<NamedHolderDTO>> getPresentPeopleInRoom(@PathVariable("uuid") String uuid,
                                                            @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
                                                            @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
@@ -104,8 +106,8 @@ public class HistoryController {
         }
         //TODO assume today only
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
-        List<History> histories = dao.getRoomHistory(uuid, token.getAuthenticatedUser(), limit, offset);
-        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
+        List<CardHolder> holders = dao.getPresentCardHoldersInRoom(uuid);
+        return ResponseEntity.ok(holders.stream().map(holder -> new NamedHolderDTO().convert(holder))
                 .collect(Collectors.toList()));
     }
 
