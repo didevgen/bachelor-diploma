@@ -11,6 +11,7 @@ import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.HistoryDAO;
 import ua.nure.providence.daos.RoomDAO;
 import ua.nure.providence.dtos.business.cardholder.NamedHolderDTO;
+import ua.nure.providence.dtos.business.room.RoomDTO;
 import ua.nure.providence.dtos.history.HistoryDTO;
 import ua.nure.providence.exceptions.rest.RestException;
 import ua.nure.providence.models.business.Card;
@@ -104,11 +105,19 @@ public class HistoryController {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
-        //TODO assume today only
-        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
-        List<CardHolder> holders = dao.getPresentCardHoldersInRoom(uuid);
+        List<CardHolder> holders = dao.getPresentCardHoldersInRoom(uuid, limit, offset);
         return ResponseEntity.ok(holders.stream().map(holder -> new NamedHolderDTO().convert(holder))
                 .collect(Collectors.toList()));
+    }
+
+    @RequestMapping(value = "/cardHolder/{uuid}/find", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<RoomDTO> findCardHolderPlace(@PathVariable("uuid") String uuid) {
+        Room room = dao.findCardHolderPosition(uuid);
+        if (room == null) {
+            return ResponseEntity.ok(new RoomDTO());
+        }
+        return ResponseEntity.ok(new RoomDTO().convert(room));
     }
 
 }

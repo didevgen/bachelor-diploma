@@ -7,15 +7,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.nure.providence.models.authentication.User;
-import ua.nure.providence.models.business.CardHolder;
-import ua.nure.providence.models.business.QCard;
-import ua.nure.providence.models.business.QCardHolder;
-import ua.nure.providence.models.business.QRoom;
+import ua.nure.providence.models.business.*;
 import ua.nure.providence.models.history.History;
 import ua.nure.providence.models.history.QHistory;
 import ua.nure.providence.models.zk.internal.EventType;
 import ua.nure.providence.models.zk.internal.QEventType;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -131,7 +129,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .fetch();
     }
 
-    public List<CardHolder> getPresentCardHoldersInRoom(String roomUuid) {
+    public List<CardHolder> getPresentCardHoldersInRoom(String roomUuid, long limit, long offset) {
         QHistory parent = new QHistory("parent");
         QHistory child = new QHistory("child");
         QCardHolder cardHolder = new QCardHolder("holder");
@@ -144,12 +142,39 @@ public class HistoryDAO extends BaseDAO<History> {
                 .where(room.uuid.eq(roomUuid).and(parent.inOutState.eq(1)))
                 .groupBy(cardHolder.id, cardHolder.uuid, cardHolder.fullName)
                 .having(parent.timeStamp.max().goe(
-                                JPAExpressions.select(child.timeStamp.max()).from(child)
-                                        .where(cardHolder.id.eq(child.cardHolder.id)
-                                                .and(child.room.uuid.eq(roomUuid))
-                                                .and(child.inOutState.eq(0))
-                                        )))
+                        JPAExpressions.select(child.timeStamp.max()).from(child)
+                                .where(cardHolder.id.eq(child.cardHolder.id)
+                                        .and(child.room.uuid.eq(roomUuid))
+                                        .and(child.inOutState.eq(0))
+                                )))
+                .limit(limit).offset(offset)
                 .fetch();
+    }
+
+    public Room findCardHolderPosition(String holderUuid) {
+        DateTime latestEntrance = new JPAQuery<DateTime>(entityManager)
+                .select(QHistory.history.timeStamp.max())
+                .from(QHistory.history)
+                .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
+                .where(QCardHolder.cardHolder.uuid.eq(holderUuid).and(QHistory.history.inOutState.eq(1)))
+                .fetchOne();
+        DateTime latestExit = new JPAQuery<DateTime>(entityManager)
+                .select(QHistory.history.timeStamp.max())
+                .from(QHistory.history)
+                .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
+                .where(QCardHolder.cardHolder.uuid.eq(holderUuid).and(QHistory.history.inOutState.eq(0)))
+                .fetchOne();
+        if (latestEntrance.getMillis() > latestExit.getMillis()) {
+            QHistory history = new QHistory("history");
+            QRoom room = new QRoom("room");
+            return new JPAQuery<History>(entityManager)
+                    .select(room)
+                    .from(history)
+                    .leftJoin(history.room, room)
+                    .where(history.timeStamp.eq(latestEntrance))
+                    .fetchOne();
+        }
+        return null;
     }
 
     @Override
