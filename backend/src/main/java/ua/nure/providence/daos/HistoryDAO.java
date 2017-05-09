@@ -12,9 +12,11 @@ import ua.nure.providence.models.history.History;
 import ua.nure.providence.models.history.QHistory;
 import ua.nure.providence.models.zk.internal.EventType;
 import ua.nure.providence.models.zk.internal.QEventType;
+import static com.querydsl.core.group.GroupBy.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Providence Team on 06.05.2017.
@@ -59,6 +61,18 @@ public class HistoryDAO extends BaseDAO<History> {
                 .limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
                 .fetch();
+    }
+
+    public Map<Room, List<History>> getCardHolderSessions(String cardHolderUuid, User user) {
+        return new JPAQuery<History>(entityManager)
+                .from(QHistory.history)
+                .leftJoin(QHistory.history.room, QRoom.room)
+                .leftJoin(QHistory.history.eventType, QEventType.eventType)
+                .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
+                .where(QRoom.room.account.eq(user.getAccount())
+                        .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid)))
+                .orderBy(QHistory.history.timeStamp.asc())
+                .transform(groupBy(QRoom.room).as(list(QHistory.history)));
     }
 
     public List<History> getCardHolderHistoryInRoom(String cardHolderUuid, String roomUuid,

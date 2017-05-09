@@ -1,29 +1,24 @@
 package ua.nure.providence.controllers.history;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.HistoryDAO;
-import ua.nure.providence.daos.RoomDAO;
 import ua.nure.providence.dtos.business.cardholder.NamedHolderDTO;
 import ua.nure.providence.dtos.business.room.RoomDTO;
 import ua.nure.providence.dtos.history.HistoryDTO;
-import ua.nure.providence.exceptions.rest.RestException;
-import ua.nure.providence.models.business.Card;
+import ua.nure.providence.dtos.history.session.HolderSessionDTO;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
 import ua.nure.providence.models.history.History;
-import ua.nure.providence.models.zk.internal.EventType;
 import ua.nure.providence.utils.auth.LoginToken;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -118,6 +113,24 @@ public class HistoryController {
             return ResponseEntity.ok(new RoomDTO());
         }
         return ResponseEntity.ok(new RoomDTO().convert(room));
+    }
+
+    @RequestMapping(value = "/cardHolder/{uuid}/sessions", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<HolderSessionDTO>> getCardHolderSessions(@PathVariable("uuid") String uuid) {
+        List<HolderSessionDTO> result = new ArrayList<>();
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        Map<Room, List<History>> histories = dao.getCardHolderSessions(uuid, token.getAuthenticatedUser());
+        for (Map.Entry<Room, List<History>> entry : histories.entrySet()) {
+            List<History> entries = entry.getValue().stream().filter(history -> history.getInOutState() == 1)
+                    .sorted(Comparator.comparing(History::getTimeStamp))
+                    .collect(Collectors.toList());
+            List<History> exits = entry.getValue().stream().filter(history -> history.getInOutState() == 0)
+                    .sorted(Comparator.comparing(History::getTimeStamp))
+                    .collect(Collectors.toList());
+        }
+        return null;
+
     }
 
 }
