@@ -1,5 +1,7 @@
 package ua.nure.providence.controllers.history;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,15 +12,13 @@ import ua.nure.providence.dtos.business.cardholder.NamedHolderDTO;
 import ua.nure.providence.dtos.business.room.RoomDTO;
 import ua.nure.providence.dtos.history.HistoryDTO;
 import ua.nure.providence.dtos.history.session.HolderSessionDTO;
+import ua.nure.providence.dtos.history.session.IntermediateSessionDTO;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
 import ua.nure.providence.models.history.History;
 import ua.nure.providence.utils.auth.LoginToken;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -121,15 +121,70 @@ public class HistoryController {
         List<HolderSessionDTO> result = new ArrayList<>();
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
         Map<Room, List<History>> histories = dao.getCardHolderSessions(uuid, token.getAuthenticatedUser());
+
         for (Map.Entry<Room, List<History>> entry : histories.entrySet()) {
+
             List<History> entries = entry.getValue().stream().filter(history -> history.getInOutState() == 1)
                     .sorted(Comparator.comparing(History::getTimeStamp))
                     .collect(Collectors.toList());
             List<History> exits = entry.getValue().stream().filter(history -> history.getInOutState() == 0)
                     .sorted(Comparator.comparing(History::getTimeStamp))
                     .collect(Collectors.toList());
+
+            for (History exit : exits) {
+                List<History> entrances = entries.stream()
+                        .filter(entrance -> entrance.getTimeStamp().compareTo(exit.getTimeStamp()) <= 0)
+                        .sorted(Comparator.comparing(History::getTimeStamp))
+                        .collect(Collectors.toList());
+
+                if (entrances.size() > 0) {
+                    List<HolderSessionDTO> entrancesWithExit = new ArrayList<>();
+                    entrances.forEach(subItem -> {
+                        if (subItem.getTimeStamp().toLocalDate().compareTo(exit.getTimeStamp().toLocalDate()) == 0) {
+                            HolderSessionDTO sessionItem = new HolderSessionDTO(
+                                    subItem.getTimeStamp().toString(),
+                                    exit.getTimeStamp().toString(),
+                                    new RoomDTO().convert(entry.getKey()));
+                            entrancesWithExit.add(sessionItem);
+                        } else {
+                            HolderSessionDTO sessionItem = new HolderSessionDTO(
+                                    subItem.getTimeStamp().toString(),
+                                    subItem.getTimeStamp().toLocalDate().toString(),
+                                    new RoomDTO().convert(entry.getKey()));
+                            entrancesWithExit.add(sessionItem);
+                        }
+                    });
+                    if (entrancesWithExit.stream().noneMatch(elem ->
+                            elem.getSessionEnd().equals(exit.getTimeStamp().toString()))) {
+                        HolderSessionDTO sessionItem = new HolderSessionDTO(
+                                exit.getTimeStamp().toLocalDate().toString(),
+                                exit.getTimeStamp().toString(),
+                                new RoomDTO().convert(entry.getKey()));
+                        entrancesWithExit.add(sessionItem);
+                    }
+                    result.addAll(entrancesWithExit);
+                } else {
+                    HolderSessionDTO sessionItem = new HolderSessionDTO(
+                            exit.getTimeStamp().toLocalDate().toString(),
+                            exit.getTimeStamp().toString(),
+                            new RoomDTO().convert(exit.getRoom()));
+                    result.add(sessionItem);
+                }
+
+                entries = entries.stream().filter(item -> !entrances.contains(item))
+                        .collect(Collectors.toList());
+            }
+
+            for (History item : entries) {
+                HolderSessionDTO sessionItem = new HolderSessionDTO(
+                        item.getTimeStamp().toString(),
+                        item.getTimeStamp().toLocalDate().plusDays(1)
+                                .toDateTimeAtStartOfDay().minusMinutes(1).toString(),
+                        new RoomDTO().convert(item.getRoom()));
+                result.add(sessionItem);
+            }
         }
-        return null;
+        return ResponseEntity.ok(result);
 
     }
 

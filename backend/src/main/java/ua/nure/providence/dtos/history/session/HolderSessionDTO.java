@@ -15,14 +15,11 @@ public class HolderSessionDTO {
 
     private String sessionEnd;
 
-    private List<IntermediateSessionDTO> subSessions;
-
     private RoomDTO room;
 
-    public HolderSessionDTO(String sessionStart, String sessionEnd, List<IntermediateSessionDTO> subSessions, RoomDTO room) {
+    public HolderSessionDTO(String sessionStart, String sessionEnd, RoomDTO room) {
         this.sessionStart = sessionStart;
         this.sessionEnd = sessionEnd;
-        this.subSessions = subSessions;
         this.room = room;
     }
 
@@ -40,14 +37,6 @@ public class HolderSessionDTO {
 
     public void setSessionEnd(String sessionEnd) {
         this.sessionEnd = sessionEnd;
-    }
-
-    public List<IntermediateSessionDTO> getSubSessions() {
-        return subSessions;
-    }
-
-    public void setSubSessions(List<IntermediateSessionDTO> subSessions) {
-        this.subSessions = subSessions;
     }
 
     public RoomDTO getRoom() {
