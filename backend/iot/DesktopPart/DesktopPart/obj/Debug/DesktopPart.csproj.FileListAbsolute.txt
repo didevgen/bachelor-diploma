@@ -1,0 +1,10 @@
+D:\C#\DesktopPart\DesktopPart\bin\Debug\DesktopPart.exe.config
+D:\C#\DesktopPart\DesktopPart\bin\Debug\DesktopPart.exe
+D:\C#\DesktopPart\DesktopPart\bin\Debug\DesktopPart.pdb
+D:\C#\DesktopPart\DesktopPart\obj\Debug\DesktopPart.csprojResolveAssemblyReference.cache
+D:\C#\DesktopPart\DesktopPart\obj\Debug\DesktopPart.exe
+D:\C#\DesktopPart\DesktopPart\obj\Debug\DesktopPart.pdb
+D:\C#\DesktopPart\DesktopPart\bin\Debug\websocket-sharp.dll
+D:\C#\DesktopPart\DesktopPart\bin\Debug\websocket-sharp.pdb
+D:\C#\DesktopPart\DesktopPart\bin\Debug\Newtonsoft.Json.dll
+D:\C#\DesktopPart\DesktopPart\bin\Debug\Newtonsoft.Json.xml
