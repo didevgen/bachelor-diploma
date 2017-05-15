@@ -9,7 +9,7 @@ namespace ZKService.State
 {
     interface IConnection
     {
-        bool Connect(string deviceId, ConnectionParams connection);
+        IntPtr Connect(string deviceId, ConnectionParams connection);
 
         bool Disconnect(string deviceId);
     }

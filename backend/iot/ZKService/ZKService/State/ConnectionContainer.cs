@@ -21,7 +21,7 @@ namespace ZKService.State
 
         private IDictionary<string, IntPtr> connections = new Dictionary<string, IntPtr>();
 
-        public bool Connect(string deviceId, ConnectionParams parameters)
+        public IntPtr Connect(string deviceId, ConnectionParams parameters)
         {
             if (!this.connections.ContainsKey(deviceId))
             {
@@ -30,14 +30,14 @@ namespace ZKService.State
                     this.BreakConnection(deviceId, 10 * 60 * 1000);
                     IntPtr handle = ZKApi.Connect(parameters.ToString());
                     connections.Add(deviceId, handle);
-                    return true;
+                    return handle;
                 }
                 catch (Exception ex)
                 {
-                    return false;
+                    return IntPtr.Zero;
                 }
             }
-            return true;
+            return connections[deviceId];
         }
 
         public bool Disconnect(string deviceId)
