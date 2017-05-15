@@ -1,5 +1,6 @@
 package ua.nure.providence.controllers.login;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -8,11 +9,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.controllers.BaseController;
 import ua.nure.providence.daos.UserDAO;
+import ua.nure.providence.dtos.auth.TokenDTO;
 import ua.nure.providence.dtos.login.LoginDTO;
 import ua.nure.providence.dtos.user.UserDTO;
 import ua.nure.providence.exceptions.rest.RestException;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.services.AuthToken;
+import ua.nure.providence.services.oauth.IdTokenVerifierAndParser;
 import ua.nure.providence.services.redis.IRedisRepository;
 import ua.nure.providence.utils.MD5;
 import ua.nure.providence.utils.auth.LoginToken;
@@ -55,5 +58,13 @@ public class LoginController extends BaseController {
 
         response.setHeader(env.getProperty("token.header"), authToken.getTokenValue());
         return ResponseEntity.ok(new UserDTO().convert(user));
+    }
+
+    @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> authorizeGoogle(@RequestBody TokenDTO tokenDTO) throws Exception {
+        GoogleIdToken.Payload payLoad = IdTokenVerifierAndParser.getPayload(env.getProperty("security.oauth2.client.clientId"), tokenDTO.getToken());
+        String email = payLoad.getEmail();
+        return ResponseEntity.ok(email);
     }
 }

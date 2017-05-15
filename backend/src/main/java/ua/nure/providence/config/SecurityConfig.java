@@ -12,9 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import ua.nure.providence.utils.auth.BaseAuthenticationProvider;
-import ua.nure.providence.utils.auth.SuccessHandler;
 import ua.nure.providence.filters.AuthFilter;
+import ua.nure.providence.utils.auth.BaseAuthenticationProvider;
 
 import java.util.Arrays;
 
@@ -31,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/login")
                 .and().ignoring().antMatchers(HttpMethod.POST, "/api/v1/logout")
+                .and().ignoring().antMatchers(HttpMethod.POST, "/api/v1/verifyToken")
                 .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/swagger-ui.html")
                 .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/swagger-resources/**")
                 .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/v2/**")
