@@ -25,6 +25,10 @@ public class RedisRepository implements IRedisRepository<String, String> {
     }
 
     @Override
+    public void insert(String key, String value, long time) {
+        valueOps.set(key, value, time, TimeUnit.SECONDS);
+    }
+    @Override
     public void insert(String key, String value) {
         valueOps.set(key, value, 1, TimeUnit.DAYS);
     }

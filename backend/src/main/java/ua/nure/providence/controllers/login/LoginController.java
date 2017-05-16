@@ -63,8 +63,27 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> authorizeGoogle(@RequestBody TokenDTO tokenDTO) throws Exception {
-        GoogleIdToken.Payload payLoad = IdTokenVerifierAndParser.getPayload(env.getProperty("security.oauth2.client.clientId"), tokenDTO.getToken());
+        GoogleIdToken.Payload payLoad;
+        try {
+            payLoad = IdTokenVerifierAndParser.getPayload(env.getProperty("security.oauth2.client.clientId"), tokenDTO.getToken());
+        } catch (Exception ex) {
+            throw new RestException(HttpStatus.UNAUTHORIZED, 401002, "Invalid token was provided");
+        }
         String email = payLoad.getEmail();
+        User user = dao.getByEmail(email);
+
+        if (user == null) {
+            throw new RestException(HttpStatus.NOT_FOUND, 404001, "Specified user not found");
+        }
+
+        redisRepository.insert(tokenDTO.getToken(), user.getUuid(),  payLoad.getExpirationTimeSeconds());
+        AuthToken authToken = new AuthToken(tokenDTO.getToken(),
+                user.getUuid());
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(new LoginToken(user.getEmail(), user.getPassword(),
+                        authToken, user));
+
         return ResponseEntity.ok(email);
     }
 }

@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnInit } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { LoginClient } from "./login.client";
-import { AuthService } from "../../services/authentication/auth.service";
-import { LoginResponse } from "../../models/auth/auth.models";
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginClient } from './login.client';
+import { AuthService } from '../../services/authentication/auth.service';
+import { LoginResponse } from '../../models/auth/auth.models';
 
 declare const gapi: any;
 @Component({
@@ -56,14 +56,17 @@ export class Login implements OnInit, AfterViewInit {
     this.auth2.attachClickHandler(element, {},
       (googleUser) => {
 
-        let profile = googleUser.getBasicProfile();
+        const profile = googleUser.getBasicProfile();
         localStorage.setItem('token', googleUser.getAuthResponse().id_token);
         localStorage.setItem('google_image', profile.getImageUrl());
         localStorage.setItem('google_name', profile.getName());
         localStorage.setItem('google_email', profile.getEmail());
         localStorage.setItem('google_id', profile.getId());
         this.loginClient.oauthLogin(googleUser.getAuthResponse().id_token).subscribe((result: any) => {
-        })
+          console.log(result);
+        }, error => {
+          console.log(error);
+        });
       });
   }
 
@@ -78,8 +81,9 @@ export class Login implements OnInit, AfterViewInit {
     this.submitted = true;
     if (this.form.valid) {
       this.loginClient.login(values.email, values.password).subscribe((result: any) => {
+        console.log(result);
         localStorage.setItem('token', result.headers.get('x-auth-token'));
-      })
+      }, error => {});
     }
   }
 }
