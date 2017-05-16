@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ErrorObservable } from 'rxjs/observable/errorobservable';
 import 'rxjs/add/operator/catch';
 import { AuthHttp } from './http/auth.http';
+import { BaseError } from '../models/error/error.models';
 
 declare var gApiBaseAddress: any;
 
@@ -85,7 +86,7 @@ export class ApiClient implements IApiClient {
     return observable;
   }
 
-  public delete(path: string, data?: any, options?: RequestOptionsArgs): Observable<any> {
+  public delete<T>(path: string, data?: any, options?: RequestOptionsArgs): Observable<T> {
     const observable = this.http
       .delete(this.createUrl(path), data, this.buildRequestOptions(options))
       .map(r => {
@@ -110,9 +111,9 @@ export class ApiClient implements IApiClient {
     return response.json ? response.json() : response;
   }
 
-  private throwError = (error: any): ErrorObservable => {
+  private throwError(error: any): ErrorObservable<any> {
     if (error.json) {
-      return Observable.throw(error);
+      return Observable.throw(error.json());
     } else {
       const errorMessage = this.getErrorMessage(error);
       return Observable.throw(errorMessage);

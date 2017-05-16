@@ -1,22 +1,22 @@
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpModule } from "@angular/http";
-import { RouterModule } from "@angular/router";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 /*
  * Platform and Environment providers/directives/pipes
  */
-import { routing } from "./app.routing";
+import { routing } from './app.routing';
 // App is our top level component
-import { App } from "./app.component";
-import { AppState, InternalStateType } from "./app.service";
-import { GlobalState } from "./global.state";
-import { NgaModule } from "./theme/nga.module";
-import { PagesModule } from "./pages/pages.module";
-import { AuthService } from "./services/authentication/auth.service";
-import { AuthHttp } from "./services/http/auth.http";
-
+import { App } from './app.component';
+import { AppState, InternalStateType } from './app.service';
+import { GlobalState } from './global.state';
+import { NgaModule } from './theme/nga.module';
+import { PagesModule } from './pages/pages.module';
+import { AuthService } from './services/authentication/auth.service';
+import { AuthHttp } from './services/http/auth.http';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -49,11 +49,13 @@ export type StoreType = {
     NgaModule.forRoot(),
     NgbModule.forRoot(),
     PagesModule,
+    ToasterModule,
     routing
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     APP_PROVIDERS
-  ]
+  ],
+
 })
 
 export class AppModule {

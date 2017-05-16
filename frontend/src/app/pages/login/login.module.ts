@@ -5,7 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
 import { Login } from './login.component';
 import { routing }       from './login.routing';
-import { LoginClient } from "./login.client";
+import { LoginClient } from './login.client';
+import { ToasterModule } from 'angular2-toaster';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { LoginClient } from "./login.client";
     ReactiveFormsModule,
     FormsModule,
     NgaModule,
+    ToasterModule,
     routing
   ],
   declarations: [

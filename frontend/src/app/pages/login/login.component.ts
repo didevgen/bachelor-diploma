@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, NgZone } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToasterService } from 'angular2-toaster';
 import { LoginClient } from './login.client';
 import { AuthService } from '../../services/authentication/auth.service';
 import { LoginResponse } from '../../models/auth/auth.models';
@@ -24,6 +25,8 @@ export class Login implements OnInit, AfterViewInit {
 
   constructor(private fb: FormBuilder,
               private loginClient: LoginClient,
+              private toasterService: ToasterService,
+              private ngZone: NgZone,
               private authService: AuthService) {
   }
 
@@ -63,9 +66,12 @@ export class Login implements OnInit, AfterViewInit {
         localStorage.setItem('google_email', profile.getEmail());
         localStorage.setItem('google_id', profile.getId());
         this.loginClient.oauthLogin(googleUser.getAuthResponse().id_token).subscribe((result: any) => {
-          console.log(result);
+          this.authService.user = result.user;
+          localStorage.setItem('token', result.headers.get('x-auth-token'));
         }, error => {
-          console.log(error);
+          this.ngZone.runGuarded(() => {
+            this.toasterService.pop('error', 'Error', error.message);
+          });
         });
       });
   }
@@ -78,12 +84,15 @@ export class Login implements OnInit, AfterViewInit {
   }
 
   public onSubmit(values: { email: string, password: string }): void {
+    this.toasterService.pop('success', 'Args Title', 'Args Body');
     this.submitted = true;
     if (this.form.valid) {
-      this.loginClient.login(values.email, values.password).subscribe((result: any) => {
-        console.log(result);
+      this.loginClient.login(values.email, values.password).subscribe((result: LoginResponse) => {
+        this.authService.user = result.user;
         localStorage.setItem('token', result.headers.get('x-auth-token'));
-      }, error => {});
+      }, error => {
+        this.toasterService.pop('error', 'Error', error.message);
+      });
     }
   }
 }
