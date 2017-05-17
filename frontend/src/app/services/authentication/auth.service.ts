@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Headers, Http, RequestOptionsArgs } from '@angular/http';
 import { User } from '../../models/auth/auth.models';
@@ -7,10 +8,11 @@ import { User } from '../../models/auth/auth.models';
 export class AuthService {
 
   private readonly TOKEN_NAME = 'token';
+  private readonly TOKEN_EXPIRATION = 'token-expires';
 
   private _user: User;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private router: Router) {
   }
 
   public set user(value: User) {
@@ -22,11 +24,15 @@ export class AuthService {
   }
 
   public get isAuthenticated(): boolean {
-    return this._user !== null && !!localStorage.getItem(this.TOKEN_NAME);
+    return !!this.getToken() && this.isTokenExpired();
   };
 
   public getToken(): string {
     return localStorage.getItem(this.TOKEN_NAME);
+  }
+
+  public isTokenExpired(): boolean {
+    return +localStorage.getItem(this.TOKEN_EXPIRATION) <= new Date().getTime();
   }
 
   public makeAuthenticatedCall(url: string, options: RequestOptionsArgs) {
@@ -44,11 +50,15 @@ export class AuthService {
       options.headers.set('x-auth-token', this.getToken());
       return this.http.request(url, options).catch(this.handleError);
     } else {
+      this.router.navigate(['/login']);
       return Observable.throw(new Error('User Not Authenticated.'));
     }
   }
 
   private handleError(error: any): Observable<any> {
+    if (error.code === 401 || error.code === 403) {
+      this.router.navigate(['/login']);
+    }
     return Observable.throw(error);
   }
 

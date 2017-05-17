@@ -39,7 +39,7 @@ public class BaseAuthenticationProvider implements AuthenticationProvider {
         } catch (NoSuchAlgorithmException e) {
             throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, 500000, "Encryption algorithm error");
         }
-        AuthToken authToken = new AuthToken(tokenGenerator.issueToken(user.getUuid()), user.getUuid());
+        AuthToken authToken = new AuthToken(tokenGenerator.issueToken(user.getUuid(), 3600), user.getUuid());
         return new LoginToken(user.getEmail(), user.getPassword(), authToken, user);
     }
 

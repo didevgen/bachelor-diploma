@@ -30,7 +30,7 @@ public class RedisRepository implements IRedisRepository<String, String> {
     }
     @Override
     public void insert(String key, String value) {
-        valueOps.set(key, value, 1, TimeUnit.DAYS);
+        valueOps.set(key, value, 1, TimeUnit.HOURS);
     }
 
     @Override

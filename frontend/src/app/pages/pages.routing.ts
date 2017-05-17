@@ -1,6 +1,7 @@
 import { Routes, RouterModule }  from '@angular/router';
 import { Pages } from './pages.component';
 import { ModuleWithProviders } from '@angular/core';
+import { AuthenticationResolve } from '../resolvers/authoriation.resolve';
 // noinspection TypeScriptValidateTypes
 
 // export function loadChildren(path) { return System.import(path); };
@@ -16,6 +17,7 @@ export const routes: Routes = [
   },
   {
     path: 'pages',
+    resolve: { isAuthorized: AuthenticationResolve },
     component: Pages,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

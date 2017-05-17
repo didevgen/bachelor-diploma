@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { Headers, RequestMethod, RequestOptions, RequestOptionsArgs, URLSearchParams } from "@angular/http";
-import { Observable } from "rxjs";
-import { AuthService } from "../authentication/auth.service";
+import { Injectable } from '@angular/core';
+import { Headers, RequestMethod, RequestOptions, RequestOptionsArgs, URLSearchParams } from '@angular/http';
+import { Observable } from 'rxjs';
+import { AuthService } from '../authentication/auth.service';
 
 @Injectable()
 export class AuthHttp {
@@ -47,7 +47,7 @@ export class AuthHttp {
   }
 
   private sendRequest(url: string, options: RequestOptionsArgs): Observable<any> {
-    let newOptions = new RequestOptions();
+    const newOptions = new RequestOptions();
     newOptions.method = options.method;
 
     if (options.search != null) {

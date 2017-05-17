@@ -14,9 +14,9 @@ public class TokenGenerator {
     private IRedisRepository redisRepository;
     private Random random = new SecureRandom();
 
-    public String issueToken(String uuid) {
+    public String issueToken(String uuid, long expires) {
         String tokenValue = new BigInteger(130, random).toString(32);
-        redisRepository.insert(tokenValue, uuid);
+        redisRepository.insert(tokenValue, uuid, expires);
         return tokenValue;
     }
 

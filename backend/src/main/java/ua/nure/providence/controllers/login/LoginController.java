@@ -49,7 +49,9 @@ public class LoginController extends BaseController {
         User user = dao.getByEmailAndPassword(loginDTO.getEmail(), MD5.encrypt(loginDTO.getPassword()))
                 .orElseThrow(() ->
                         new RestException(HttpStatus.NOT_FOUND, 404001, "Specified user not found"));
-        AuthToken authToken = new AuthToken(tokenGenerator.issueToken(user.getUuid()),
+        long tokenLifetime = 3600;
+
+        AuthToken authToken = new AuthToken(tokenGenerator.issueToken(user.getUuid(), tokenLifetime),
                 user.getUuid());
 
         SecurityContextHolder.getContext()
@@ -57,12 +59,13 @@ public class LoginController extends BaseController {
                         authToken, user));
 
         response.setHeader(env.getProperty("token.header"), authToken.getTokenValue());
+        response.setHeader(env.getProperty("token.expire.header"), String.valueOf(System.currentTimeMillis() + tokenLifetime * 1000));
         return ResponseEntity.ok(new UserDTO().convert(user));
     }
 
     @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> authorizeGoogle(@RequestBody TokenDTO tokenDTO) throws Exception {
+    public ResponseEntity<String> authorizeGoogle(@RequestBody TokenDTO tokenDTO, HttpServletResponse response) throws Exception {
         GoogleIdToken.Payload payLoad;
         try {
             payLoad = IdTokenVerifierAndParser.getPayload(env.getProperty("security.oauth2.client.clientId"), tokenDTO.getToken());
@@ -76,14 +79,15 @@ public class LoginController extends BaseController {
             throw new RestException(HttpStatus.NOT_FOUND, 404001, "Specified user not found");
         }
 
-        redisRepository.insert(tokenDTO.getToken(), user.getUuid(),  payLoad.getExpirationTimeSeconds());
+        redisRepository.insert(tokenDTO.getToken(), user.getUuid(),  payLoad.getExpirationTimeSeconds() * 1000 - System.currentTimeMillis());
         AuthToken authToken = new AuthToken(tokenDTO.getToken(),
                 user.getUuid());
 
         SecurityContextHolder.getContext()
                 .setAuthentication(new LoginToken(user.getEmail(), user.getPassword(),
                         authToken, user));
-
+        response.setHeader(env.getProperty("token.header"), authToken.getTokenValue());
+        response.setHeader(env.getProperty("token.expire.header"), String.valueOf(payLoad.getAuthorizationTimeSeconds() * 1000));
         return ResponseEntity.ok(email);
     }
 }

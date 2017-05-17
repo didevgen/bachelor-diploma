@@ -9,7 +9,7 @@ export class Layouts {
 
   public defaultPicture = 'assets/img/theme/no-photo.png';
   public profile:any = {
-    picture: 'assets/img/app/profile/Nasta.png'
+    picture: 'https://lh3.googleusercontent.com/-z_36zrxoDk8/AAAAAAAAAAI/AAAAAAAAAEU/RgBNBQBTXK0/s96-c/photo.jpg'
   };
   public uploaderOptions:NgUploaderOptions = {
     // url: 'http://website.com/upload'
@@ -20,7 +20,7 @@ export class Layouts {
     // url: 'http://website.com/upload'
     url: '',
   };
-  
+
   constructor() {
   }
 

@@ -16,14 +16,16 @@ import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 import { AuthService } from './services/authentication/auth.service';
 import { AuthHttp } from './services/http/auth.http';
-import { ToasterModule, ToasterService } from 'angular2-toaster';
+import { ToasterModule } from 'angular2-toaster';
+import { AuthenticationResolve } from './resolvers/authoriation.resolve';
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
   GlobalState,
   AuthService,
-  AuthHttp
+  AuthHttp,
+  AuthenticationResolve
 ];
 
 export type StoreType = {

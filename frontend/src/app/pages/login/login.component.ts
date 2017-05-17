@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnInit, NgZone } from '@angular/core';
+import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToasterService } from 'angular2-toaster';
 import { LoginClient } from './login.client';
@@ -27,6 +28,7 @@ export class Login implements OnInit, AfterViewInit {
               private loginClient: LoginClient,
               private toasterService: ToasterService,
               private ngZone: NgZone,
+              private router: Router,
               private authService: AuthService) {
   }
 
@@ -66,8 +68,7 @@ export class Login implements OnInit, AfterViewInit {
         localStorage.setItem('google_email', profile.getEmail());
         localStorage.setItem('google_id', profile.getId());
         this.loginClient.oauthLogin(googleUser.getAuthResponse().id_token).subscribe((result: any) => {
-          this.authService.user = result.user;
-          localStorage.setItem('token', result.headers.get('x-auth-token'));
+          this.handleSuccessLogin(result);
         }, error => {
           this.ngZone.runGuarded(() => {
             this.toasterService.pop('error', 'Error', error.message);
@@ -88,11 +89,17 @@ export class Login implements OnInit, AfterViewInit {
     this.submitted = true;
     if (this.form.valid) {
       this.loginClient.login(values.email, values.password).subscribe((result: LoginResponse) => {
-        this.authService.user = result.user;
-        localStorage.setItem('token', result.headers.get('x-auth-token'));
+        this.handleSuccessLogin(result);
       }, error => {
         this.toasterService.pop('error', 'Error', error.message);
       });
     }
+  }
+
+  private handleSuccessLogin(result: LoginResponse): void {
+    this.authService.user = result.user;
+    localStorage.setItem('token', result.headers.get('x-auth-token'));
+    localStorage.setItem('token_expire', result.headers.get('token-expires'));
+    this.router.navigateByUrl('/');
   }
 }
