@@ -29,14 +29,15 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .where(QCardHolder.cardHolder.uuid.eq(uuid))
                 .fetchOne();
     }
+
     public List<CardHolder> getAll(Account account, long limit, long offset) {
-        return new JPAQuery<CardHolder>(entityManager)
-                .from(QCardHolder.cardHolder)
-                .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
-                .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
-                .where(QStructuralCategory.structuralCategory.account.eq(account))
+        return this.getAllBaseQuery(account)
                 .orderBy(QCardHolder.cardHolder.fullName.asc())
                 .limit(limit).offset(offset).fetch();
+    }
+
+    public long getCount(Account account) {
+        return this.getAllBaseQuery(account).fetchCount();
     }
 
     @Override
@@ -45,5 +46,13 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .from(QCardHolder.cardHolder)
                 .where(QCardHolder.cardHolder.uuid.eq(uuid))
                 .fetchCount() > 0;
+    }
+
+    private JPAQuery<CardHolder> getAllBaseQuery(Account account) {
+        return new JPAQuery<CardHolder>(entityManager)
+                .from(QCardHolder.cardHolder)
+                .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
+                .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
+                .where(QStructuralCategory.structuralCategory.account.eq(account));
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.controllers.BaseController;
 import ua.nure.providence.daos.LockerDAO;
 import ua.nure.providence.daos.RoomDAO;
+import ua.nure.providence.dtos.BaseListDTO;
 import ua.nure.providence.dtos.business.room.RoomDTO;
 import ua.nure.providence.dtos.business.room.RoomUpdateDTO;
 import ua.nure.providence.exceptions.rest.RestException;
@@ -44,17 +45,18 @@ public class RoomController extends BaseController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<RoomDTO>> getRooms(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+    public ResponseEntity<BaseListDTO<RoomDTO>> getRooms(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
                                                   @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        long count = dao.getCount(token.getAuthenticatedUser().getAccount());
 
         List<RoomDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), limit, offset).stream()
                         .map(room -> new RoomDTO().convert(room))
                         .collect(Collectors.toList());
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new BaseListDTO<>(result, limit, offset, count));
     }
 
     @RequestMapping(value = "{uuid}", method = RequestMethod.PUT)

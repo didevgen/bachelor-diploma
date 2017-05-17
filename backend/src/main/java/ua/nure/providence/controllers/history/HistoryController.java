@@ -1,24 +1,26 @@
 package ua.nure.providence.controllers.history;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+import com.mysema.commons.lang.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.daos.HistoryDAO;
+import ua.nure.providence.dtos.BaseListDTO;
 import ua.nure.providence.dtos.business.cardholder.NamedHolderDTO;
 import ua.nure.providence.dtos.business.room.RoomDTO;
 import ua.nure.providence.dtos.history.HistoryDTO;
 import ua.nure.providence.dtos.history.session.HolderSessionDTO;
-import ua.nure.providence.dtos.history.session.IntermediateSessionDTO;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
 import ua.nure.providence.models.history.History;
 import ua.nure.providence.utils.auth.LoginToken;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -34,21 +36,22 @@ public class HistoryController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<HistoryDTO>> getAccountHistory(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                              @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+    public ResponseEntity<BaseListDTO<HistoryDTO>> getAccountHistory(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                     @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
 
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
-        List<History> histories = dao.getAccountHistory(token.getAuthenticatedUser(), limit, offset);
-        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
-                .collect(Collectors.toList()));
+        Pair<List<History>, Long> pair = dao.getAccountHistory(token.getAuthenticatedUser(), limit, offset);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream()
+                .map(history -> new HistoryDTO().convert(history))
+                .collect(Collectors.toList()), limit, offset, pair.getSecond()));
     }
 
     @RequestMapping(value = "/room/{uuid}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<HistoryDTO>> getRoomHistory(@PathVariable("uuid") String uuid,
+    public ResponseEntity<BaseListDTO<HistoryDTO>> getRoomHistory(@PathVariable("uuid") String uuid,
                                                               @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
                                                               @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
@@ -56,14 +59,14 @@ public class HistoryController {
         }
 
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
-        List<History> histories = dao.getRoomHistory(uuid, token.getAuthenticatedUser(), limit, offset);
-        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
-                .collect(Collectors.toList()));
+        Pair<List<History>, Long> pair = dao.getRoomHistory(uuid, token.getAuthenticatedUser(), limit, offset);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream().map(history -> new HistoryDTO().convert(history))
+                .collect(Collectors.toList()), limit, offset, pair.getSecond()));
     }
 
     @RequestMapping(value = "/cardholder/{uuid}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<HistoryDTO>> getCardHolderHistory(@PathVariable("uuid") String uuid,
+    public ResponseEntity<BaseListDTO<HistoryDTO>> getCardHolderHistory(@PathVariable("uuid") String uuid,
                                                            @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
                                                            @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
@@ -71,14 +74,14 @@ public class HistoryController {
         }
 
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
-        List<History> histories = dao.getCardHolderHistory(uuid, token.getAuthenticatedUser(), limit, offset);
-        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
-                .collect(Collectors.toList()));
+        Pair<List<History>, Long> pair = dao.getCardHolderHistory(uuid, token.getAuthenticatedUser(), limit, offset);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream().map(history -> new HistoryDTO().convert(history))
+                .collect(Collectors.toList()), limit, offset, pair.getSecond()));
     }
 
     @RequestMapping(value = "/cardholder/{holderId}/room/{roomId}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<HistoryDTO>> getRoomCardHolderHistory(@PathVariable("holderId") String holderId,
+    public ResponseEntity<BaseListDTO<HistoryDTO>> getRoomCardHolderHistory(@PathVariable("holderId") String holderId,
                                                                      @PathVariable("roomId") String roomId,
                                                                  @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
                                                                  @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
@@ -87,22 +90,22 @@ public class HistoryController {
         }
 
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
-        List<History> histories = dao.getCardHolderHistoryInRoom(holderId, roomId, token.getAuthenticatedUser(), limit, offset);
-        return ResponseEntity.ok(histories.stream().map(history -> new HistoryDTO().convert(history))
-                .collect(Collectors.toList()));
+        Pair<List<History>, Long> pair = dao.getCardHolderHistoryInRoom(holderId, roomId, token.getAuthenticatedUser(), limit, offset);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream().map(history -> new HistoryDTO().convert(history))
+                .collect(Collectors.toList()), limit, offset, pair.getSecond()));
     }
 
     @RequestMapping(value = "/room/{uuid}/online", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<NamedHolderDTO>> getPresentPeopleInRoom(@PathVariable("uuid") String uuid,
+    public ResponseEntity<BaseListDTO<NamedHolderDTO>> getPresentPeopleInRoom(@PathVariable("uuid") String uuid,
                                                            @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
                                                            @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
-        List<CardHolder> holders = dao.getPresentCardHoldersInRoom(uuid, limit, offset);
-        return ResponseEntity.ok(holders.stream().map(holder -> new NamedHolderDTO().convert(holder))
-                .collect(Collectors.toList()));
+        Pair<List<CardHolder>, Long> pair = dao.getPresentCardHoldersInRoom(uuid, limit, offset);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream().map(holder -> new NamedHolderDTO().convert(holder))
+                .collect(Collectors.toList()), limit, offset, pair.getSecond()));
     }
 
     @RequestMapping(value = "/cardHolder/{uuid}/find", method = RequestMethod.GET)

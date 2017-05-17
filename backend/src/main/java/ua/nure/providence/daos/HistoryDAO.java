@@ -1,5 +1,6 @@
 package ua.nure.providence.daos;
 
+import com.mysema.commons.lang.Pair;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.joda.time.DateTime;
@@ -25,42 +26,42 @@ import java.util.Map;
 @Transactional
 public class HistoryDAO extends BaseDAO<History> {
 
-    public List<History> getAccountHistory(User user, long limit, long offset) {
-        return new JPAQuery<History>(entityManager)
+    public Pair<List<History>, Long> getAccountHistory(User user, long limit, long offset) {
+        JPAQuery<History> query = new JPAQuery<History>(entityManager)
                 .from(QHistory.history)
                 .leftJoin(QHistory.history.room, QRoom.room)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
-                .where(QRoom.room.account.eq(user.getAccount()))
-                .limit(limit).offset(offset)
+                .where(QRoom.room.account.eq(user.getAccount()));
+        return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
-                .fetch();
+                .fetch(), query.fetchCount());
     }
 
-    public List<History> getRoomHistory(String roomUuid, User user, long limit, long offset) {
-        return new JPAQuery<History>(entityManager)
+    public Pair<List<History>, Long> getRoomHistory(String roomUuid, User user, long limit, long offset) {
+        JPAQuery<History> query = new JPAQuery<History>(entityManager)
                 .from(QHistory.history)
                 .leftJoin(QHistory.history.room, QRoom.room)
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
-                        .and(QRoom.room.uuid.eq(roomUuid)))
-                .limit(limit).offset(offset)
+                        .and(QRoom.room.uuid.eq(roomUuid)));
+        return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
-                .fetch();
+                .fetch(), query.fetchCount());
     }
 
-    public List<History> getCardHolderHistory(String cardHolderUuid, User user, long limit, long offset) {
-        return new JPAQuery<History>(entityManager)
+    public Pair<List<History>, Long> getCardHolderHistory(String cardHolderUuid, User user, long limit, long offset) {
+        JPAQuery<History> query = new JPAQuery<History>(entityManager)
                 .from(QHistory.history)
                 .leftJoin(QHistory.history.room, QRoom.room)
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
-                        .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid)))
-                .limit(limit).offset(offset)
+                        .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid)));
+        return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
-                .fetch();
+                .fetch(), query.fetchCount());
     }
 
     public Map<Room, List<History>> getCardHolderSessions(String cardHolderUuid, User user) {
@@ -75,9 +76,9 @@ public class HistoryDAO extends BaseDAO<History> {
                 .transform(groupBy(QRoom.room).as(list(QHistory.history)));
     }
 
-    public List<History> getCardHolderHistoryInRoom(String cardHolderUuid, String roomUuid,
+    public Pair<List<History>, Long> getCardHolderHistoryInRoom(String cardHolderUuid, String roomUuid,
                                                     User user, long limit, long offset) {
-        return new JPAQuery<History>(entityManager)
+        JPAQuery<History> query = new JPAQuery<History>(entityManager)
                 .from(QHistory.history)
                 .leftJoin(QHistory.history.room, QRoom.room)
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
@@ -85,9 +86,10 @@ public class HistoryDAO extends BaseDAO<History> {
                 .where(QRoom.room.account.eq(user.getAccount())
                         .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid))
                         .and(QRoom.room.uuid.eq(roomUuid))
-                ).limit(limit).offset(offset)
+                );
+        return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
-                .fetch();
+                .fetch(), query.fetchCount());
     }
 
     public List<History> getRangedAccountHistory(User user, DateTime start, DateTime end, long limit, long offset) {
@@ -143,12 +145,12 @@ public class HistoryDAO extends BaseDAO<History> {
                 .fetch();
     }
 
-    public List<CardHolder> getPresentCardHoldersInRoom(String roomUuid, long limit, long offset) {
+    public Pair<List<CardHolder>, Long>getPresentCardHoldersInRoom(String roomUuid, long limit, long offset) {
         QHistory parent = new QHistory("parent");
         QHistory child = new QHistory("child");
         QCardHolder cardHolder = new QCardHolder("holder");
         QRoom room = new QRoom("room");
-        return new JPAQuery<CardHolder>(entityManager)
+        JPAQuery<CardHolder> query = new JPAQuery<CardHolder>(entityManager)
                 .select(cardHolder)
                 .from(parent)
                 .leftJoin(parent.room, room)
@@ -160,9 +162,9 @@ public class HistoryDAO extends BaseDAO<History> {
                                 .where(cardHolder.id.eq(child.cardHolder.id)
                                         .and(child.room.uuid.eq(roomUuid))
                                         .and(child.inOutState.eq(0))
-                                )))
-                .limit(limit).offset(offset)
-                .fetch();
+                                )));
+        return new Pair<>(query.limit(limit).offset(offset)
+                .fetch(), query.fetchCount());
     }
 
     public Room findCardHolderPosition(String holderUuid) {

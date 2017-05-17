@@ -30,11 +30,13 @@ public class RoomDAO extends BaseDAO<Room> {
     }
 
     public List<Room> getAll(Account account, long limit, long offset) {
-        return new JPAQuery<Room>(entityManager)
-                .from(QRoom.room)
-                .where(QRoom.room.account.eq(account))
+        return this.getAllBaseQuery(account)
                 .orderBy(QRoom.room.name.asc())
                 .limit(limit).offset(offset).fetch();
+    }
+
+    public long getCount(Account account) {
+        return this.getAllBaseQuery(account).fetchCount();
     }
 
     @Override
@@ -43,5 +45,11 @@ public class RoomDAO extends BaseDAO<Room> {
                 .from(QRoom.room)
                 .where(QRoom.room.uuid.eq(uuid))
                 .fetchCount() > 0;
+    }
+
+    private JPAQuery<Room> getAllBaseQuery(Account account) {
+        return new JPAQuery<Room>(entityManager)
+                .from(QRoom.room)
+                .where(QRoom.room.account.eq(account));
     }
 }

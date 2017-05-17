@@ -1,5 +1,6 @@
 package ua.nure.providence.daos;
 
+import com.mysema.commons.lang.Pair;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,21 +71,24 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
                 .fetchOne();
     }
 
-    public List<StructuralCategory> getAll(User user, long limit, long offset) {
-        return new JPAQuery<StructuralCategory>(entityManager)
+    public Pair<List<StructuralCategory>, Long> getAll(User user, long limit, long offset) {
+        JPAQuery<StructuralCategory> query = new JPAQuery<StructuralCategory>(entityManager)
                 .from(QStructuralCategory.structuralCategory)
                 .where(QStructuralCategory.structuralCategory.account.eq(user.getAccount()))
-                .orderBy(QStructuralCategory.structuralCategory.name.asc())
-                .limit(limit).offset(offset)
-                .fetch();
+                .orderBy(QStructuralCategory.structuralCategory.name.asc());
+        return new Pair<>(query.limit(limit).offset(offset)
+                .fetch(), query.fetchCount());
     }
 
-    public List<StructuralCategory> getCategoriesWithHolders(User user, long limit, long offset) {
-        return new JPAQuery<StructuralCategory>(entityManager)
+
+    public Pair<List<StructuralCategory>, Long> getCategoriesWithHolders(User user, long limit, long offset) {
+        JPAQuery<StructuralCategory> query = new JPAQuery<StructuralCategory>(entityManager)
                 .from(QStructuralCategory.structuralCategory)
                 .where(QStructuralCategory.structuralCategory.account.eq(user.getAccount()))
-                .leftJoin(QStructuralCategory.structuralCategory.cardHolders, QCardHolder.cardHolder)
-                .limit(limit).offset(offset)
+                .leftJoin(QStructuralCategory.structuralCategory.cardHolders, QCardHolder.cardHolder);
+        long count = query.fetchCount();
+        List<StructuralCategory> result = query.limit(limit).offset(offset)
                 .fetch();
+        return new Pair(result, count);
     }
 }

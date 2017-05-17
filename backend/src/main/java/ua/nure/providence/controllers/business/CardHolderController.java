@@ -10,6 +10,7 @@ import ua.nure.providence.controllers.BaseController;
 import ua.nure.providence.daos.CardDAO;
 import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.CategoryDAO;
+import ua.nure.providence.dtos.BaseListDTO;
 import ua.nure.providence.dtos.business.cardholder.CardHolderDTO;
 import ua.nure.providence.dtos.business.cardholder.CardHolderUpdateDTO;
 import ua.nure.providence.exceptions.rest.RestException;
@@ -50,16 +51,17 @@ public class CardHolderController extends BaseController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<CardHolderDTO>> getCardHolders(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                  @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+    public ResponseEntity<BaseListDTO<CardHolderDTO>> getCardHolders(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                     @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        long count = dao.getCount(token.getAuthenticatedUser().getAccount());
         List<CardHolderDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), limit, offset).stream()
                 .map(holder -> new CardHolderDTO().convert(holder))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new BaseListDTO<>(result, limit, offset, count));
     }
 
     @RequestMapping(value = "{uuid}", method = RequestMethod.PUT)
