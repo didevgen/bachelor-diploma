@@ -10,14 +10,14 @@ public class BaseListDTO<T> {
 
     private long limit;
     private long offset;
-    private long total;
+    private long count;
     private List<T> data = new ArrayList<>();
 
     public BaseListDTO(List<T> data, long limit, long offset, long total) {
         this.data = data;
         this.limit = limit;
         this.offset = offset;
-        this.total = total;
+        this.count = total;
     }
 
     public long getLimit() {
@@ -36,19 +36,19 @@ public class BaseListDTO<T> {
         this.offset = offset;
     }
 
-    public long getTotal() {
-        return total;
-    }
-
-    public void setTotal(long total) {
-        this.total = total;
-    }
-
     public List<T> getData() {
         return data;
     }
 
     public void setData(List<T> data) {
         this.data = data;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

@@ -18,6 +18,9 @@ import { AuthService } from './services/authentication/auth.service';
 import { AuthHttp } from './services/http/auth.http';
 import { ToasterModule } from 'angular2-toaster';
 import { AuthenticationResolve } from './resolvers/authoriation.resolve';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { SpinnerComponent } from './pages/ui/spinner/spinner.component';
+import { SpinnerModule } from './pages/ui/spinner/spinner.module';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -47,11 +50,13 @@ export type StoreType = {
     HttpModule,
     RouterModule,
     FormsModule,
+    NgxDatatableModule,
     ReactiveFormsModule,
     NgaModule.forRoot(),
     NgbModule.forRoot(),
     PagesModule,
     ToasterModule,
+    SpinnerModule,
     routing
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection

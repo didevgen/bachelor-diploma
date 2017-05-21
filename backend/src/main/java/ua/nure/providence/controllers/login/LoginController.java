@@ -65,7 +65,7 @@ public class LoginController extends BaseController {
 
     @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> authorizeGoogle(@RequestBody TokenDTO tokenDTO, HttpServletResponse response) throws Exception {
+    public ResponseEntity<UserDTO> authorizeGoogle(@RequestBody TokenDTO tokenDTO, HttpServletResponse response) throws Exception {
         GoogleIdToken.Payload payLoad;
         try {
             payLoad = IdTokenVerifierAndParser.getPayload(env.getProperty("security.oauth2.client.clientId"), tokenDTO.getToken());
@@ -87,7 +87,7 @@ public class LoginController extends BaseController {
                 .setAuthentication(new LoginToken(user.getEmail(), user.getPassword(),
                         authToken, user));
         response.setHeader(env.getProperty("token.header"), authToken.getTokenValue());
-        response.setHeader(env.getProperty("token.expire.header"), String.valueOf(payLoad.getAuthorizationTimeSeconds() * 1000));
-        return ResponseEntity.ok(email);
+        response.setHeader(env.getProperty("token.expire.header"), String.valueOf(payLoad.getExpirationTimeSeconds() * 1000));
+        return ResponseEntity.ok(new UserDTO().convert(user));
     }
 }

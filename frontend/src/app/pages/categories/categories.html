@@ -1,0 +1,65 @@
+<spinner [show]="loading"></spinner>
+<div class="row" *ngIf="isParentCategory && !loading">
+  <div class="col-xl-12">
+    <h1>Root categories</h1>
+    <div class="row is-flex">
+      <div class="col-sm-4 card" *ngFor="let item of parentCategories">
+        <category [data]="item"></category>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row holderCategories" *ngIf="!isParentCategory && !loading">
+  <ngb-tabset>
+    <ngb-tab>
+      <ng-template ngbTabTitle>Categories</ng-template>
+      <ng-template ngbTabContent>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <h1>{{currentCategory.name}}</h1>
+          <h5 *ngIf="currentCategory.parent">
+            <a [routerLink]="['/pages/categories', currentCategory.parent.uuid]">Parent: {{currentCategory.parent.name}}
+            </a>
+          </h5>
+          <h5 *ngIf="!currentCategory.parent"><a [routerLink]="['/pages/categories']">Root categories</a></h5>
+          <div class="row is-flex">
+            <div class="col-sm-4 card" *ngFor="let item of currentCategory.children">
+              <category [data]="item"></category>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab>
+      <ng-template ngbTabTitle>Card holders</ng-template>
+      <ng-template ngbTabContent>
+        <!--<ngx-datatable
+          class="material"
+          [rows]="rows"
+          [columnMode]="'force'"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="'auto'"
+          [externalPaging]="true"
+          [count]="count"
+          [offset]="offset"
+          [limit]="limit"
+          (page)='setPage($event)'>
+        </ngx-datatable>-->
+        <ngx-datatable
+          [rows]="rows"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="'auto'"
+          class="material"
+          [externalPaging]="true"
+          [count]="count"
+          [offset]="offset"
+          [limit]="limit"
+          (page)='setPage($event)'
+          [columns]="columns">
+        </ngx-datatable>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>
+

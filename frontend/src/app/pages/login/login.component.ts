@@ -100,6 +100,8 @@ export class Login implements OnInit, AfterViewInit {
     this.authService.user = result.user;
     localStorage.setItem('token', result.headers.get('x-auth-token'));
     localStorage.setItem('token_expire', result.headers.get('token-expires'));
-    this.router.navigateByUrl('/');
+    localStorage.setItem('name', `${result.user.name} ${result.user.surname}`);
+    localStorage.setItem('email', result.user.email);
+    window.location.href = '/';
   }
 }

@@ -7,6 +7,7 @@ import { TreeModule } from 'ng2-tree';
 import { routing }       from './components.routing';
 import { Components } from './components.component';
 import { TreeView } from './components/treeView/treeView.component';
+import { SpinnerComponent } from '../ui/spinner/spinner.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { TreeView } from './components/treeView/treeView.component';
   declarations: [
     Components,
     TreeView,
+    SpinnerComponent
   ]
 })
 export class ComponentsModule {}

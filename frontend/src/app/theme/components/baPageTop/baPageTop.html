@@ -3,15 +3,10 @@
   <a routerLink="/pages/dashboard" class="al-logo clearfix"><span>Providence</span></a>
   <a href (click)="toggleMenu()" class="collapse-menu-link ion-navicon"></a>
 
-  <div class="search">
-    <i class="ion-ios-search-strong" ng-click="startSearch()"></i>
-    <input id="searchInput" type="text" placeholder="Search for...">
-  </div>
-
   <div class="user-profile clearfix">
     <div class="dropdown al-user-profile">
       <a class="profile-toggle-link dropdown-toggle" id="user-profile-dd" data-toggle="dropdown" aria-expanded="false">
-        <img src="{{ ( 'Nasta' | baProfilePicture ) }}">
+        <img src="{{avatar}}">
       </a>
       <ul class="dropdown-menu top-dropdown-menu profile-dropdown" aria-labelledby="user-profile-dd">
         <li class="dropdown-item"><a href><i class="fa fa-user"></i>Profile</a></li>

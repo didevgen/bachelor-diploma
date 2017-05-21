@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Headers, Http, RequestOptionsArgs } from '@angular/http';
+import { Headers, Http, RequestOptionsArgs, Response } from '@angular/http';
 import { User } from '../../models/auth/auth.models';
 
 @Injectable()
@@ -48,7 +48,11 @@ export class AuthService {
       }
 
       options.headers.set('x-auth-token', this.getToken());
-      return this.http.request(url, options).catch(this.handleError);
+      return this.http.request(url, options)
+        .map((response: Response) => {
+          return response.json();
+        })
+        .catch(this.handleError);
     } else {
       this.router.navigate(['/login']);
       return Observable.throw(new Error('User Not Authenticated.'));

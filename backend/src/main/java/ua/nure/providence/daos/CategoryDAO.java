@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.nure.providence.models.authentication.User;
+import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.QCardHolder;
 import ua.nure.providence.models.hierarchy.QStructuralCategory;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
@@ -76,6 +77,26 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
                 .from(QStructuralCategory.structuralCategory)
                 .where(QStructuralCategory.structuralCategory.account.eq(user.getAccount()))
                 .orderBy(QStructuralCategory.structuralCategory.name.asc());
+        return new Pair<>(query.limit(limit).offset(offset)
+                .fetch(), query.fetchCount());
+    }
+
+    public Pair<List<StructuralCategory>, Long> getTopCategories(User user, long limit, long offset) {
+        JPAQuery<StructuralCategory> query = new JPAQuery<StructuralCategory>(entityManager)
+                .from(QStructuralCategory.structuralCategory)
+                .where(QStructuralCategory.structuralCategory.account.eq(user.getAccount())
+                        .and(QStructuralCategory.structuralCategory.parent.isNull()))
+                .orderBy(QStructuralCategory.structuralCategory.name.asc());
+        return new Pair<>(query.limit(limit).offset(offset)
+                .fetch(), query.fetchCount());
+    }
+
+    public Pair<List<CardHolder>, Long> getHoldersWithinCategory(String categoryUuid, User user, long limit, long offset) {
+        JPAQuery<CardHolder> query = new JPAQuery<CardHolder>(entityManager)
+                .from(QCardHolder.cardHolder)
+                .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
+                .where(QStructuralCategory.structuralCategory.account.eq(user.getAccount())
+                        .and(QStructuralCategory.structuralCategory.uuid.eq(categoryUuid)));
         return new Pair<>(query.limit(limit).offset(offset)
                 .fetch(), query.fetchCount());
     }

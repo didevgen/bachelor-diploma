@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.CategoryDAO;
 import ua.nure.providence.dtos.BaseListDTO;
+import ua.nure.providence.dtos.business.cardholder.NamedHolderDTO;
 import ua.nure.providence.dtos.structure.*;
 import ua.nure.providence.exceptions.rest.RestException;
 import ua.nure.providence.models.authentication.User;
@@ -62,6 +63,26 @@ public class CategoryController {
         return ResponseEntity.ok(new CategoryDTO().convert(category));
     }
 
+    @RequestMapping(value = "/{uuid}/holders", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<BaseListDTO<NamedHolderDTO>> getHoldersForCategory(@PathVariable(name = "uuid") String uuid,
+                                                                                @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                                @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+        if (!dao.exists(uuid)) {
+            throw new RestException(HttpStatus.NOT_FOUND, 404012, "Specified category not found");
+        }
+
+        if (limit == 0) {
+            limit = Long.MAX_VALUE;
+        }
+
+        User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
+        Pair<List<CardHolder>, Long> pair = dao.getHoldersWithinCategory(uuid, user, limit, offset);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream()
+                .map(item -> new NamedHolderDTO().convert(item))
+                .collect(Collectors.toList()), limit, offset, pair.getSecond()));
+    }
+
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<BaseListDTO<SimpleCategoryDTO>> getCategories(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
@@ -72,6 +93,21 @@ public class CategoryController {
 
         User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
         Pair<List<StructuralCategory>, Long> pair = dao.getAll(user, limit, offset);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream()
+                .map(item -> new SimpleCategoryDTO().convert(item))
+                .collect(Collectors.toList()), limit, offset, pair.getSecond()));
+    }
+
+    @RequestMapping(value = "/parentCategories/all", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<BaseListDTO<SimpleCategoryDTO>> getTopLevelCategories(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                        @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+        if (limit == 0) {
+            limit = Long.MAX_VALUE;
+        }
+
+        User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
+        Pair<List<StructuralCategory>, Long> pair = dao.getTopCategories(user, limit, offset);
         return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream()
                 .map(item -> new SimpleCategoryDTO().convert(item))
                 .collect(Collectors.toList()), limit, offset, pair.getSecond()));

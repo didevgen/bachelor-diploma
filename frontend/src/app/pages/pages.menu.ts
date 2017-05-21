@@ -15,26 +15,16 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'editors',
+        path: 'categories',
         data: {
           menu: {
-            title: 'general.menu.editors',
+            title: 'Categories',
             icon: 'ion-edit',
             selected: false,
             expanded: false,
             order: 100,
           }
-        },
-        children: [
-          {
-            path: 'ckeditor',
-            data: {
-              menu: {
-                title: 'general.menu.ck_editor',
-              }
-            }
-          }
-        ]
+        }
       },
       {
         path: 'components',

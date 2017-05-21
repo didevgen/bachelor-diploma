@@ -1,0 +1,60 @@
+:host /deep/ {
+  @media screen and (min-width: 1620px) {
+    .row.shift-up {
+      > * {
+        margin-top: -573px;
+      }
+    }
+  }
+
+  @media screen and (max-width: 1620px) {
+    .card.feed-panel.large-card {
+      height: 824px;
+    }
+  }
+
+  .user-stats-card {
+    .card-title {
+      padding: 0 0 15px;
+    }
+  }
+
+  .blurCalendar {
+    height: 475px;
+  }
+
+  h5 {
+    a {
+      color: white;
+    }
+  }
+
+  .nav.nav-tabs {
+    background-color: #537bb5;
+    li {
+      a:hover {
+        background-color: #0275d8;
+      }
+    }
+  }
+
+  .row.is-flex {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  .row.is-flex .card {
+    padding: 20px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    .btn {
+      margin-top: auto;
+      align-self: center;
+    }
+  }
+}
+

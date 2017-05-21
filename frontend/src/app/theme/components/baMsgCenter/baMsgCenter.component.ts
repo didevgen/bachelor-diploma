@@ -1,21 +1,20 @@
-import {Component} from '@angular/core';
-
-import {BaMsgCenterService} from './baMsgCenter.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'ba-msg-center',
-  providers: [BaMsgCenterService],
   styleUrls: ['./baMsgCenter.scss'],
   templateUrl: './baMsgCenter.html'
 })
-export class BaMsgCenter {
+export class BaMsgCenter implements OnInit {
 
-  public notifications:Array<Object>;
-  public messages:Array<Object>;
+  public userName: string;
+  public email: string;
 
-  constructor(private _baMsgCenterService:BaMsgCenterService) {
-    this.notifications = this._baMsgCenterService.getNotifications();
-    this.messages = this._baMsgCenterService.getMessages();
+  constructor() {
   }
 
+  public ngOnInit(): void {
+    this.userName = localStorage.getItem('name');
+    this.email = localStorage.getItem('email');
+  }
 }

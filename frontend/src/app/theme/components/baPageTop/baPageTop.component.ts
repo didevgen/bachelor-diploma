@@ -8,7 +8,7 @@ import {GlobalState} from '../../../global.state';
   styleUrls: ['./baPageTop.scss']
 })
 export class BaPageTop {
-
+  public avatar: string = localStorage.getItem('google_image');
   public isScrolled:boolean = false;
   public isMenuCollapsed:boolean = false;
 
