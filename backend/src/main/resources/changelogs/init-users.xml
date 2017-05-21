@@ -25,6 +25,11 @@
             phone_number, role, surname, account_id)
             VALUES (3, uuid_generate_v4(), null, null, 'didevgen2@gmail.com', null, 'Kirill', '202cb962ac59075b964b07152d234b70',
             null, 'USER', 'Chuklatii', 1);
+            INSERT INTO providence.users(
+            id, uuid, address, birthday, email, middle_name, name, password,
+            phone_number, role, surname, account_id)
+            VALUES (4, uuid_generate_v4(), null, null, 'kateryna.kovalenko@nure.ua', null, 'Kateryna', '202cb962ac59075b964b07152d234b70',
+            null, 'ADMIN', 'Kovalenko', 1);
         </sql>
     </changeSet>
 </databaseChangeLog>
