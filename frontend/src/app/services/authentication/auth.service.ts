@@ -8,7 +8,7 @@ import { User } from '../../models/auth/auth.models';
 export class AuthService {
 
   private readonly TOKEN_NAME = 'token';
-  private readonly TOKEN_EXPIRATION = 'token-expires';
+  private readonly TOKEN_EXPIRATION = 'token_expire';
 
   private _user: User;
 
@@ -24,7 +24,7 @@ export class AuthService {
   }
 
   public get isAuthenticated(): boolean {
-    return !!this.getToken() && this.isTokenExpired();
+    return !!this.getToken() && !this.isTokenExpired();
   };
 
   public getToken(): string {
