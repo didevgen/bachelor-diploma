@@ -1,6 +1,7 @@
 package ua.nure.providence.controllers.subscriptions;
 
 import com.mysema.commons.lang.Pair;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,11 +57,11 @@ public class SubscriptionController {
 
     @RequestMapping(value = "/subscribe", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity addSubscriptions(@RequestBody() BaseDataDTO<List<String>> data) {
+    public ResponseEntity addSubscriptions(@RequestBody() BaseDataDTO<String> data) {
         User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
-        List<CardHolder> cardHolders = cardHolderDAO.getAll(data.getData());
-        user.getHolderSubscriptions().addAll(cardHolders);
-        userDao.update(user);
+        CardHolder cardHolder = cardHolderDAO.getHolder(data.getData());
+        cardHolder.getSubscribers().add(user);
+        cardHolderDAO.updateCardHolderSubscribers(cardHolder);
         return new ResponseEntity(HttpStatus.OK);
     }
 

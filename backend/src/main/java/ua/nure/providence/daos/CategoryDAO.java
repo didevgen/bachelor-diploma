@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import ua.nure.providence.models.authentication.QUser;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.QCardHolder;
@@ -95,6 +96,7 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
         JPAQuery<CardHolder> query = new JPAQuery<CardHolder>(entityManager)
                 .from(QCardHolder.cardHolder)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
+                .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
                 .where(QStructuralCategory.structuralCategory.account.eq(user.getAccount())
                         .and(QStructuralCategory.structuralCategory.uuid.eq(categoryUuid)));
         return new Pair<>(query.limit(limit).offset(offset)

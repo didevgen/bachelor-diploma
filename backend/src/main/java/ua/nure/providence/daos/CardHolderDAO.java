@@ -1,10 +1,12 @@
 package ua.nure.providence.daos;
 
 import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.nure.providence.models.authentication.Account;
+import ua.nure.providence.models.authentication.QUser;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.QCard;
 import ua.nure.providence.models.business.QCardHolder;
@@ -36,10 +38,18 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .limit(limit).offset(offset).fetch();
     }
 
-    public List<CardHolder> getAll(List<String> holders) {
+    public void updateCardHolderSubscribers(CardHolder holder) {
+        new JPAUpdateClause(entityManager, QCardHolder.cardHolder)
+                .set(QCardHolder.cardHolder.subscribers, holder.getSubscribers())
+                .where(QCardHolder.cardHolder.uuid.eq(holder.getUuid()))
+                .execute();
+    }
+
+    public CardHolder getHolder(String holder) {
         return new JPAQuery<CardHolder>(entityManager)
                 .from(QCardHolder.cardHolder)
-                .where(QCardHolder.cardHolder.uuid.in(holders)).fetch();
+                .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
+                .where(QCardHolder.cardHolder.uuid.eq(holder)).fetchOne();
     }
 
     public long getCount(Account account) {

@@ -11,6 +11,7 @@ import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.CategoryDAO;
 import ua.nure.providence.dtos.BaseListDTO;
 import ua.nure.providence.dtos.business.cardholder.NamedHolderDTO;
+import ua.nure.providence.dtos.business.cardholder.SubscribedHolderDTO;
 import ua.nure.providence.dtos.structure.*;
 import ua.nure.providence.exceptions.rest.RestException;
 import ua.nure.providence.models.authentication.User;
@@ -18,7 +19,6 @@ import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
 import ua.nure.providence.utils.auth.LoginToken;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,9 +65,9 @@ public class CategoryController {
 
     @RequestMapping(value = "/{uuid}/holders", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<BaseListDTO<NamedHolderDTO>> getHoldersForCategory(@PathVariable(name = "uuid") String uuid,
-                                                                                @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                                                @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+    public ResponseEntity<BaseListDTO<SubscribedHolderDTO>> getHoldersForCategory(@PathVariable(name = "uuid") String uuid,
+                                                                                  @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                                  @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (!dao.exists(uuid)) {
             throw new RestException(HttpStatus.NOT_FOUND, 404012, "Specified category not found");
         }
@@ -79,7 +79,7 @@ public class CategoryController {
         User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
         Pair<List<CardHolder>, Long> pair = dao.getHoldersWithinCategory(uuid, user, limit, offset);
         return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream()
-                .map(item -> new NamedHolderDTO().convert(item))
+                .map(item -> new SubscribedHolderDTO().convert(item, user))
                 .collect(Collectors.toList()), limit, offset, pair.getSecond()));
     }
 
@@ -101,7 +101,7 @@ public class CategoryController {
     @RequestMapping(value = "/parentCategories/all", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<BaseListDTO<SimpleCategoryDTO>> getTopLevelCategories(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                                        @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+                                                                                @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }

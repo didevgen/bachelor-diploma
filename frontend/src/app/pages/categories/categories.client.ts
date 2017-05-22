@@ -15,6 +15,10 @@ export class CategoryClient {
     return this.http.get(`/api/v1/categories/${uuid}`);
   }
 
+  public subscribeToHolder(uuid: string): Observable<DetailCategory> {
+    return this.http.post(`/api/v1/subscriptions/subscribe`, {data: uuid});
+  }
+
   public getCategoryHolders(uuid: string, pageInfo: PageData): Observable<ListResult<NamedCardHolder>> {
     let url = `/api/v1/categories/${uuid}/holders?`;
     if (pageInfo.limit !== undefined) {

@@ -23,11 +23,24 @@
       <ng-template ngbTabTitle>Categories</ng-template>
       <ng-template ngbTabContent>
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-          <div class="row is-flex">
+          <div class="row is-flex" *ngIf="currentCategory.children.length !== 0">
             <div class="col-sm-4 card" *ngFor="let item of currentCategory.children">
               <category [data]="item"></category>
             </div>
           </div>
+          <ba-card baCardClass="banner-column-panel" *ngIf="currentCategory.children.length === 0">
+            <div class="banner">
+              <div class="large-banner-wrapper">
+                <img src="{{ ( 'app/typography/banner.jpg' | baAppPicture ) }}" alt=""/>
+              </div>
+              <div class="banner-text-wrapper">
+                <div class="banner-text">
+                  <h1>No categories</h1>
+                  <p>Check card holder's presence</p>
+                </div>
+              </div>
+            </div>
+          </ba-card>
         </div>
       </ng-template>
     </ngb-tab>
@@ -47,7 +60,15 @@
             [offset]="offset"
             [limit]="limit"
             (page)='setPage($event)'>
-            <ngx-datatable-column name="Name" prop="name" [flexGrow]="1"></ngx-datatable-column>
+            <ngx-datatable-column name="Name" prop="name" [flexGrow]="3"></ngx-datatable-column>
+            <ngx-datatable-column name="Subscribed" prop="subscribed" [flexGrow]="1">
+              <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+                <label class="switch">
+                  <input type="checkbox" name="isSubscribed" [checked]="value" (change)="subscribeToCardHolder(value, row)">
+                  <div class="slider round"></div>
+                </label>
+              </ng-template>
+            </ngx-datatable-column>
           </ngx-datatable>
         </div>
       </ng-template>
