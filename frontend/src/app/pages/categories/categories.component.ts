@@ -16,9 +16,9 @@ import { NamedCardHolder } from '../../models/cardh-holders/holders.model';
 export class CategoriesComponent extends UnsubscribableComponent implements OnInit,
   IBaseList<NamedCardHolder> {
 
-  public parentCategories: Category[] = [];
+  public parentCategories: Category[];
   public currentCategory: DetailCategory;
-  public rows: any[] = [];
+  public rows: any[];
   public count: number;
   public offset: number;
   public limit: number;
@@ -28,10 +28,6 @@ export class CategoriesComponent extends UnsubscribableComponent implements OnIn
   }
 
   private uuid: string;
-
-  public columns = [
-    {prop: 'name'},
-  ];
 
   constructor(private client: CategoryClient,
               private currentRoute: ActivatedRoute) {
@@ -52,6 +48,13 @@ export class CategoriesComponent extends UnsubscribableComponent implements OnIn
   }
 
   public setPage(pageInfo: PageData): void {
+    pageInfo.offset = pageInfo.limit * pageInfo.offset;
+    this.loading = true;
+    this.client.getCategoryHolders(this.uuid, pageInfo)
+      .finally(() => this.loading = false)
+      .subscribe((cardHolders) => {
+        this.handleListResult(cardHolders);
+      });
   }
 
   private handleCategory() {
@@ -62,12 +65,7 @@ export class CategoriesComponent extends UnsubscribableComponent implements OnIn
       ).finally(() => this.loading = false)
         .subscribe(([categories, cardHolders]) => {
           this.currentCategory = categories;
-          this.rows = cardHolders.data.map(item => {
-            return {name: item.name};
-          });
-          this.limit = cardHolders.limit;
-          this.offset = cardHolders.offset;
-          this.count = cardHolders.count;
+          this.handleListResult(cardHolders);
         }));
   }
 
@@ -77,6 +75,13 @@ export class CategoriesComponent extends UnsubscribableComponent implements OnIn
       .subscribe((data: ListResult<Category>) => {
         this.parentCategories = data.data;
       }));
+  }
+
+  private handleListResult(cardHolders: any): void {
+    this.rows = cardHolders.data;
+    this.limit = cardHolders.limit;
+    this.offset = Math.floor(cardHolders.offset / cardHolders.limit);
+    this.count = cardHolders.count;
   }
 
 }

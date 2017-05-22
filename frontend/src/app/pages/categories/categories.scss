@@ -1,3 +1,12 @@
+:host /deep/ .widgets {
+  .data-table-container {
+    width: 100%;
+    .panel-heading {
+      margin-top: 25px;
+    }
+  }
+}
+
 :host /deep/ {
   @media screen and (min-width: 1620px) {
     .row.shift-up {

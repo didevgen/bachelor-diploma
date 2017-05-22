@@ -1,0 +1,23 @@
+.ngx-datatable.material {
+  background: transparent;
+  border: 1px white solid;
+}
+
+.ngx-datatable.material .datatable-header .datatable-header-cell {
+  color: white;
+}
+
+.ngx-datatable.material .datatable-footer .datatable-pager a {
+  color: white;
+}
+
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover, .ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover .datatable-row-group {
+  background-color: rgba(0, 0, 0, 0.03);
+  transition-property: background;
+  transition-duration: .3s;
+  transition-timing-function: linear;
+}

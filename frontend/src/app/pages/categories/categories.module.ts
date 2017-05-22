@@ -12,6 +12,7 @@ import { CategoriesComponent } from './categories.component';
 import { CategoryClient } from './categories.client';
 import { CategoryComponent } from './category-grid/category-component';
 import { SpinnerModule } from '../ui/spinner/spinner.module';
+import { DataTableModule } from 'angular2-datatable';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { SpinnerModule } from '../ui/spinner/spinner.module';
     NgaModule,
     NgbModule.forRoot(),
     NgxDatatableModule,
+    DataTableModule,
     SpinnerModule,
     routing
   ],
