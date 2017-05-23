@@ -49,8 +49,12 @@ public class User extends BaseEntity {
     @ManyToMany
     @JoinTable(
             name="holder_subscriptions",
-            joinColumns=@JoinColumn(name="user_id", referencedColumnName="id"),
-            inverseJoinColumns=@JoinColumn(name="cardholder_id", referencedColumnName="id"))
+            joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "cardholder_id", referencedColumnName = "id")
+            })
     private List<CardHolder> holderSubscriptions = new ArrayList<>();
 
     public User() {

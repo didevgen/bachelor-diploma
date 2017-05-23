@@ -59,9 +59,13 @@ export class CategoriesComponent extends UnsubscribableComponent implements OnIn
 
   public subscribeToCardHolder(value: boolean, row: any) {
     row.subscribed = !value;
-    this.subscribers.push(this.client.subscribeToHolder(row.uuid).subscribe(() => {
-
-    }));
+    if (row.subscribed === true) {
+      this.subscribers.push(this.client.subscribeToHolder(row.uuid).subscribe(() => {
+      }));
+    } else {
+      this.subscribers.push(this.client.unsubscribeFromHolder(row.uuid).subscribe(() => {
+      }));
+    }
   }
 
   private handleCategory() {

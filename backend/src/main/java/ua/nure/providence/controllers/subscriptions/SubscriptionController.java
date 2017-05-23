@@ -57,22 +57,23 @@ public class SubscriptionController {
 
     @RequestMapping(value = "/subscribe", method = RequestMethod.POST)
     @ResponseBody
+    @Transactional
     public ResponseEntity addSubscriptions(@RequestBody() BaseDataDTO<String> data) {
         User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
         CardHolder cardHolder = cardHolderDAO.getHolder(data.getData());
-        cardHolder.getSubscribers().add(user);
-        cardHolderDAO.updateCardHolderSubscribers(cardHolder);
+        User originalUser = userDao.get(user.getUuid());
+        originalUser.getHolderSubscriptions().add(cardHolder);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/unsubscribe", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/unsubscribe", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity removeSubscriptions(@RequestBody() BaseDataDTO<List<String>> data) {
+    public ResponseEntity removeSubscriptions(@RequestBody() BaseDataDTO<String> data) {
         User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
-        user.setHolderSubscriptions(user.getHolderSubscriptions().stream().filter(item ->
-                data.getData().stream().noneMatch(dataItem -> dataItem.equals(item.getUuid())))
+        User originalUser = userDao.get(user.getUuid());
+        originalUser.setHolderSubscriptions(originalUser.getHolderSubscriptions().stream().filter(item ->
+                !data.getData().equals(item.getUuid()))
                 .collect(Collectors.toList()));
-        userDao.update(user);
         return new ResponseEntity(HttpStatus.OK);
     }
 }
