@@ -1,6 +1,9 @@
 .ngx-datatable.material {
   background: transparent;
   border: 1px white solid;
+  a {
+    color: white;
+  }
 }
 
 .ngx-datatable.material .datatable-header .datatable-header-cell {

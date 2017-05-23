@@ -15,20 +15,30 @@
     </ba-card>
   </div>
   <div *ngIf="showTable" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+    <h1>My subscriptions</h1>
     <ngx-datatable
-    class="material"
-    [rows]="rows"
-    [columns]="columns"
-    [columnMode]="'force'"
-    [headerHeight]="50"
-    [footerHeight]="50"
-    [rowHeight]="'auto'"
-    [externalPaging]="true"
-    [count]="count"
-    [offset]="offset"
-    [limit]="limit"
-    (page)='setPage($event)'>
-  </ngx-datatable>
+      [rows]="rows"
+      [headerHeight]="50"
+      [columnMode]="'flex'"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      class="material"
+      [externalPaging]="true"
+      [count]="count"
+      [offset]="offset"
+      [limit]="limit"
+      (page)='setPage($event)'>
+      <ngx-datatable-column name="Full Name" prop="fullName" [flexGrow]="2"></ngx-datatable-column>
+      <ngx-datatable-column name="Categories" prop="categories" [flexGrow]="1">
+        <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+          <div class="row" *ngFor="let item of value">
+            <div class="col-sm-12">
+              <a [routerLink]="['/pages/categories/', item.uuid]">{{item.name}}</a>
+            </div>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   </div>
 </div>
 
