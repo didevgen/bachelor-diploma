@@ -12,6 +12,8 @@ public class RoomDTO extends BaseUuidDTO<Room> {
 
     private String building;
 
+    private Integer online;
+
     private int floor;
 
     @Override
@@ -45,5 +47,13 @@ public class RoomDTO extends BaseUuidDTO<Room> {
 
     public void setFloor(int floor) {
         this.floor = floor;
+    }
+
+    public Integer getOnline() {
+        return online;
+    }
+
+    public void setOnline(Integer online) {
+        this.online = online;
     }
 }

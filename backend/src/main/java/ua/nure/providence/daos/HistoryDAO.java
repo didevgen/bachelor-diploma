@@ -1,9 +1,12 @@
 package ua.nure.providence.daos;
 
 import com.mysema.commons.lang.Pair;
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
+import org.apache.tomcat.jni.Local;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.nure.providence.models.authentication.User;
@@ -145,25 +148,56 @@ public class HistoryDAO extends BaseDAO<History> {
     }
 
     public Pair<List<CardHolder>, Long>getPresentCardHoldersInRoom(String roomUuid, long limit, long offset) {
+        JPAQuery<CardHolder> query = this.getOnlineQuery(roomUuid);
+        return new Pair<>(query.limit(limit).offset(offset)
+                .fetch(), (long)getOnlineCountToday(roomUuid));
+    }
+
+    public Integer getOnlineCountToday(String roomUuid) {
         QHistory parent = new QHistory("parent");
         QHistory child = new QHistory("child");
         QCardHolder cardHolder = new QCardHolder("holder");
         QRoom room = new QRoom("room");
-        JPAQuery<CardHolder> query = new JPAQuery<CardHolder>(entityManager)
-                .select(cardHolder)
+        List<Long> holder = new JPAQuery<CardHolder>(entityManager)
+                .select(cardHolder.id)
                 .from(parent)
                 .leftJoin(parent.room, room)
                 .leftJoin(parent.cardHolder, cardHolder)
-                .where(room.uuid.eq(roomUuid).and(parent.inOutState.eq(1)))
+                .where(room.uuid.eq(roomUuid)
+                        .and(parent.timeStamp.goe(LocalDate.now().toDateTimeAtStartOfDay()))
+                        .and(parent.inOutState.eq(1)))
                 .groupBy(cardHolder.id, cardHolder.uuid, cardHolder.fullName)
                 .having(parent.timeStamp.max().goe(
                         JPAExpressions.select(child.timeStamp.max()).from(child)
                                 .where(cardHolder.id.eq(child.cardHolder.id)
+                                        .and(child.timeStamp.goe(LocalDate.now().toDateTimeAtStartOfDay()))
+                                        .and(child.room.uuid.eq(roomUuid))
+                                        .and(child.inOutState.eq(0))
+                                ))).fetch();
+        return holder.size();
+    }
+
+    private JPAQuery<CardHolder> getOnlineQuery(String roomUuid) {
+        QHistory parent = new QHistory("parent");
+        QHistory child = new QHistory("child");
+        QCardHolder cardHolder = new QCardHolder("holder");
+        QRoom room = new QRoom("room");
+        return new JPAQuery<CardHolder>(entityManager)
+                .select(cardHolder)
+                .from(parent)
+                .leftJoin(parent.room, room)
+                .leftJoin(parent.cardHolder, cardHolder)
+                .where(room.uuid.eq(roomUuid)
+                        .and(parent.timeStamp.goe(LocalDate.now().toDateTimeAtStartOfDay()))
+                        .and(parent.inOutState.eq(1)))
+                .groupBy(cardHolder.id, cardHolder.uuid, cardHolder.fullName)
+                .having(parent.timeStamp.max().goe(
+                        JPAExpressions.select(child.timeStamp.max()).from(child)
+                                .where(cardHolder.id.eq(child.cardHolder.id)
+                                        .and(child.timeStamp.goe(LocalDate.now().toDateTimeAtStartOfDay()))
                                         .and(child.room.uuid.eq(roomUuid))
                                         .and(child.inOutState.eq(0))
                                 )));
-        return new Pair<>(query.limit(limit).offset(offset)
-                .fetch(), query.fetchCount());
     }
 
     public Room findCardHolderPosition(String holderUuid) {

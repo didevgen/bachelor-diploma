@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.controllers.BaseController;
+import ua.nure.providence.daos.HistoryDAO;
 import ua.nure.providence.daos.LockerDAO;
 import ua.nure.providence.daos.RoomDAO;
 import ua.nure.providence.dtos.BaseListDTO;
@@ -31,6 +32,9 @@ public class RoomController extends BaseController {
     private RoomDAO dao;
 
     @Autowired
+    private HistoryDAO historyDAO;
+
+    @Autowired
     private LockerDAO lockerDAO;
 
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
@@ -46,7 +50,7 @@ public class RoomController extends BaseController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<BaseListDTO<RoomDTO>> getRooms(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                  @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+                                                         @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
@@ -54,8 +58,12 @@ public class RoomController extends BaseController {
         long count = dao.getCount(token.getAuthenticatedUser().getAccount());
 
         List<RoomDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), limit, offset).stream()
-                        .map(room -> new RoomDTO().convert(room))
-                        .collect(Collectors.toList());
+                .map(room -> new RoomDTO().convert(room))
+                .map(room -> {
+                    room.setOnline(historyDAO.getOnlineCountToday(room.getUuid()));
+                    return room;
+                })
+                .collect(Collectors.toList());
         return ResponseEntity.ok(new BaseListDTO<>(result, limit, offset, count));
     }
 
