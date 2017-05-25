@@ -1,19 +1,7 @@
 <spinner [show]="loading"></spinner>
 <div class="row">
   <div *ngIf="!showTable && this.rows" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    <ba-card baCardClass="banner-column-panel">
-      <div class="banner">
-        <div class="large-banner-wrapper">
-          <img src="{{ ( 'app/typography/banner.jpg' | baAppPicture ) }}" alt=""/>
-        </div>
-        <div class="banner-text-wrapper">
-          <div class="banner-text">
-            <h1>No subscriptions</h1>
-            <p>Click here to add</p>
-          </div>
-        </div>
-      </div>
-    </ba-card>
+    <empty [title]="'No subscriptions'" [text]="'Click here to add'"></empty>
   </div>
   <div *ngIf="showTable" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
     <h1>My subscriptions</h1>

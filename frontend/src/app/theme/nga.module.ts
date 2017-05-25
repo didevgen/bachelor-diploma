@@ -56,6 +56,7 @@ import {
   EmailValidator,
   EqualPasswordsValidator
 } from './validators';
+import { EmptyComponent } from '../pages/ui/components/empty/empty.component';
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -72,7 +73,8 @@ const NGA_COMPONENTS = [
   BaPageTop,
   BaPictureUploader,
   BaSidebar,
-  BaFileUploader
+  BaFileUploader,
+  EmptyComponent
 ];
 
 const NGA_DIRECTIVES = [

@@ -19,10 +19,22 @@ export const PAGES_MENU = [
         data: {
           menu: {
             title: 'Categories',
-            icon: 'ion-edit',
+            icon: 'ion-clipboard',
             selected: false,
             expanded: false,
             order: 100,
+          }
+        }
+      },
+      {
+        path: 'rooms',
+        data: {
+          menu: {
+            title: 'Rooms',
+            icon: 'ion-ios-home',
+            selected: false,
+            expanded: false,
+            order: 150,
           }
         }
       },

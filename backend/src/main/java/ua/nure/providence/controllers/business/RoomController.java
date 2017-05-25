@@ -49,15 +49,17 @@ public class RoomController extends BaseController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<BaseListDTO<RoomDTO>> getRooms(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                         @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+    public ResponseEntity<BaseListDTO<RoomDTO>> getRooms(
+            @RequestParam(value = "name", required = false) String nameFilter,
+            @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
-        long count = dao.getCount(token.getAuthenticatedUser().getAccount());
+        long count = dao.getCount(token.getAuthenticatedUser().getAccount(), nameFilter);
 
-        List<RoomDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), limit, offset).stream()
+        List<RoomDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), limit, offset, nameFilter).stream()
                 .map(room -> new RoomDTO().convert(room))
                 .map(room -> {
                     room.setOnline(historyDAO.getOnlineCountToday(room.getUuid()));

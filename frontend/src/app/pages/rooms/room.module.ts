@@ -6,9 +6,11 @@ import { AppTranslationModule } from '../../app.translation.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgaModule } from '../../theme/nga.module';
 
-import { routing } from './categories.routing';
+import { routing } from './room.routing';
 import { SpinnerModule } from '../ui/spinner/spinner.module';
 import { DataTableModule } from 'angular2-datatable';
+import { RoomComponent } from './room.component';
+import { RoomClient } from './room.client';
 
 @NgModule({
   imports: [
@@ -23,8 +25,10 @@ import { DataTableModule } from 'angular2-datatable';
     routing
   ],
   declarations: [
+    RoomComponent
   ],
   providers: [
+    RoomClient
   ]
 })
 export class RoomModule {

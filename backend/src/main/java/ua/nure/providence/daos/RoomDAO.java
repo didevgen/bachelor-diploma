@@ -29,14 +29,23 @@ public class RoomDAO extends BaseDAO<Room> {
                 .fetchOne();
     }
 
-    public List<Room> getAll(Account account, long limit, long offset) {
-        return this.getAllBaseQuery(account)
-                .orderBy(QRoom.room.name.asc())
+    public List<Room> getAll(Account account, long limit, long offset, String nameFilter) {
+        JPAQuery<Room> query = this.getAllBaseQuery(account);
+        if (nameFilter != null) {
+            query.where(QRoom.room.name.contains(nameFilter));
+        }
+
+        return query.orderBy(QRoom.room.name.asc())
                 .limit(limit).offset(offset).fetch();
     }
 
-    public long getCount(Account account) {
-        return this.getAllBaseQuery(account).fetchCount();
+    public long getCount(Account account, String nameFilter) {
+        JPAQuery<Room> query = this.getAllBaseQuery(account);
+        if (nameFilter != null) {
+            query.where(QRoom.room.name.contains(nameFilter));
+        }
+
+        return query.fetchCount();
     }
 
     @Override

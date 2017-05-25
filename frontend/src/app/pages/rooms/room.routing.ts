@@ -1,16 +1,12 @@
 import { Routes, RouterModule }  from '@angular/router';
 
 import { ModuleWithProviders } from '@angular/core';
+import { RoomComponent } from './room.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: CategoriesComponent,
-    children: [],
-    pathMatch: 'full'
-  }, {
-    path: ':uuid',
-    component: CategoriesComponent,
+    component: RoomComponent,
     children: [],
     pathMatch: 'full'
   }

@@ -28,19 +28,8 @@
               <category [data]="item"></category>
             </div>
           </div>
-          <ba-card baCardClass="banner-column-panel" *ngIf="currentCategory.children.length === 0">
-            <div class="banner">
-              <div class="large-banner-wrapper">
-                <img src="{{ ( 'app/typography/banner.jpg' | baAppPicture ) }}" alt=""/>
-              </div>
-              <div class="banner-text-wrapper">
-                <div class="banner-text">
-                  <h1>No categories</h1>
-                  <p>Check card holder's presence</p>
-                </div>
-              </div>
-            </div>
-          </ba-card>
+          <empty *ngIf="currentCategory.children.length === 0" [title]="'No categories'"
+                 [text]="'Check card holder presence'"></empty>
         </div>
       </ng-template>
     </ngb-tab>
