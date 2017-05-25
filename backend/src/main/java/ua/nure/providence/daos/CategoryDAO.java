@@ -4,7 +4,6 @@ import com.mysema.commons.lang.Pair;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.nure.providence.models.authentication.QUser;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.CardHolder;
@@ -23,7 +22,7 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
 
     @Override
     public StructuralCategory get(String uuid) {
-        throw new NotImplementedException();
+        return null;
     }
 
     @Override

@@ -28,12 +28,8 @@ public class DatabaseConfig{
     private Environment env;
 
     @Autowired
-    private DataSource dataSource;
-
-    @Autowired
     private LocalContainerEntityManagerFactoryBean entityManagerFactory;
 
-    @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("spring.database.driver-class-name"));
@@ -45,10 +41,11 @@ public class DatabaseConfig{
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+
         LocalContainerEntityManagerFactoryBean entityManagerFactory =
                 new LocalContainerEntityManagerFactoryBean();
 
-        entityManagerFactory.setDataSource(dataSource);
+        entityManagerFactory.setDataSource(dataSource());
         entityManagerFactory.setPackagesToScan(
                 env.getProperty("entitymanager.packagesToScan"));
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -120,7 +117,7 @@ public class DatabaseConfig{
 
     private DataSource getDataSource(LiquibaseProperties liquibaseProperties) {
         if (liquibaseProperties.getUrl() == null) {
-            return this.dataSource;
+            return dataSource();
         }
         return DataSourceBuilder.create().url(liquibaseProperties.getUrl())
                 .username(liquibaseProperties.getUser())

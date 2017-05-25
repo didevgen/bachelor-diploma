@@ -4,10 +4,12 @@ import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.nure.providence.models.authentication.Account;
 import ua.nure.providence.models.authentication.User;
-import ua.nure.providence.models.business.*;
+import ua.nure.providence.models.business.DoorLocker;
+import ua.nure.providence.models.business.QDoorConfiguration;
+import ua.nure.providence.models.business.QDoorLocker;
+import ua.nure.providence.models.business.QRoom;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class DoorDAO extends BaseDAO<DoorLocker> {
 
     @Override
     public DoorLocker get(String uuid) {
-        throw new NotImplementedException();
+        return null;
     }
 
     public DoorLocker get(String uuid, User user) {
@@ -71,6 +73,6 @@ public class DoorDAO extends BaseDAO<DoorLocker> {
 
     @Override
     public boolean exists(String uuid) {
-        throw new NotImplementedException();
+        return false;
     }
 }

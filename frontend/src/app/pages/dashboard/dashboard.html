@@ -1,5 +1,6 @@
+<spinner [show]="loading"></spinner>
 <div class="row">
-  <div *ngIf="!showTable" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+  <div *ngIf="!showTable && this.rows" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
     <ba-card baCardClass="banner-column-panel">
       <div class="banner">
         <div class="large-banner-wrapper">

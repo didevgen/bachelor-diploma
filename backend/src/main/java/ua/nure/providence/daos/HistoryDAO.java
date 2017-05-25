@@ -6,7 +6,6 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.*;
 import ua.nure.providence.models.history.History;
@@ -195,11 +194,11 @@ public class HistoryDAO extends BaseDAO<History> {
 
     @Override
     public History get(String uuid) {
-        throw new NotImplementedException();
+        return null;
     }
 
     @Override
     public boolean exists(String uuid) {
-        throw new NotImplementedException();
+        return false;
     }
 }
