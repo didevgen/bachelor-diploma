@@ -11,6 +11,7 @@ import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.QCard;
 import ua.nure.providence.models.business.QCardHolder;
 import ua.nure.providence.models.hierarchy.QStructuralCategory;
+import ua.nure.providence.models.subscription.QSubscription;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -41,17 +42,11 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .limit(limit).offset(offset).fetch();
     }
 
-    public void updateCardHolderSubscribers(CardHolder holder) {
-        new JPAUpdateClause(entityManager, QCardHolder.cardHolder)
-                .set(QCardHolder.cardHolder.subscribers, holder.getSubscribers())
-                .where(QCardHolder.cardHolder.uuid.eq(holder.getUuid()))
-                .execute();
-    }
-
     public CardHolder getHolder(String holder) {
         return new JPAQuery<CardHolder>(entityManager)
                 .from(QCardHolder.cardHolder)
-                .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
+                .leftJoin(QCardHolder.cardHolder.subscriptions, QSubscription.subscription)
+                .leftJoin(QSubscription.subscription.user, QUser.user)
                 .where(QCardHolder.cardHolder.uuid.eq(holder)).fetchOne();
     }
 
@@ -72,7 +67,8 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .from(QCardHolder.cardHolder)
                 .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
-                .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
+                .leftJoin(QCardHolder.cardHolder.subscriptions, QSubscription.subscription)
+                .leftJoin(QSubscription.subscription.user, QUser.user)
                 .where(QStructuralCategory.structuralCategory.account.eq(account));
     }
 }

@@ -12,7 +12,8 @@ public class SubscribedHolderDTO extends NamedHolderDTO {
 
     public SubscribedHolderDTO convert(CardHolder object, User user) {
         super.convert(object);
-        setSubscribed(object.getSubscribers().stream().anyMatch(item -> item.getUuid().equals(user.getUuid())));
+        setSubscribed(object.getSubscriptions().stream().anyMatch(item -> item.getUser().getUuid()
+                .equals(user.getUuid())));
         return this;
     }
 
