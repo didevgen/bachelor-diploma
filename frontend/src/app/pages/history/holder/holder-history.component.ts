@@ -68,7 +68,8 @@ export class HolderHistoryComponent extends UnsubscribableComponent implements O
         start: moment(item.sessionStart),
         end: moment(item.sessionEnd),
         color: '#fff',
-        textColor: '#000'
+        textColor: '#000',
+        borderColor: '#000'
       };
     });
   }
