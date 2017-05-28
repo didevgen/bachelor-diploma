@@ -1,0 +1,6 @@
+<spinner [show]="loading"></spinner>
+<ba-full-calendar *ngIf="showCalendar"
+                  [baFullCalendarConfiguration]="calendarConfiguration"
+                  baFullCalendarClass="blurCalendar"
+                  (onCalendarReady)="onCalendarReady($event)"
+></ba-full-calendar>

@@ -13,7 +13,11 @@
     [offset]="offset"
     [limit]="limit"
     (page)='setPage($event)'>
-    <ngx-datatable-column name="Holder" prop="cardHolder.name" [flexGrow]="1"></ngx-datatable-column>
+    <ngx-datatable-column name="Holder" prop="cardHolder.name" [flexGrow]="1">
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <a [routerLink]="['/pages/history/holder', row.cardHolder.uuid, 'sessions']">{{value}}</a>
+      </ng-template>
+    </ngx-datatable-column>
     <ngx-datatable-column name="Room" prop="room.name" [flexGrow]="1"></ngx-datatable-column>
     <ngx-datatable-column name="Time" prop="timestamp" [flexGrow]="1">
       <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>

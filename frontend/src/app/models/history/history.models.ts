@@ -15,3 +15,9 @@ export class AccountHistoryItem {
   public uuid: string;
   public event: HistoryEvent;
 }
+
+export class SessionHistory {
+  public room: Room;
+  public sessionEnd: string;
+  public sessionStart: string;
+}

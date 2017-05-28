@@ -11,6 +11,7 @@ import { SpinnerModule } from '../ui/spinner/spinner.module';
 import { DataTableModule } from 'angular2-datatable';
 import { HistoryComponent } from './history.component';
 import { HistoryClient } from './history.client';
+import { HolderHistoryComponent } from './holder/holder-history.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { HistoryClient } from './history.client';
     routing
   ],
   declarations: [
-    HistoryComponent
+    HistoryComponent,
+    HolderHistoryComponent
   ],
   providers: [
     HistoryClient
