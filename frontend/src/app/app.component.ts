@@ -1,11 +1,9 @@
 import { Component, ViewContainerRef } from '@angular/core';
-import * as $ from 'jquery';
 
 import { GlobalState } from './global.state';
 import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from './theme/services';
 import { BaThemeConfig } from './theme/theme.config';
-import { layoutPaths } from './theme/theme.constants';
-
+declare const OneSignal: any;
 /*
  * App Component
  * Top Level Component
@@ -43,6 +41,22 @@ export class App {
     // hide spinner once all loaders are completed
     BaThemePreloader.load().then((values) => {
       this._spinner.hide();
+      OneSignal.push(['init', {
+        appId: '276dc1e0-08e7-41c3-8db9-d8a5e4186676',
+        subdomainName: 'providence-eye',
+        httpPermissionRequest: {
+          enable: true
+        },
+        persistNotification: false
+      }]);
+
+      OneSignal.push(function () {
+        OneSignal.isPushNotificationsEnabled().then((isEnabled) => {
+          if (!isEnabled) {
+            OneSignal.registerForPushNotifications();
+          }
+        });
+      });
     });
   }
 

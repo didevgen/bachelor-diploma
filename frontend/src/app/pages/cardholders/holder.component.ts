@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UnsubscribableComponent } from '../../theme/unsubscribable.component';
 import { ListResult, PageData } from '../../models/datatable/list.data';
 import { IBaseList } from '../components/base/base-list.component';
 import { CardHolder } from '../../models/cardh-holders/holders.model';
 import { HolderClient } from './holder.client';
+declare const OneSignal: any;
 
 @Component({
   selector: 'holders',
@@ -21,6 +22,7 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
   public userTyping: boolean = false;
 
   constructor(private currentRoute: ActivatedRoute,
+              private ngZone: NgZone,
               private holderClient: HolderClient) {
     super();
   }
@@ -46,18 +48,30 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
   }
 
   public subscribeToCardHolder(value: boolean, row: any) {
-    row.subscribed = !value;
-    if (row.subscribed === true) {
-      this.subscribers.push(this.holderClient.subscribeToHolder(row.uuid).subscribe(() => {
-      }));
-    } else {
-      this.subscribers.push(this.holderClient.unsubscribeFromHolder(row.uuid).subscribe(() => {
-      }));
-    }
+    OneSignal.push(() => {
+      OneSignal.isPushNotificationsEnabled().then((isEnabled) => {
+        if (isEnabled) {
+          OneSignal.getUserId().then(userId => {
+          });
+        } else {
+          this.ngZone.run(() => {
+            row.subscribed = !value;
+            if (row.subscribed === true) {
+              this.subscribers.push(this.holderClient.subscribeToHolder(row.uuid).subscribe(() => {
+              }));
+            } else {
+              this.subscribers.push(this.holderClient.unsubscribeFromHolder(row.uuid).subscribe(() => {
+              }));
+            }
+          });
+        }
+      });
+    });
+
   }
 
   private getHolders(pageInfo: PageData = <PageData>{limit: 10, offset: 0}) {
-    this.loading = true
+    this.loading = true;
     this.subscribers.push(
       this.holderClient.getHolders(pageInfo, this.nameFilter)
         .finally(() => this.loading = false)
