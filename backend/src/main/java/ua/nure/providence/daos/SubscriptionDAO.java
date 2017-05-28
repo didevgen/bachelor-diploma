@@ -1,6 +1,7 @@
 package ua.nure.providence.daos;
 
 import com.mysema.commons.lang.Pair;
+import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

@@ -63,7 +63,7 @@ public class SubscriptionController {
         CardHolder cardHolder = cardHolderDAO.getHolder(data.getData());
         User originalUser = userDao.get(user.getUuid());
         originalUser.getHolderSubscriptions().add(cardHolder);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "/unsubscribe", method = RequestMethod.POST)
@@ -71,9 +71,8 @@ public class SubscriptionController {
     public ResponseEntity removeSubscriptions(@RequestBody() BaseDataDTO<String> data) {
         User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
         User originalUser = userDao.get(user.getUuid());
-        originalUser.setHolderSubscriptions(originalUser.getHolderSubscriptions().stream().filter(item ->
-                !data.getData().equals(item.getUuid()))
-                .collect(Collectors.toList()));
-        return new ResponseEntity(HttpStatus.OK);
+        originalUser.getHolderSubscriptions().removeIf(item ->
+                data.getData().equals(item.getUuid()));
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

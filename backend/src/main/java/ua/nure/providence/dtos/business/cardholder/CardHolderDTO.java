@@ -2,6 +2,7 @@ package ua.nure.providence.dtos.business.cardholder;
 
 import ua.nure.providence.dtos.BaseUuidDTO;
 import ua.nure.providence.dtos.business.structure.SimpleCategoryDTO;
+import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.base.UUIDEntity;
 import ua.nure.providence.models.business.Card;
 import ua.nure.providence.models.business.CardHolder;
@@ -21,12 +22,20 @@ public class CardHolderDTO extends BaseUuidDTO<CardHolder> {
 
     private List<SimpleCategoryDTO> categories = new ArrayList<>();
 
+    private boolean isSubscribed;
+
     @Override
     public CardHolderDTO convert(CardHolder object) {
         super.convert(object);
         this.fullName = object.getFullName();
         setCardNumbers(object.getCards().stream().map(Card::getCardNumber).collect(Collectors.toList()));
         setCategories(object.getCategories().stream().map(item -> new SimpleCategoryDTO().convert(item)).collect(Collectors.toList()));
+        return this;
+    }
+
+    public CardHolderDTO convert(CardHolder object, User user) {
+        this.convert(object);
+        setSubscribed(object.getSubscribers().stream().anyMatch(item -> item.getUuid().equals(user.getUuid())));
         return this;
     }
 
@@ -52,5 +61,13 @@ public class CardHolderDTO extends BaseUuidDTO<CardHolder> {
 
     public void setCategories(List<SimpleCategoryDTO> categories) {
         this.categories = categories;
+    }
+
+    public boolean isSubscribed() {
+        return isSubscribed;
+    }
+
+    public void setSubscribed(boolean subscribed) {
+        isSubscribed = subscribed;
     }
 }

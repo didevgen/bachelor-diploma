@@ -9,6 +9,14 @@ export class DashboardClient {
 
   }
 
+  public subscribeToHolder(uuid: string): Observable<any> {
+    return this.authService.post(`/api/v1/subscriptions/subscribe`, {data: uuid});
+  }
+
+  public unsubscribeFromHolder(uuid: string): Observable<any> {
+    return this.authService.post(`/api/v1/subscriptions/unsubscribe`, {data: uuid});
+  }
+
   public getSubscriptions(pageData: PageData): Observable<ListResult<any>> {
     let baseUrl = '/api/v1/subscriptions/all?';
 

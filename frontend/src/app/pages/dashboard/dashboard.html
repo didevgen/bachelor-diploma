@@ -1,7 +1,7 @@
 <spinner [show]="loading"></spinner>
 <div class="row">
   <div *ngIf="!showTable && this.rows" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    <empty [title]="'No subscriptions'" [text]="'Click here to add'"></empty>
+    <empty [title]="'No subscriptions'" [link]="'pages/holders'" [text]="'Click here to add'"></empty>
   </div>
   <div *ngIf="showTable" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
     <h1>My subscriptions</h1>
@@ -23,6 +23,18 @@
           <div class="row" *ngFor="let item of value">
             <div class="col-sm-12">
               <a [routerLink]="['/pages/categories/', item.uuid]">{{item.name}}</a>
+            </div>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="" prop="uuid" [flexGrow]="1">
+        <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+          <div class="row">
+            <div class="col-xs-12">
+              <button class="btn btn-primary" *ngIf="!row.unsubscribed" (click)="unsubscribe(value, row)">Unsubscribe
+              </button>
+              <button class="btn btn-primary" *ngIf="row.unsubscribed" (click)="subscribe(value, row)">Subscribe
+              </button>
             </div>
           </div>
         </ng-template>

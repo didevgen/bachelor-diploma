@@ -81,7 +81,7 @@ public class RoomController extends BaseController {
         roomUpdateDTO.fromDTO(previousRoom);
         previousRoom.setDoors(lockerDAO.getLockers(roomUpdateDTO.getLockers()));
         dao.update(previousRoom);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -106,6 +106,6 @@ public class RoomController extends BaseController {
         Room room = dao.get(uuid);
 
         dao.delete(room);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

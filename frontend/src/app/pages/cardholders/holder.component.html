@@ -1,0 +1,52 @@
+<spinner [show]="loading"></spinner>
+<div class="form-group">
+  <label for="nameFilter">Name</label>
+  <input type="text" [(ngModel)]="nameFilter" (ngModelChange)="nameChanged($event)" class="form-control" id="nameFilter"
+         placeholder="Name">
+</div>
+<empty *ngIf="rows && rows.length === 0" [title]="'No holders'" [text]="'Add some'"></empty>
+<div style="width: 100%" *ngIf="rows && rows.length !== 0">
+  <ngx-datatable
+    [rows]="rows"
+    [headerHeight]="50"
+    [columnMode]="'flex'"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    class="material"
+    [externalPaging]="true"
+    [count]="count"
+    [offset]="offset"
+    [limit]="limit"
+    (page)='setPage($event)'>
+    <ngx-datatable-column name="Name" prop="fullName" [flexGrow]="1"></ngx-datatable-column>
+    <ngx-datatable-column name="Categories" prop="categories" [flexGrow]="1">
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <div class="row" *ngFor="let item of value">
+          <div class="col-sm-12">
+            <a [routerLink]="['/pages/categories/', item.uuid]">{{item.name}}</a>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Card numbers" prop="cardNumbers" [flexGrow]="1">
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <span *ngIf="value.length === 0">No card numbers</span>
+        <div *ngIf="value.length > 0">
+          <div class="row" *ngFor="let item of value">
+            <div class="col-sm-12">
+              {{item}}
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Subscribed" prop="subscribed" [flexGrow]="1">
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <label class="switch">
+          <input type="checkbox" name="isSubscribed" [checked]="value" (change)="subscribeToCardHolder(value, row)">
+          <div class="slider round"></div>
+        </label>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>

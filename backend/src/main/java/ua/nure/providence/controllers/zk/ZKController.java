@@ -3,7 +3,6 @@ package ua.nure.providence.controllers.zk;
 import com.querydsl.core.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
@@ -132,7 +130,7 @@ public class ZKController extends BaseController {
 
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<Resource> deleteDoorLocker(@PathVariable(name = "uuid") String uuid) {
+    public ResponseEntity deleteDoorLocker(@PathVariable(name = "uuid") String uuid) {
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
 
         if (!this.dao.exists(uuid, token.getAuthenticatedUser())) {
@@ -141,7 +139,7 @@ public class ZKController extends BaseController {
 
         DoorLocker locker = dao.get(uuid, token.getAuthenticatedUser());
         dao.delete(locker);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "/windows/service", method = RequestMethod.GET)

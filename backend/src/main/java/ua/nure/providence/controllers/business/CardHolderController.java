@@ -51,15 +51,17 @@ public class CardHolderController extends BaseController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<BaseListDTO<CardHolderDTO>> getCardHolders(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                                     @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+    public ResponseEntity<BaseListDTO<CardHolderDTO>> getCardHolders(
+            @RequestParam(value = "name", required = false) String nameFilter,
+            @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
         long count = dao.getCount(token.getAuthenticatedUser().getAccount());
-        List<CardHolderDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), limit, offset).stream()
-                .map(holder -> new CardHolderDTO().convert(holder))
+        List<CardHolderDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), nameFilter, limit, offset).stream()
+                .map(holder -> new CardHolderDTO().convert(holder, token.getAuthenticatedUser()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new BaseListDTO<>(result, limit, offset, count));
     }
@@ -134,7 +136,7 @@ public class CardHolderController extends BaseController {
         }
         CardHolder cardHolder = dao.get(uuid);
         dao.delete(cardHolder);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 }

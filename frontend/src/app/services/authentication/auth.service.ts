@@ -50,7 +50,11 @@ export class AuthService {
       options.headers.set('x-auth-token', this.getToken());
       return this.http.request(url, options)
         .map((response: Response) => {
-          return response.json();
+          if (response['_body']) {
+            return response.json();
+          } else {
+            return {};
+          }
         })
         .catch(this.handleError);
     } else {

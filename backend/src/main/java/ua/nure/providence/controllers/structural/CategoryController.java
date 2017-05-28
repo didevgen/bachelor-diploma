@@ -168,7 +168,7 @@ public class CategoryController {
 
         StructuralCategory category = dao.getDetail(uuid, user);
         dao.delete(category);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     private void handleCategory(StructuralCategory category, CategoryUpdateDTO dto, User user) {

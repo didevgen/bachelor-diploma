@@ -32,9 +32,12 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .fetchOne();
     }
 
-    public List<CardHolder> getAll(Account account, long limit, long offset) {
-        return this.getAllBaseQuery(account)
-                .orderBy(QCardHolder.cardHolder.fullName.asc())
+    public List<CardHolder> getAll(Account account, String nameFilter, long limit, long offset) {
+        JPAQuery<CardHolder> query = this.getAllBaseQuery(account);
+        if (nameFilter != null) {
+            query.where(QCardHolder.cardHolder.fullName.contains(nameFilter));
+        }
+        return query.orderBy(QCardHolder.cardHolder.fullName.asc())
                 .limit(limit).offset(offset).fetch();
     }
 
@@ -69,6 +72,7 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .from(QCardHolder.cardHolder)
                 .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
+                .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
                 .where(QStructuralCategory.structuralCategory.account.eq(account));
     }
 }

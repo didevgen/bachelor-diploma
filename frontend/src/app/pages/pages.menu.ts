@@ -6,7 +6,7 @@ export const PAGES_MENU = [
         path: 'dashboard',
         data: {
           menu: {
-            title: 'general.menu.dashboard',
+            title: 'Dashboard',
             icon: 'ion-android-home',
             selected: false,
             expanded: false,
@@ -35,6 +35,18 @@ export const PAGES_MENU = [
             selected: false,
             expanded: false,
             order: 150,
+          }
+        }
+      },
+      {
+        path: 'holders',
+        data: {
+          menu: {
+            title: 'Card Holders',
+            icon: 'ion-card',
+            selected: false,
+            expanded: false,
+            order: 160,
           }
         }
       },
