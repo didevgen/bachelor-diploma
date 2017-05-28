@@ -57,6 +57,7 @@ import {
   EqualPasswordsValidator
 } from './validators';
 import { EmptyComponent } from '../pages/ui/components/empty/empty.component';
+import { DateFormatter } from '../pipes/date-formatter.pipe';
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -87,7 +88,8 @@ const NGA_DIRECTIVES = [
 const NGA_PIPES = [
   BaAppPicturePipe,
   BaKameleonPicturePipe,
-  BaProfilePicturePipe
+  BaProfilePicturePipe,
+  DateFormatter
 ];
 
 const NGA_SERVICES = [

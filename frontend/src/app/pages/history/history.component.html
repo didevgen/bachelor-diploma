@@ -1,0 +1,25 @@
+<spinner [show]="loading"></spinner>
+<empty *ngIf="rows && rows.length === 0" [title]="'No history'" [text]="'Add some'"></empty>
+<div style="width: 100%" *ngIf="rows && rows.length !== 0">
+  <ngx-datatable
+    [rows]="rows"
+    [headerHeight]="50"
+    [columnMode]="'flex'"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    class="material"
+    [externalPaging]="true"
+    [count]="count"
+    [offset]="offset"
+    [limit]="limit"
+    (page)='setPage($event)'>
+    <ngx-datatable-column name="Holder" prop="cardHolder.name" [flexGrow]="1"></ngx-datatable-column>
+    <ngx-datatable-column name="Room" prop="room.name" [flexGrow]="1"></ngx-datatable-column>
+    <ngx-datatable-column name="Time" prop="timestamp" [flexGrow]="1">
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        {{value | dateFormat}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Event" prop="event.eventName" [flexGrow]="1"></ngx-datatable-column>
+  </ngx-datatable>
+</div>

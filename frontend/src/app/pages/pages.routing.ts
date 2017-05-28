@@ -25,6 +25,7 @@ export const routes: Routes = [
       { path: 'categories', loadChildren: './categories/categories.module#CategoriesModule' },
       { path: 'rooms', loadChildren: './rooms/room.module#RoomModule' },
       { path: 'holders', loadChildren: './cardholders/holder.module#HolderModule' },
+      { path: 'history', loadChildren: './history/history.module#HistoryModule' },
       { path: 'editors', loadChildren: './editors/editors.module#EditorsModule' },
       { path: 'components', loadChildren: './components/components.module#ComponentsModule' },
       { path: 'charts', loadChildren: './charts/charts.module#ChartsModule' },

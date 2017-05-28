@@ -57,7 +57,7 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
   }
 
   private getHolders(pageInfo: PageData = <PageData>{limit: 10, offset: 0}) {
-    this.loading = true;
+    this.loading = true
     this.subscribers.push(
       this.holderClient.getHolders(pageInfo, this.nameFilter)
         .finally(() => this.loading = false)

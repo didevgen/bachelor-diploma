@@ -22,7 +22,7 @@ export const PAGES_MENU = [
             icon: 'ion-clipboard',
             selected: false,
             expanded: false,
-            order: 100,
+            order: 1,
           }
         }
       },
@@ -34,7 +34,7 @@ export const PAGES_MENU = [
             icon: 'ion-ios-home',
             selected: false,
             expanded: false,
-            order: 150,
+            order: 2,
           }
         }
       },
@@ -46,7 +46,19 @@ export const PAGES_MENU = [
             icon: 'ion-card',
             selected: false,
             expanded: false,
-            order: 160,
+            order: 3,
+          }
+        }
+      },
+      {
+        path: 'history',
+        data: {
+          menu: {
+            title: 'History',
+            icon: 'ion-clock',
+            selected: false,
+            expanded: false,
+            order: 4,
           }
         }
       },
