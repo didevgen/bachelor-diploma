@@ -10,7 +10,6 @@ import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.QCardHolder;
 import ua.nure.providence.models.hierarchy.QStructuralCategory;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
-import ua.nure.providence.models.subscription.QSubscription;
 
 import java.util.List;
 
@@ -96,8 +95,7 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
         JPAQuery<CardHolder> query = new JPAQuery<CardHolder>(entityManager)
                 .from(QCardHolder.cardHolder)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
-                .leftJoin(QCardHolder.cardHolder.subscriptions, QSubscription.subscription)
-                .leftJoin(QSubscription.subscription.user, QUser.user)
+                .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
                 .where(QStructuralCategory.structuralCategory.account.eq(user.getAccount())
                         .and(QStructuralCategory.structuralCategory.uuid.eq(categoryUuid)));
         return new Pair<>(query.limit(limit).offset(offset)

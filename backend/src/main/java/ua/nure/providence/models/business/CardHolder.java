@@ -6,7 +6,6 @@ import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.base.BaseEntity;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
 import ua.nure.providence.models.history.History;
-import ua.nure.providence.models.subscription.Subscription;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,8 +27,8 @@ public class CardHolder extends BaseEntity {
     @ManyToMany(mappedBy = "cardHolders", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StructuralCategory> categories = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "subsribedHolders", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Subscription> subscriptions = new ArrayList<>();
+    @ManyToMany(mappedBy = "holderSubscriptions", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<User> subscribers = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cardHolder")
     private List<History> histories = new ArrayList<>();
@@ -61,20 +60,20 @@ public class CardHolder extends BaseEntity {
         this.categories = categories;
     }
 
+    public List<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(List<User> subscribers) {
+        this.subscribers = subscribers;
+    }
+
     public List<History> getHistories() {
         return histories;
     }
 
     public void setHistories(List<History> histories) {
         this.histories = histories;
-    }
-
-    public List<Subscription> getSubscriptions() {
-        return subscriptions;
-    }
-
-    public void setSubscriptions(List<Subscription> subscriptions) {
-        this.subscriptions = subscriptions;
     }
 
     @PreRemove

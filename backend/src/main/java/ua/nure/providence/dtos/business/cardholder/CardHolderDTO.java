@@ -35,8 +35,7 @@ public class CardHolderDTO extends BaseUuidDTO<CardHolder> {
 
     public CardHolderDTO convert(CardHolder object, User user) {
         this.convert(object);
-        setSubscribed(object.getSubscriptions().stream().anyMatch(item -> item.getUser().getUuid()
-                .equals(user.getUuid())));
+        setSubscribed(object.getSubscribers().stream().anyMatch(item -> item.getUuid().equals(user.getUuid())));
         return this;
     }
 

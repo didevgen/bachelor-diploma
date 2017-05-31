@@ -52,18 +52,6 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
       OneSignal.isPushNotificationsEnabled().then((isEnabled) => {
         if (isEnabled) {
           OneSignal.getUserId().then(userId => {
-            this.ngZone.run(() => {
-              row.subscribed = !value;
-              if (row.subscribed === true) {
-                this.subscribers.push(this.holderClient.oneSignalSubscribeToHolder(row.uuid, userId)
-                  .subscribe(() => {
-                  }));
-              } else {
-                this.subscribers.push(this.holderClient.oneSignalUnsubscribeFromHolder(row.uuid, userId)
-                  .subscribe(() => {
-                  }));
-              }
-            });
           });
         } else {
           this.ngZone.run(() => {

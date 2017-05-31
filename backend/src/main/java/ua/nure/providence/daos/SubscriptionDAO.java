@@ -11,8 +11,6 @@ import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.QCard;
 import ua.nure.providence.models.business.QCardHolder;
 import ua.nure.providence.models.hierarchy.QStructuralCategory;
-import ua.nure.providence.models.subscription.QSubscription;
-import ua.nure.providence.models.subscription.Subscription;
 
 import java.util.List;
 
@@ -21,10 +19,10 @@ import java.util.List;
  */
 @Repository("subscriptionDao")
 @Transactional
-public class SubscriptionDAO extends BaseDAO<Subscription> {
+public class SubscriptionDAO extends BaseDAO<CardHolder> {
 
     @Override
-    public Subscription get(String uuid) {
+    public CardHolder get(String uuid) {
         return null;
     }
 
@@ -36,21 +34,13 @@ public class SubscriptionDAO extends BaseDAO<Subscription> {
     public Pair<List<CardHolder>, Long> getAllSubscriptions(User user, long limit, long offset) {
         JPAQuery<CardHolder> query = new JPAQuery<CardHolder>(entityManager)
                 .from(QCardHolder.cardHolder)
-                .leftJoin(QCardHolder.cardHolder.subscriptions, QSubscription.subscription)
-                .leftJoin(QSubscription.subscription.user, QUser.user)
+                .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
                 .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
                 .where(QUser.user.eq(user));
         return new Pair<>(query
                 .limit(limit).offset(offset)
                 .fetch(), query.fetchCount());
-    }
-
-    public void deleteSubscription(User user, String subscriptionKey) {
-        new JPADeleteClause(entityManager, QSubscription.subscription)
-                .where(QSubscription.subscription.user.eq(user)
-                        .and(QSubscription.subscription.subscriptionKey.eq(subscriptionKey)))
-                .execute();
     }
 
 }
