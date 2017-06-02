@@ -1,7 +1,8 @@
 <spinner [show]="loading"></spinner>
 <div class="form-group">
   <label for="nameFilter">Name</label>
-  <input type="text" [(ngModel)]="nameFilter" (ngModelChange)="nameChanged($event)" class="form-control" id="nameFilter" placeholder="Name">
+  <input type="text" [(ngModel)]="nameFilter" (ngModelChange)="nameChanged($event)" class="form-control" id="nameFilter"
+         placeholder="Name">
 </div>
 <empty *ngIf="rows && rows.length === 0" [title]="'No rooms'" [text]="'Add some'"></empty>
 <div style="width: 100%" *ngIf="rows && rows.length !== 0">
@@ -20,6 +21,11 @@
     <ngx-datatable-column name="Name" prop="name" [flexGrow]="1"></ngx-datatable-column>
     <ngx-datatable-column name="Building" prop="building" [flexGrow]="1"></ngx-datatable-column>
     <ngx-datatable-column name="Floor" prop="floor" [flexGrow]="1"></ngx-datatable-column>
-    <ngx-datatable-column name="Online" prop="online" [flexGrow]="1"></ngx-datatable-column>
+    <ngx-datatable-column name="Online" prop="online" [flexGrow]="1">
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <a *ngIf="value >= 0" [routerLink]="['/pages/holders/room/', row.uuid, 'online']">{{value}}</a>
+        <!--<span *ngIf="value === 0">{{value}}</span>-->
+      </ng-template>
+    </ngx-datatable-column>
   </ngx-datatable>
 </div>

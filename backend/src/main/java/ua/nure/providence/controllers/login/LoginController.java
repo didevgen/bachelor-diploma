@@ -54,7 +54,7 @@ public class LoginController extends BaseController {
         User user = dao.getByEmailAndPassword(loginDTO.getEmail(), MD5.encrypt(loginDTO.getPassword()))
                 .orElseThrow(() ->
                         new RestException(HttpStatus.NOT_FOUND, 404001, "Specified user not found"));
-        long tokenLifetime = 3600;
+        long tokenLifetime = 3600 * 1000;
 
         AuthToken authToken = new AuthToken(tokenGenerator.issueToken(user.getUuid(), tokenLifetime),
                 user.getUuid());

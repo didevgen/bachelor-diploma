@@ -25,4 +25,15 @@ export class HolderClient extends DashboardClient {
     return this.http.get(url);
   }
 
+  public getRoomHolders(roomId: string, pageInfo: PageData): Observable<ListResult<CardHolder>> {
+    let url = `/api/v1/history/room/${roomId}/holders/online?`;
+    if (pageInfo.limit !== undefined) {
+      url += `&limit=${pageInfo.limit}`;
+    }
+    if (pageInfo.offset !== undefined) {
+      url += `&offset=${pageInfo.offset}`;
+    }
+    return this.http.get(url);
+  }
+
 }

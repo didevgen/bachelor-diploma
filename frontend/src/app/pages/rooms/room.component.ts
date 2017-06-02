@@ -47,6 +47,7 @@ export class RoomComponent extends UnsubscribableComponent implements OnInit, IB
   }
 
   private getRooms(pageInfo: PageData = <PageData>{limit: 10, offset: 0}) {
+    this.loading = true;
     this.subscribers.push(
       this.roomClient.getRooms(pageInfo, this.nameFilter)
       .finally(() => this.loading = false)

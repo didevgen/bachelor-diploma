@@ -16,6 +16,11 @@ export class AccountHistoryItem {
   public event: HistoryEvent;
 }
 
+export class SessionDetail {
+  public sessions: SessionHistory[] = [];
+  public fullName: string = '';
+}
+
 export class SessionHistory {
   public room: Room;
   public sessionEnd: string;

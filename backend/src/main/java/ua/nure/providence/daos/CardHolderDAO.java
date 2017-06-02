@@ -32,6 +32,13 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .fetchOne();
     }
 
+    public CardHolder getLightHolder(String uuid) {
+        return new JPAQuery<CardHolder>(entityManager)
+                .from(QCardHolder.cardHolder)
+                .where(QCardHolder.cardHolder.uuid.eq(uuid))
+                .fetchOne();
+    }
+
     public List<CardHolder> getAll(Account account, String nameFilter, long limit, long offset) {
         JPAQuery<CardHolder> query = this.getAllBaseQuery(account);
         if (nameFilter != null) {

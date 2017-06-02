@@ -1,6 +1,20 @@
 <spinner [show]="loading"></spinner>
-<ba-full-calendar *ngIf="showCalendar"
-                  [baFullCalendarConfiguration]="calendarConfiguration"
-                  baFullCalendarClass="blurCalendar"
-                  (onCalendarReady)="onCalendarReady($event)"
-></ba-full-calendar>
+<div class="row">
+  <div class="col-xs-12">
+    <h1>{{cardHolderName}}</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <h3>Current location: {{currentPlace}}</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <ba-full-calendar *ngIf="showCalendar"
+                      [baFullCalendarConfiguration]="calendarConfiguration"
+                      baFullCalendarClass="blurCalendar"
+                      (onCalendarReady)="onCalendarReady($event)"
+    ></ba-full-calendar>
+  </div>
+</div>

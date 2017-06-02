@@ -22,7 +22,7 @@ import { ToasterModule } from 'angular2-toaster';
   declarations: [
     Login
   ],
-  providers: [LoginClient]
+  providers: []
 })
 export class LoginModule {
 }

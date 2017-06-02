@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UnsubscribableComponent } from '../../theme/unsubscribable.component';
 import { ListResult, PageData } from '../../models/datatable/list.data';
@@ -19,6 +19,7 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
   public limit: number;
   public nameFilter: string;
   public userTyping: boolean = false;
+  public roomId: string = null;
 
   constructor(private currentRoute: ActivatedRoute,
               private ngZone: NgZone,
@@ -27,7 +28,12 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
   }
 
   public ngOnInit(): void {
-    this.getHolders();
+    this.roomId = this.currentRoute.snapshot.params['roomId'];
+    if (this.roomId) {
+      this.getRoomHolders(this.currentRoute.snapshot.params['roomId']);
+    } else {
+      this.getHolders();
+    }
   }
 
   public nameChanged(filter: string) {
@@ -47,7 +53,6 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
   }
 
   public subscribeToCardHolder(value: boolean, row: any) {
-
     row.subscribed = !value;
     if (row.subscribed === true) {
       this.subscribers.push(this.holderClient.subscribeToHolder(row.uuid).subscribe(() => {
@@ -62,6 +67,16 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
     this.loading = true;
     this.subscribers.push(
       this.holderClient.getHolders(pageInfo, this.nameFilter)
+        .finally(() => this.loading = false)
+        .subscribe((rooms: ListResult<CardHolder>) => {
+          this.handleListResult(rooms);
+        }));
+  }
+
+  private getRoomHolders(roomId: string, pageInfo: PageData = <PageData>{limit: 10, offset: 0}) {
+    this.loading = true;
+    this.subscribers.push(
+      this.holderClient.getRoomHolders(roomId, pageInfo)
         .finally(() => this.loading = false)
         .subscribe((rooms: ListResult<CardHolder>) => {
           this.handleListResult(rooms);

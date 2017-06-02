@@ -2,16 +2,21 @@ package ua.nure.providence.controllers.history;
 
 import com.mysema.commons.lang.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.HistoryDAO;
 import ua.nure.providence.dtos.BaseListDTO;
+import ua.nure.providence.dtos.business.cardholder.CardHolderDTO;
 import ua.nure.providence.dtos.business.cardholder.NamedHolderDTO;
 import ua.nure.providence.dtos.business.room.RoomDTO;
 import ua.nure.providence.dtos.history.HistoryDTO;
 import ua.nure.providence.dtos.history.session.HolderSessionDTO;
+import ua.nure.providence.dtos.history.session.SessionDetailDTO;
+import ua.nure.providence.exceptions.rest.RestException;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
 import ua.nure.providence.models.history.History;
@@ -34,6 +39,9 @@ public class HistoryController {
     @Autowired
     private HistoryDAO dao;
 
+    @Autowired
+    private CardHolderDAO holderDao;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<BaseListDTO<HistoryDTO>> getAccountHistory(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
@@ -52,8 +60,8 @@ public class HistoryController {
     @RequestMapping(value = "/room/{uuid}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<BaseListDTO<HistoryDTO>> getRoomHistory(@PathVariable("uuid") String uuid,
-                                                              @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                              @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+                                                                  @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                  @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
@@ -67,12 +75,14 @@ public class HistoryController {
     @RequestMapping(value = "/cardholder/{uuid}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<BaseListDTO<HistoryDTO>> getCardHolderHistory(@PathVariable("uuid") String uuid,
-                                                           @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                           @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+                                                                        @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                        @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
-
+        if (!holderDao.exists(uuid)) {
+            throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified holder not found");
+        }
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
         Pair<List<History>, Long> pair = dao.getCardHolderHistory(uuid, token.getAuthenticatedUser(), limit, offset);
         return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream().map(history -> new HistoryDTO().convert(history))
@@ -82,13 +92,15 @@ public class HistoryController {
     @RequestMapping(value = "/cardholder/{holderId}/room/{roomId}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<BaseListDTO<HistoryDTO>> getRoomCardHolderHistory(@PathVariable("holderId") String holderId,
-                                                                     @PathVariable("roomId") String roomId,
-                                                                 @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                                 @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+                                                                            @PathVariable("roomId") String roomId,
+                                                                            @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                            @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
-
+        if (!holderDao.exists(holderId)) {
+            throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified holder not found");
+        }
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
         Pair<List<History>, Long> pair = dao.getCardHolderHistoryInRoom(holderId, roomId, token.getAuthenticatedUser(), limit, offset);
         return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream().map(history -> new HistoryDTO().convert(history))
@@ -98,8 +110,8 @@ public class HistoryController {
     @RequestMapping(value = "/room/{uuid}/online", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<BaseListDTO<NamedHolderDTO>> getPresentPeopleInRoom(@PathVariable("uuid") String uuid,
-                                                           @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
-                                                           @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+                                                                              @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                              @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
         if (limit == 0) {
             limit = Long.MAX_VALUE;
         }
@@ -108,9 +120,25 @@ public class HistoryController {
                 .collect(Collectors.toList()), limit, offset, pair.getSecond()));
     }
 
+    @RequestMapping(value = "/room/{uuid}/holders/online", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<BaseListDTO<CardHolderDTO>> getDetailedPresentPeople(@PathVariable("uuid") String uuid,
+                                                                                @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                                @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+        if (limit == 0) {
+            limit = Long.MAX_VALUE;
+        }
+        Pair<List<CardHolder>, Long> pair = dao.getPresentCardHoldersInRoom(uuid, limit, offset);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream().map(holder -> new CardHolderDTO().convert(holder))
+                .collect(Collectors.toList()), limit, offset, pair.getSecond()));
+    }
+
     @RequestMapping(value = "/cardHolder/{uuid}/find", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<RoomDTO> findCardHolderPlace(@PathVariable("uuid") String uuid) {
+        if (!holderDao.exists(uuid)) {
+            throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified holder not found");
+        }
         Room room = dao.findCardHolderPosition(uuid);
         if (room == null) {
             return ResponseEntity.ok(new RoomDTO());
@@ -120,8 +148,12 @@ public class HistoryController {
 
     @RequestMapping(value = "/cardHolder/{uuid}/sessions", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<HolderSessionDTO>> getCardHolderSessions(@PathVariable("uuid") String uuid) {
+    public ResponseEntity<SessionDetailDTO> getCardHolderSessions(@PathVariable("uuid") String uuid) {
         List<HolderSessionDTO> result = new ArrayList<>();
+        CardHolder holder = holderDao.getLightHolder(uuid);
+        if (holder == null) {
+            throw new RestException(HttpStatus.NOT_FOUND, 404004, "Specified holder not found");
+        }
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
         Map<Room, List<History>> histories = dao.getCardHolderSessions(uuid, token.getAuthenticatedUser());
 
@@ -187,7 +219,7 @@ public class HistoryController {
                 result.add(sessionItem);
             }
         }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new SessionDetailDTO(holder.getFullName(), result));
 
     }
 

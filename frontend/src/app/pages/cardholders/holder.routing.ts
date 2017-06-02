@@ -9,6 +9,11 @@ export const routes: Routes = [
     component: HolderComponent,
     children: [],
     pathMatch: 'full'
+  }, {
+    path: 'room/:roomId/online',
+    component: HolderComponent,
+    children: [],
+    pathMatch: 'full'
   }
 ];
 

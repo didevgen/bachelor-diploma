@@ -21,12 +21,18 @@ import { AuthenticationResolve } from './resolvers/authoriation.resolve';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { SpinnerComponent } from './pages/ui/spinner/spinner.component';
 import { SpinnerModule } from './pages/ui/spinner/spinner.module';
+import { GlobalHttp } from './services/global/global.http';
+import { OneSignalService } from './services/global/one-signal.service';
+import { LoginClient } from './pages/login/login.client';
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
   GlobalState,
   AuthService,
+  GlobalHttp,
+  LoginClient,
+  OneSignalService,
   AuthHttp,
   AuthenticationResolve
 ];
