@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.controllers.BaseController;
+import ua.nure.providence.daos.DeviceDAO;
 import ua.nure.providence.daos.UserDAO;
 import ua.nure.providence.dtos.auth.TokenDTO;
 import ua.nure.providence.dtos.login.LoginDTO;
+import ua.nure.providence.dtos.login.LogoutDTO;
 import ua.nure.providence.dtos.user.UserDTO;
 import ua.nure.providence.exceptions.rest.RestException;
 import ua.nure.providence.models.authentication.User;
@@ -32,6 +34,9 @@ public class LoginController extends BaseController {
 
     @Autowired
     private UserDAO dao;
+
+    @Autowired
+    private DeviceDAO deviceDAO;
 
     @Autowired
     private Environment env;
@@ -79,7 +84,7 @@ public class LoginController extends BaseController {
             throw new RestException(HttpStatus.NOT_FOUND, 404001, "Specified user not found");
         }
 
-        redisRepository.insert(tokenDTO.getToken(), user.getUuid(),  payLoad.getExpirationTimeSeconds() * 1000 - System.currentTimeMillis());
+        redisRepository.insert(tokenDTO.getToken(), user.getUuid(), payLoad.getExpirationTimeSeconds() * 1000 - System.currentTimeMillis());
         AuthToken authToken = new AuthToken(tokenDTO.getToken(),
                 user.getUuid());
 
@@ -89,5 +94,16 @@ public class LoginController extends BaseController {
         response.setHeader(env.getProperty("token.header"), authToken.getTokenValue());
         response.setHeader(env.getProperty("token.expire.header"), String.valueOf(payLoad.getExpirationTimeSeconds() * 1000));
         return ResponseEntity.ok(new UserDTO().convert(user));
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity logout(@RequestBody LogoutDTO logoutDTO) {
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        if (logoutDTO.getSubscriptionKey() != null) {
+            deviceDAO.deleteSubscribedDevice(logoutDTO.getSubscriptionKey());
+        }
+        redisRepository.delete(token.getAuthToken().getTokenValue());
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

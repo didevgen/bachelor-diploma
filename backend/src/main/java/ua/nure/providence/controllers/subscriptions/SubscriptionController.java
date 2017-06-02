@@ -9,13 +9,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.providence.daos.CardHolderDAO;
+import ua.nure.providence.daos.DeviceDAO;
 import ua.nure.providence.daos.SubscriptionDAO;
 import ua.nure.providence.daos.UserDAO;
 import ua.nure.providence.dtos.BaseDataDTO;
 import ua.nure.providence.dtos.BaseListDTO;
 import ua.nure.providence.dtos.business.cardholder.CardHolderDTO;
+import ua.nure.providence.dtos.business.device.DeviceDTO;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.CardHolder;
+import ua.nure.providence.models.business.SubscribedDevice;
 import ua.nure.providence.utils.auth.LoginToken;
 
 import java.util.List;
@@ -31,6 +34,9 @@ public class SubscriptionController {
 
     @Autowired
     private SubscriptionDAO dao;
+
+    @Autowired
+    private DeviceDAO deviceDAO;
 
     @Autowired
     private UserDAO userDao;
@@ -73,6 +79,23 @@ public class SubscriptionController {
         User originalUser = userDao.get(user.getUuid());
         originalUser.getHolderSubscriptions().removeIf(item ->
                 data.getData().equals(item.getUuid()));
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/device/register", method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public ResponseEntity registerDevice(@RequestBody() DeviceDTO data) {
+        User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
+        User originalUser = userDao.get(user.getUuid());
+        if (!deviceDAO.exists(data.getSubscriptionKey())) {
+            SubscribedDevice device = new SubscribedDevice();
+            device.setSubscriptionKey(data.getSubscriptionKey());
+            device.setType(data.getDeviceType());
+            device.setOwner(user);
+            deviceDAO.insert(device);
+            originalUser.getDevices().add(device);
+        }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

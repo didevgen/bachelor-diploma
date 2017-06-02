@@ -29,7 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/v1/login")
-                .and().ignoring().antMatchers(HttpMethod.POST, "/api/v1/logout")
                 .and().ignoring().antMatchers(HttpMethod.POST, "/api/v1/verifyToken")
                 .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/swagger-ui.html")
                 .and().ignoring().antMatchers(HttpMethod.GET, "/api/v1/swagger-resources/**")
@@ -48,7 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/logout").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
                 .and()

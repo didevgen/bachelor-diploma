@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import ua.nure.providence.enums.UserRole;
 import ua.nure.providence.models.base.BaseEntity;
 import ua.nure.providence.models.business.CardHolder;
+import ua.nure.providence.models.business.SubscribedDevice;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class User extends BaseEntity {
 
     @ManyToMany
     @JoinTable(
-            name="holder_subscriptions",
+            name = "holder_subscriptions",
             joinColumns = {
                     @JoinColumn(name = "user_id", referencedColumnName = "id")
             },
@@ -56,6 +57,9 @@ public class User extends BaseEntity {
                     @JoinColumn(name = "cardholder_id", referencedColumnName = "id")
             })
     private List<CardHolder> holderSubscriptions = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "owner")
+    private List<SubscribedDevice> devices = new ArrayList<>();
 
     public User() {
     }
@@ -146,5 +150,13 @@ public class User extends BaseEntity {
 
     public void setHolderSubscriptions(List<CardHolder> holderSubscriptions) {
         this.holderSubscriptions = holderSubscriptions;
+    }
+
+    public List<SubscribedDevice> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<SubscribedDevice> devices) {
+        this.devices = devices;
     }
 }
