@@ -64,8 +64,9 @@ export class AuthService {
   }
 
   private handleError(error: any): Observable<any> {
-    if (error.code === 401 || error.code === 403) {
-      this.router.navigate(['/login']);
+    if (error.status === 401 || error.status === 403) {
+      window.location.href = '/login';
+      return;
     }
     return Observable.throw(error);
   }

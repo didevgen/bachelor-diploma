@@ -88,7 +88,7 @@ public class SubscriptionController {
     public ResponseEntity registerDevice(@RequestBody() DeviceDTO data) {
         User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
         User originalUser = userDao.get(user.getUuid());
-        if (!deviceDAO.exists(data.getSubscriptionKey())) {
+        if (!deviceDAO.exists(originalUser, data.getSubscriptionKey())) {
             SubscribedDevice device = new SubscribedDevice();
             device.setSubscriptionKey(data.getSubscriptionKey());
             device.setType(data.getDeviceType());

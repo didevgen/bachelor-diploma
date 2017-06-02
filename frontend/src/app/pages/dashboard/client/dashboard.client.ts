@@ -13,14 +13,6 @@ export class DashboardClient {
     return this.authService.post(`/api/v1/subscriptions/subscribe`, {data: uuid});
   }
 
-  public oneSignalSubscribeToHolder(uuid: string, signalId: string): Observable<any> {
-    return this.authService.post(`/api/v1/subscriptions/subscribe/signal`, {data: uuid, oneSignalId: signalId});
-  }
-
-  public oneSignalUnsubscribeFromHolder(uuid: string, signalId: string): Observable<any> {
-    return this.authService.post(`/api/v1/subscriptions/unsubscribe/signal`, {data: uuid, oneSignalId: signalId});
-  }
-
   public unsubscribeFromHolder(uuid: string): Observable<any> {
     return this.authService.post(`/api/v1/subscriptions/unsubscribe`, {data: uuid});
   }

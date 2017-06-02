@@ -11,6 +11,7 @@
 
 # IDEs and editors
 /.idea
+/src/.idea/*
 .project
 .classpath
 .c9/
@@ -43,3 +44,6 @@ testem.log
 Thumbs.db
 src/idea/*
 src/.idea/*
+src/idea/workspace.xml
+/src/idea/workspace.xml
+src/.idea/workspace.xml

@@ -5,7 +5,6 @@ import { ListResult, PageData } from '../../models/datatable/list.data';
 import { IBaseList } from '../components/base/base-list.component';
 import { CardHolder } from '../../models/cardh-holders/holders.model';
 import { HolderClient } from './holder.client';
-declare const OneSignal: any;
 
 @Component({
   selector: 'holders',
@@ -48,26 +47,15 @@ export class HolderComponent extends UnsubscribableComponent implements OnInit, 
   }
 
   public subscribeToCardHolder(value: boolean, row: any) {
-    OneSignal.push(() => {
-      OneSignal.isPushNotificationsEnabled().then((isEnabled) => {
-        if (isEnabled) {
-          OneSignal.getUserId().then(userId => {
-          });
-        } else {
-          this.ngZone.run(() => {
-            row.subscribed = !value;
-            if (row.subscribed === true) {
-              this.subscribers.push(this.holderClient.subscribeToHolder(row.uuid).subscribe(() => {
-              }));
-            } else {
-              this.subscribers.push(this.holderClient.unsubscribeFromHolder(row.uuid).subscribe(() => {
-              }));
-            }
-          });
-        }
-      });
-    });
 
+    row.subscribed = !value;
+    if (row.subscribed === true) {
+      this.subscribers.push(this.holderClient.subscribeToHolder(row.uuid).subscribe(() => {
+      }));
+    } else {
+      this.subscribers.push(this.holderClient.unsubscribeFromHolder(row.uuid).subscribe(() => {
+      }));
+    }
   }
 
   private getHolders(pageInfo: PageData = <PageData>{limit: 10, offset: 0}) {
