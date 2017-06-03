@@ -1,5 +1,6 @@
 package ua.nure.providence.dtos.business.cardholder;
 
+import org.joda.time.DateTime;
 import ua.nure.providence.dtos.BaseUuidDTO;
 import ua.nure.providence.dtos.business.structure.SimpleCategoryDTO;
 import ua.nure.providence.models.authentication.User;
@@ -23,6 +24,8 @@ public class CardHolderDTO extends BaseUuidDTO<CardHolder> {
     private List<SimpleCategoryDTO> categories = new ArrayList<>();
 
     private boolean isSubscribed;
+
+    private String lastActivity;
 
     @Override
     public CardHolderDTO convert(CardHolder object) {
@@ -69,5 +72,13 @@ public class CardHolderDTO extends BaseUuidDTO<CardHolder> {
 
     public void setSubscribed(boolean subscribed) {
         isSubscribed = subscribed;
+    }
+
+    public String getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(String lastActivity) {
+        this.lastActivity = lastActivity;
     }
 }

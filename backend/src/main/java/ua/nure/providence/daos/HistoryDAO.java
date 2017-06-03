@@ -241,6 +241,14 @@ public class HistoryDAO extends BaseDAO<History> {
                 .fetchOne();
     }
 
+    public DateTime getLastHolderActivity(CardHolder holder) {
+        return new JPAQuery<DateTime>(entityManager)
+                .select(QHistory.history.timeStamp.max())
+                .from(QHistory.history)
+                .where(QHistory.history.cardHolder.eq(holder))
+                .fetchOne();
+    }
+
     @Override
     public History get(String uuid) {
         return null;

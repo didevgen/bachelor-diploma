@@ -1,5 +1,6 @@
 package ua.nure.providence.controllers.business;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import ua.nure.providence.controllers.BaseController;
 import ua.nure.providence.daos.CardDAO;
 import ua.nure.providence.daos.CardHolderDAO;
 import ua.nure.providence.daos.CategoryDAO;
+import ua.nure.providence.daos.HistoryDAO;
 import ua.nure.providence.dtos.BaseListDTO;
 import ua.nure.providence.dtos.business.cardholder.CardHolderDTO;
 import ua.nure.providence.dtos.business.cardholder.CardHolderUpdateDTO;
@@ -17,6 +19,7 @@ import ua.nure.providence.exceptions.rest.RestException;
 import ua.nure.providence.models.business.Card;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
+import ua.nure.providence.models.history.History;
 import ua.nure.providence.utils.auth.LoginToken;
 
 import java.util.List;
@@ -37,6 +40,9 @@ public class CardHolderController extends BaseController {
     private CardDAO cardDAO;
 
     @Autowired
+    private HistoryDAO historyDAO;
+
+    @Autowired
     private CategoryDAO categoryDAO;
 
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
@@ -46,7 +52,12 @@ public class CardHolderController extends BaseController {
             throw new RestException(HttpStatus.NOT_FOUND, 404005, "Specified holder not found");
         }
         CardHolder holder = dao.get(uuid);
-        return ResponseEntity.ok(new CardHolderDTO().convert(holder));
+        CardHolderDTO dto = new CardHolderDTO().convert(holder);
+        DateTime latestActivity = historyDAO.getLastHolderActivity(holder);
+        if (latestActivity != null) {
+            dto.setLastActivity(latestActivity.toString());
+        }
+        return ResponseEntity.ok(dto);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -61,7 +72,14 @@ public class CardHolderController extends BaseController {
         LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
         long count = dao.getCount(token.getAuthenticatedUser().getAccount());
         List<CardHolderDTO> result = dao.getAll(token.getAuthenticatedUser().getAccount(), nameFilter, limit, offset).stream()
-                .map(holder -> new CardHolderDTO().convert(holder, token.getAuthenticatedUser()))
+                .map(holder -> {
+                    CardHolderDTO dto = new CardHolderDTO().convert(holder, token.getAuthenticatedUser());
+                    DateTime latestActivity = historyDAO.getLastHolderActivity(holder);
+                    if (latestActivity != null) {
+                        dto.setLastActivity(latestActivity.toString());
+                    }
+                    return dto;
+                })
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new BaseListDTO<>(result, limit, offset, count));
     }
