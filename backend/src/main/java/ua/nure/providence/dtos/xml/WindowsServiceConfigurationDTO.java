@@ -17,6 +17,8 @@ public class WindowsServiceConfigurationDTO  {
 
     private String accountUuid;
 
+    private String publicApiKey;
+
     private List<XmlDoor> doors = new ArrayList<>();
 
     public WindowsServiceConfigurationDTO convert(Account object, List<DoorLocker> doorLockers) {

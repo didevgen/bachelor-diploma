@@ -16,10 +16,14 @@ import ua.nure.providence.dtos.business.room.RoomDTO;
 import ua.nure.providence.dtos.history.HistoryDTO;
 import ua.nure.providence.dtos.history.session.HolderSessionDTO;
 import ua.nure.providence.dtos.history.session.SessionDetailDTO;
+import ua.nure.providence.enums.DeviceType;
 import ua.nure.providence.exceptions.rest.RestException;
+import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
+import ua.nure.providence.models.business.SubscribedDevice;
 import ua.nure.providence.models.history.History;
+import ua.nure.providence.services.notifications.NotificationFactory;
 import ua.nure.providence.utils.auth.LoginToken;
 
 import java.util.ArrayList;
@@ -131,6 +135,27 @@ public class HistoryController {
         Pair<List<CardHolder>, Long> pair = dao.getPresentCardHoldersInRoom(uuid, limit, offset);
         return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream().map(holder -> new CardHolderDTO().convert(holder))
                 .collect(Collectors.toList()), limit, offset, pair.getSecond()));
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity test() {
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        History history = dao.getAccountHistory(token.getAuthenticatedUser(), 1, 0).getFirst().get(0);
+        CardHolder holder = history.getCardHolder();
+        holder.getSubscribers()
+                .stream().map(User::getDevices)
+                .map(subscribedDevices -> subscribedDevices.stream()
+                        .collect(Collectors.groupingBy(SubscribedDevice::getType)))
+                .forEach(subscriber -> subscriber.forEach((key, value) -> NotificationFactory.get(key)
+                        .sendNotification(
+                                history,
+                                value
+                                        .stream().map(SubscribedDevice::getSubscriptionKey)
+                                        .collect(Collectors.toList()),
+                                holder
+                        )));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/cardHolder/{uuid}/find", method = RequestMethod.GET)

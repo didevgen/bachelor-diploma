@@ -1,11 +1,11 @@
 package ua.nure.providence.models.history;
 
-import com.google.common.base.Objects;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import ua.nure.providence.models.base.BaseEntity;
 import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.business.Room;
+import ua.nure.providence.models.listeners.HistoryListener;
 import ua.nure.providence.models.zk.internal.EventType;
 
 import javax.persistence.*;
@@ -14,6 +14,7 @@ import javax.persistence.*;
  * Created by Providence Team on 01.05.2017.
  */
 @Entity
+@EntityListeners(HistoryListener.class)
 @Table(name = "history")
 public class History extends BaseEntity {
 

@@ -18,10 +18,13 @@ import java.util.List;
 @Table(name = "card_holders")
 public class CardHolder extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column()
     private String fullName;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "holder")
+    @Column()
+    private Boolean invalid = false;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "holder")
     private List<Card> cards = new ArrayList<>();
 
     @ManyToMany(mappedBy = "cardHolders", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -74,6 +77,14 @@ public class CardHolder extends BaseEntity {
 
     public void setHistories(List<History> histories) {
         this.histories = histories;
+    }
+
+    public Boolean isInvalid() {
+        return invalid;
+    }
+
+    public void setInvalid(Boolean invalid) {
+        this.invalid = invalid;
     }
 
     @PreRemove

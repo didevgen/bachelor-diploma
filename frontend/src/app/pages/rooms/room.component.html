@@ -23,8 +23,8 @@
     <ngx-datatable-column name="Floor" prop="floor" [flexGrow]="1"></ngx-datatable-column>
     <ngx-datatable-column name="Online" prop="online" [flexGrow]="1">
       <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
-        <a *ngIf="value >= 0" [routerLink]="['/pages/holders/room/', row.uuid, 'online']">{{value}}</a>
-        <!--<span *ngIf="value === 0">{{value}}</span>-->
+        <a *ngIf="value > 0" [routerLink]="['/pages/holders/room/', row.uuid, 'online']">{{value}}</a>
+        <span *ngIf="value === 0">{{value}}</span>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>

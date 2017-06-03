@@ -74,6 +74,16 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .fetchCount() > 0;
     }
 
+    public CardHolder getHolderByCardNumber(Account account, String cardNumber) {
+        return new JPAQuery<CardHolder>(entityManager)
+                .from(QCardHolder.cardHolder)
+                .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
+                .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
+                .where(QCard.card.cardNumber.eq(cardNumber)
+                        .and(QStructuralCategory.structuralCategory.account.eq(account)))
+                .fetchOne();
+    }
+
     private JPAQuery<CardHolder> getAllBaseQuery(Account account) {
         return new JPAQuery<CardHolder>(entityManager)
                 .from(QCardHolder.cardHolder)
