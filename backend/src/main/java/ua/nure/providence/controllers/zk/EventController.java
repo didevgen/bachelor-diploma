@@ -54,8 +54,12 @@ public class EventController {
             CardHolder holder = cardHolderDAO.getHolderByCardNumber(account, event.getCardNumber());
             History history = createHistory(event);
             if (holder == null) {
-                CardHolder invalid = createInvalidHolder(event.getCardNumber());
+                CardHolder invalid = createInvalidHolder();
+                Card card  = new Card();
+                card.setCardNumber(event.getCardNumber());
                 cardHolderDAO.insert(invalid);
+                card.setHolder(invalid);
+                cardDAO.insert(card);
                 history.setCardHolder(invalid);
             } else {
                 history.setCardHolder(holder);
@@ -65,13 +69,9 @@ public class EventController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    private CardHolder createInvalidHolder(String cardNumber) {
+    private CardHolder createInvalidHolder() {
         CardHolder holder = new CardHolder();
         holder.setInvalid(true);
-        Card card  = new Card();
-        card.setCardNumber(cardNumber);
-        card.setHolder(holder);
-        cardDAO.insert(card);
         return holder;
     }
 
