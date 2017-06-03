@@ -1,7 +1,5 @@
 package ua.nure.providence.dtos.notifications;
 
-import ua.nure.providence.models.authentication.User;
-import ua.nure.providence.models.business.CardHolder;
 import ua.nure.providence.models.history.History;
 
 import java.util.List;

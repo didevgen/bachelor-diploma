@@ -33,7 +33,7 @@ public class CardHolder extends BaseEntity {
     @ManyToMany(mappedBy = "holderSubscriptions", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> subscribers = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cardHolder")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "cardHolder")
     private List<History> histories = new ArrayList<>();
 
     public CardHolder() {

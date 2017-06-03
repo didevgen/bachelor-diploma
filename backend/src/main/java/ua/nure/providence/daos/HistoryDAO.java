@@ -15,6 +15,7 @@ import ua.nure.providence.models.history.History;
 import ua.nure.providence.models.history.QHistory;
 import ua.nure.providence.models.zk.internal.EventType;
 import ua.nure.providence.models.zk.internal.QEventType;
+
 import static com.querydsl.core.group.GroupBy.*;
 
 import java.util.Date;
@@ -34,7 +35,8 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.room, QRoom.room)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
-                .where(QRoom.room.account.eq(user.getAccount()));
+                .where(QRoom.room.account.eq(user.getAccount())
+                        .and(QCardHolder.cardHolder.invalid.isNull()));
         return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
                 .fetch(), query.fetchCount());
@@ -47,6 +49,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
+                        .and(QCardHolder.cardHolder.invalid.isNull())
                         .and(QRoom.room.uuid.eq(roomUuid)));
         return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
@@ -60,6 +63,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
+                        .and(QCardHolder.cardHolder.invalid.isNull())
                         .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid)));
         return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
@@ -73,19 +77,21 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
+                        .and(QCardHolder.cardHolder.invalid.isNull())
                         .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid)))
                 .orderBy(QHistory.history.timeStamp.asc())
                 .transform(groupBy(QRoom.room).as(list(QHistory.history)));
     }
 
     public Pair<List<History>, Long> getCardHolderHistoryInRoom(String cardHolderUuid, String roomUuid,
-                                                    User user, long limit, long offset) {
+                                                                User user, long limit, long offset) {
         JPAQuery<History> query = new JPAQuery<History>(entityManager)
                 .from(QHistory.history)
                 .leftJoin(QHistory.history.room, QRoom.room)
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
+                        .and(QCardHolder.cardHolder.invalid.isNull())
                         .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid))
                         .and(QRoom.room.uuid.eq(roomUuid))
                 );
@@ -147,10 +153,10 @@ public class HistoryDAO extends BaseDAO<History> {
                 .fetch();
     }
 
-    public Pair<List<CardHolder>, Long>getPresentCardHoldersInRoom(String roomUuid, long limit, long offset) {
+    public Pair<List<CardHolder>, Long> getPresentCardHoldersInRoom(String roomUuid, long limit, long offset) {
         JPAQuery<CardHolder> query = this.getOnlineQuery(roomUuid);
         return new Pair<>(query.limit(limit).offset(offset)
-                .fetch(), (long)getOnlineCountToday(roomUuid));
+                .fetch(), (long) getOnlineCountToday(roomUuid));
     }
 
     public Integer getOnlineCountToday(String roomUuid) {
@@ -165,6 +171,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(parent.cardHolder, cardHolder)
                 .where(room.uuid.eq(roomUuid)
                         .and(parent.timeStamp.goe(LocalDate.now().toDateTimeAtStartOfDay()))
+                        .and(cardHolder.invalid.isNull())
                         .and(parent.inOutState.eq(1)))
                 .groupBy(cardHolder.id, cardHolder.uuid, cardHolder.fullName)
                 .having(parent.timeStamp.max().goe(
@@ -188,6 +195,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(parent.room, room)
                 .leftJoin(parent.cardHolder, cardHolder)
                 .where(room.uuid.eq(roomUuid)
+                        .and(cardHolder.invalid.isNull())
                         .and(parent.timeStamp.goe(LocalDate.now().toDateTimeAtStartOfDay()))
                         .and(parent.inOutState.eq(1)))
                 .groupBy(cardHolder.id, cardHolder.uuid, cardHolder.fullName)
@@ -224,6 +232,13 @@ public class HistoryDAO extends BaseDAO<History> {
                     .fetchOne();
         }
         return null;
+    }
+
+    public EventType getEventType(Integer code) {
+        return new JPAQuery<EventType>(entityManager)
+                .from(QEventType.eventType)
+                .where(QEventType.eventType.code.eq(code))
+                .fetchOne();
     }
 
     @Override

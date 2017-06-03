@@ -11,7 +11,7 @@ public class EventDTO {
 
     private String timeStamp;
 
-    private String eventTypeId;
+    private int code;
 
     private int inOutState;
 
@@ -39,19 +39,19 @@ public class EventDTO {
         this.timeStamp = timeStamp;
     }
 
-    public String getEventTypeId() {
-        return eventTypeId;
-    }
-
-    public void setEventTypeId(String eventTypeId) {
-        this.eventTypeId = eventTypeId;
-    }
-
     public int getInOutState() {
         return inOutState;
     }
 
     public void setInOutState(int inOutState) {
         this.inOutState = inOutState;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

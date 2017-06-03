@@ -28,14 +28,16 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .from(QCardHolder.cardHolder)
                 .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
-                .where(QCardHolder.cardHolder.uuid.eq(uuid))
+                .where(QCardHolder.cardHolder.uuid.eq(uuid)
+                        .and(QCardHolder.cardHolder.invalid.isNull()))
                 .fetchOne();
     }
 
     public CardHolder getLightHolder(String uuid) {
         return new JPAQuery<CardHolder>(entityManager)
                 .from(QCardHolder.cardHolder)
-                .where(QCardHolder.cardHolder.uuid.eq(uuid))
+                .where(QCardHolder.cardHolder.uuid.eq(uuid)
+                        .and(QCardHolder.cardHolder.invalid.isNull()))
                 .fetchOne();
     }
 
@@ -90,6 +92,7 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
                 .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
-                .where(QStructuralCategory.structuralCategory.account.eq(account));
+                .where(QStructuralCategory.structuralCategory.account.eq(account)
+                        .and(QCardHolder.cardHolder.invalid.isNull()));
     }
 }
