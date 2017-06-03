@@ -14,9 +14,9 @@ public class OneSignalContentDTO {
         StringBuilder sb = new StringBuilder();
         sb.append(holder.getFullName()).append(" ").append("has ");
         if (history.getInOutState() == 0) {
-            sb.append("arrived to ");
-        } else {
             sb.append("left from ");
+        } else {
+            sb.append("arrived to");
         }
         sb.append(history.getRoom().getName()).append(" ")
                 .append("at ").append(history.getTimeStamp()

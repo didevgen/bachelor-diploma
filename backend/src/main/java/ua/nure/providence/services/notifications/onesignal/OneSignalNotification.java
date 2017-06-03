@@ -42,6 +42,21 @@ public class OneSignalNotification implements INotification {
             con.setFixedLengthStreamingMode(sendBytes.length);
             OutputStream outputStream = con.getOutputStream();
             outputStream.write(sendBytes);
+            int httpResponse = con.getResponseCode();
+            String jsonResponse;
+            System.out.println("httpResponse: " + httpResponse);
+            if (  httpResponse >= HttpURLConnection.HTTP_OK
+                    && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                scanner.close();
+            }
+            else {
+                Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                scanner.close();
+            }
+            System.out.println("jsonResponse:\n" + jsonResponse);
         } catch (Throwable t) {
             t.printStackTrace();
         }
