@@ -11,7 +11,7 @@ export class CategoryClient {
 
   }
 
-  public createCategory(data: any): Observable<any> {
+  public createCategory(data: any): Observable<Category> {
     return this.http.post(`/api/v1/categories/`, data);
   }
 

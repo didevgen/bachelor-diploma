@@ -193,11 +193,13 @@ public class CategoryController {
 
         if (dto.getParent() == null) {
             category.setParent(null);
-        } else if (!category.getParent().getUuid().equals(dto.getParent())) {
+        } else if (category.getParent() == null ||
+                !category.getParent().getUuid().equals(dto.getParent())) {
             StructuralCategory parent = dao.simpleGet(dto.getParent(), user);
             if (parent == null) {
                 throw new RestException(HttpStatus.BAD_REQUEST, 400007, "Invalid parent is provided");
             }
+            category.setParent(parent);
         }
 
         if (dto.getChildren() != null) {

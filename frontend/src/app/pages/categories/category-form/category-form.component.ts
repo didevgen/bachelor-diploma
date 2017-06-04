@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,6 +7,7 @@ import { UnsubscribableComponent } from '../../../theme/unsubscribable.component
 import { AuthHttp } from '../../../services/http/auth.http';
 import { CategoryClient } from '../categories.client';
 import { ToasterService } from 'angular2-toaster';
+import { Category } from '../../../models/category/category.models';
 
 @Component({
   selector: 'category-form',
@@ -17,6 +19,7 @@ export class CategoryFormComponent extends UnsubscribableComponent implements On
   public categoryForm: FormGroup;
 
   constructor(private fb: FormBuilder,
+              private router: Router,
               private toasterService: ToasterService,
               private categoryClient: CategoryClient,
               private _sanitizer: DomSanitizer,
@@ -46,15 +49,16 @@ export class CategoryFormComponent extends UnsubscribableComponent implements On
     const result: any = {};
     result.name = raw.name;
     result.parent = raw.parent.uuid;
-    if (result.parent) {
+    if (!result.parent) {
       result.parent = null;
     }
     result.children = [];
     if (raw.children) {
       result.children = raw.children.map(item => item.child.uuid);
     }
-    this.categoryClient.createCategory(result).subscribe(() => {
+    this.categoryClient.createCategory(result).subscribe((data: Category) => {
       this.toasterService.pop('success', 'Successfully saved category', 'Success');
+      this.router.navigate(['/pages/categories', data.uuid]);
     }, error => {
       this.toasterService.pop('error', 'Error', 'Failed to save category');
     });
