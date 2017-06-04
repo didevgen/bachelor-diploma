@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { NgUploaderModule } from 'ngx-uploader';
 import { AppTranslationModule } from '../app.translation.module';
 
+
 import { BaThemeConfig } from './theme.config';
 
 import { BaThemeConfigProvider } from './theme.configProvider';

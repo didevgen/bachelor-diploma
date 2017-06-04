@@ -44,7 +44,7 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
     public List<CardHolder> getAll(Account account, String nameFilter, long limit, long offset) {
         JPAQuery<CardHolder> query = this.getAllBaseQuery(account);
         if (nameFilter != null) {
-            query.where(QCardHolder.cardHolder.fullName.contains(nameFilter));
+            query.where(QCardHolder.cardHolder.fullName.containsIgnoreCase(nameFilter));
         }
         return query.orderBy(QCardHolder.cardHolder.fullName.asc())
                 .limit(limit).offset(offset).fetch();
@@ -53,7 +53,7 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
     public List<CardHolder> getInvalidHolders(Account account, String cardNumber, long limit, long offset) {
         JPAQuery<CardHolder> query = this.getAllInvalidBaseQuery(account);
         if (cardNumber != null) {
-            query.where(QCard.card.cardNumber.contains(cardNumber));
+            query.where(QCard.card.cardNumber.containsIgnoreCase(cardNumber));
         }
         return query.where(QCardHolder.cardHolder.invalid.isTrue())
                 .limit(limit).offset(offset).fetch();

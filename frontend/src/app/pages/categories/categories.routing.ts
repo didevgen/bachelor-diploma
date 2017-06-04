@@ -2,6 +2,7 @@ import { Routes, RouterModule }  from '@angular/router';
 
 import { ModuleWithProviders } from '@angular/core';
 import { CategoriesComponent } from './categories.component';
+import { CategoryFormComponent } from './category-form/category-form.component';
 
 export const routes: Routes = [
   {
@@ -12,6 +13,16 @@ export const routes: Routes = [
   }, {
     path: ':uuid',
     component: CategoriesComponent,
+    children: [],
+    pathMatch: 'full'
+  }, {
+    path: ':uuid/edit',
+    component: CategoryFormComponent,
+    children: [],
+    pathMatch: 'full'
+  }, {
+    path: 'create/new',
+    component: CategoryFormComponent,
     children: [],
     pathMatch: 'full'
   }

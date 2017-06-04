@@ -32,7 +32,7 @@ public class RoomDAO extends BaseDAO<Room> {
     public List<Room> getAll(Account account, long limit, long offset, String nameFilter) {
         JPAQuery<Room> query = this.getAllBaseQuery(account);
         if (nameFilter != null) {
-            query.where(QRoom.room.name.contains(nameFilter));
+            query.where(QRoom.room.name.containsIgnoreCase(nameFilter));
         }
 
         return query.orderBy(QRoom.room.name.asc())
@@ -42,7 +42,7 @@ public class RoomDAO extends BaseDAO<Room> {
     public long getCount(Account account, String nameFilter) {
         JPAQuery<Room> query = this.getAllBaseQuery(account);
         if (nameFilter != null) {
-            query.where(QRoom.room.name.contains(nameFilter));
+            query.where(QRoom.room.name.containsIgnoreCase(nameFilter));
         }
 
         return query.fetchCount();

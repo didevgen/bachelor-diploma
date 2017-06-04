@@ -1,4 +1,5 @@
 <div class="card-block">
   <h3 class="card-title">{{data.name}}</h3>
   <a [routerLink]="['/pages/categories/', data.uuid]" class="btn btn-primary">Details</a>
+  <button class="btn btn-danger" (click)="deleteCategory(data.uuid)">Delete</button>
 </div>

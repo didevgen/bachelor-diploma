@@ -72,6 +72,16 @@ public class CategoryDAO extends BaseDAO<StructuralCategory> {
                 .fetchOne();
     }
 
+    public Pair<List<StructuralCategory>, Long> getCategoryByName(User user, String name, long limit) {
+        JPAQuery<StructuralCategory> query = new JPAQuery<StructuralCategory>(entityManager)
+                .from(QStructuralCategory.structuralCategory)
+                .where(QStructuralCategory.structuralCategory.account.eq(user.getAccount())
+                        .and(QStructuralCategory.structuralCategory.name.containsIgnoreCase(name)))
+                .orderBy(QStructuralCategory.structuralCategory.name.asc());
+        return new Pair<>(query.limit(limit)
+                .fetch(), query.fetchCount());
+    }
+
     public Pair<List<StructuralCategory>, Long> getAll(User user, long limit, long offset) {
         JPAQuery<StructuralCategory> query = new JPAQuery<StructuralCategory>(entityManager)
                 .from(QStructuralCategory.structuralCategory)

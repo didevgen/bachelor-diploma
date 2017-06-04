@@ -50,6 +50,21 @@ public class CategoryController {
         return ResponseEntity.ok(new DetailCategoryDTO().convert(category));
     }
 
+    @RequestMapping(value = "/find/name", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<BaseListDTO<SimpleCategoryDTO>> getCategories(@RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+                                                                        @RequestParam(value = "name", required = false) String name) {
+        if (limit == 0) {
+            limit = 10;
+        }
+
+        User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
+        Pair<List<StructuralCategory>, Long> pair = dao.getCategoryByName(user, name, limit);
+        return ResponseEntity.ok(new BaseListDTO<>(pair.getFirst().stream()
+                .map(item -> new SimpleCategoryDTO().convert(item))
+                .collect(Collectors.toList()), limit, 0, pair.getSecond()));
+    }
+
     @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CategoryDTO> getCategory(@PathVariable(name = "uuid") String uuid) {

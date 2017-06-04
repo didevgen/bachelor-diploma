@@ -1,0 +1,43 @@
+<toaster-container></toaster-container>
+<form novalidate [formGroup]="categoryForm">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Category Name</label>
+    <input type="text" class="form-control" formControlName="name" id="exampleInputEmail1"
+           placeholder="Category name">
+  </div>
+  <div class="form-group">
+    <label>Parent</label>
+    <input class="form-control" ngui-auto-complete
+           formControlName="parent"
+           [list-formatter]="autocompleListFormatter"
+           value-property-name="uuid"
+           display-property-name="name"
+           placeholder="Parent category"
+           [source]="observableSource.bind(this)"/>
+  </div>
+  <div formArrayName="children">
+    <div *ngFor="let child of categoryForm.controls.children.controls; let i=index">
+      <div [formGroupName]="i">
+        <div class="form-group">
+          <label>Child {{i + 1}}</label>
+          <div class="input-group">
+            <input class="form-control with-danger-addon" ngui-auto-complete
+                   formControlName="child"
+                   [list-formatter]="autocompleListFormatter"
+                   value-property-name="uuid"
+                   display-property-name="name"
+                   placeholder="Child category"
+                   [source]="observableSource.bind(this)"/>
+            <span class="input-group-btn">
+              <button class="btn btn-danger" (click)="removeChildCategory(i)" type="button">Remove</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <button (click)="addChild()" class="btn btn-success">Add child category</button>
+  </div>
+  <button [disabled]="categoryForm.invalid" (click)="createCategory()" class="btn btn-danger">Submit</button>
+</form>

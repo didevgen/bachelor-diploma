@@ -123,6 +123,14 @@
   .slider.round:before {
     border-radius: 50%;
   }
-
+  .new-category {
+    .card-block{
+      text-align: center;
+    }
+    i {
+      font-size: 60px;
+      color:white;
+    }
+  }
 }
 

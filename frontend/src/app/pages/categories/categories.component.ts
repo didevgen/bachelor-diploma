@@ -47,6 +47,14 @@ export class CategoriesComponent extends UnsubscribableComponent implements OnIn
     }));
   }
 
+  public onCategoryDeleted(uuid: string) {
+    if (!this.isParentCategory) {
+      this.currentCategory.children = this.currentCategory.children.filter(category => category.uuid !== uuid);
+    } else {
+      this.parentCategories = this.parentCategories.filter(category => category.uuid !== uuid);
+    }
+  }
+
   public setPage(pageInfo: PageData): void {
     pageInfo.offset = pageInfo.limit * pageInfo.offset;
     this.loading = true;
