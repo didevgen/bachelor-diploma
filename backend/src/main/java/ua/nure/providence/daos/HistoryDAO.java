@@ -36,7 +36,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .where(QRoom.room.account.eq(user.getAccount())
-                        .and(QCardHolder.cardHolder.invalid.isNull()));
+                        .and(QCardHolder.cardHolder.invalid.isFalse()));
         return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
                 .fetch(), query.fetchCount());
@@ -49,7 +49,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
-                        .and(QCardHolder.cardHolder.invalid.isNull())
+                        .and(QCardHolder.cardHolder.invalid.isFalse())
                         .and(QRoom.room.uuid.eq(roomUuid)));
         return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
@@ -63,7 +63,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
-                        .and(QCardHolder.cardHolder.invalid.isNull())
+                        .and(QCardHolder.cardHolder.invalid.isFalse())
                         .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid)));
         return new Pair<>(query.limit(limit).offset(offset)
                 .orderBy(QHistory.history.timeStamp.desc())
@@ -77,7 +77,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
-                        .and(QCardHolder.cardHolder.invalid.isNull())
+                        .and(QCardHolder.cardHolder.invalid.isFalse())
                         .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid)))
                 .orderBy(QHistory.history.timeStamp.asc())
                 .transform(groupBy(QRoom.room).as(list(QHistory.history)));
@@ -91,7 +91,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(QHistory.history.eventType, QEventType.eventType)
                 .leftJoin(QHistory.history.cardHolder, QCardHolder.cardHolder)
                 .where(QRoom.room.account.eq(user.getAccount())
-                        .and(QCardHolder.cardHolder.invalid.isNull())
+                        .and(QCardHolder.cardHolder.invalid.isFalse())
                         .and(QCardHolder.cardHolder.uuid.eq(cardHolderUuid))
                         .and(QRoom.room.uuid.eq(roomUuid))
                 );
@@ -171,7 +171,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(parent.cardHolder, cardHolder)
                 .where(room.uuid.eq(roomUuid)
                         .and(parent.timeStamp.goe(LocalDate.now().toDateTimeAtStartOfDay()))
-                        .and(cardHolder.invalid.isNull())
+                        .and(cardHolder.invalid.isFalse())
                         .and(parent.inOutState.eq(1)))
                 .groupBy(cardHolder.id, cardHolder.uuid, cardHolder.fullName)
                 .having(parent.timeStamp.max().goe(
@@ -195,7 +195,7 @@ public class HistoryDAO extends BaseDAO<History> {
                 .leftJoin(parent.room, room)
                 .leftJoin(parent.cardHolder, cardHolder)
                 .where(room.uuid.eq(roomUuid)
-                        .and(cardHolder.invalid.isNull())
+                        .and(cardHolder.invalid.isFalse())
                         .and(parent.timeStamp.goe(LocalDate.now().toDateTimeAtStartOfDay()))
                         .and(parent.inOutState.eq(1)))
                 .groupBy(cardHolder.id, cardHolder.uuid, cardHolder.fullName)

@@ -13,7 +13,7 @@ import { CardHolder } from '../../models/cardh-holders/holders.model';
 })
 export class Dashboard extends UnsubscribableComponent implements OnInit, IBaseList<any> {
 
-  public rows: any[] = [];
+  public rows: any[];
   public count: number;
   public offset: number;
   public limit: number;
@@ -47,11 +47,14 @@ export class Dashboard extends UnsubscribableComponent implements OnInit, IBaseL
   }
 
   public setPage(pageInfo: PageData) {
-    this.subscribers.push(this.dashboardClient.getSubscriptions(pageInfo).subscribe((data: ListResult<CardHolder>) => {
-      this.rows = data.data;
-      this.limit = data.limit;
-      this.offset = Math.floor(data.offset / data.limit) * this.limit;
-      this.count = data.count;
-    }));
+    this.loading = true;
+    this.subscribers.push(this.dashboardClient.getSubscriptions(pageInfo)
+      .finally(() => this.loading = false)
+      .subscribe((data: ListResult<CardHolder>) => {
+        this.rows = data.data;
+        this.limit = data.limit;
+        this.offset = Math.floor(data.offset / data.limit) * this.limit;
+        this.count = data.count;
+      }));
   }
 }

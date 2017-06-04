@@ -29,7 +29,7 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
                 .where(QCardHolder.cardHolder.uuid.eq(uuid)
-                        .and(QCardHolder.cardHolder.invalid.isNull()))
+                        .and(QCardHolder.cardHolder.invalid.isFalse()))
                 .fetchOne();
     }
 
@@ -37,7 +37,7 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
         return new JPAQuery<CardHolder>(entityManager)
                 .from(QCardHolder.cardHolder)
                 .where(QCardHolder.cardHolder.uuid.eq(uuid)
-                        .and(QCardHolder.cardHolder.invalid.isNull()))
+                        .and(QCardHolder.cardHolder.invalid.isFalse()))
                 .fetchOne();
     }
 
@@ -47,6 +47,15 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
             query.where(QCardHolder.cardHolder.fullName.contains(nameFilter));
         }
         return query.orderBy(QCardHolder.cardHolder.fullName.asc())
+                .limit(limit).offset(offset).fetch();
+    }
+
+    public List<CardHolder> getInvalidHolders(Account account, String cardNumber, long limit, long offset) {
+        JPAQuery<CardHolder> query = this.getAllInvalidBaseQuery(account);
+        if (cardNumber != null) {
+            query.where(QCard.card.cardNumber.contains(cardNumber));
+        }
+        return query.where(QCardHolder.cardHolder.invalid.isTrue())
                 .limit(limit).offset(offset).fetch();
     }
 
@@ -82,8 +91,15 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
                 .where(QCard.card.cardNumber.eq(cardNumber)
-                        .and(QStructuralCategory.structuralCategory.account.eq(account)))
+                        .and(QCardHolder.cardHolder.account.eq(account)))
                 .fetchOne();
+    }
+
+    private JPAQuery<CardHolder> getAllInvalidBaseQuery(Account account) {
+        return new JPAQuery<CardHolder>(entityManager)
+                .from(QCardHolder.cardHolder)
+                .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
+                .where(QCardHolder.cardHolder.account.eq(account));
     }
 
     private JPAQuery<CardHolder> getAllBaseQuery(Account account) {
@@ -92,7 +108,7 @@ public class CardHolderDAO extends BaseDAO<CardHolder> {
                 .leftJoin(QCardHolder.cardHolder.cards, QCard.card)
                 .leftJoin(QCardHolder.cardHolder.categories, QStructuralCategory.structuralCategory)
                 .leftJoin(QCardHolder.cardHolder.subscribers, QUser.user)
-                .where(QStructuralCategory.structuralCategory.account.eq(account)
-                        .and(QCardHolder.cardHolder.invalid.isNull()));
+                .where(QCardHolder.cardHolder.account.eq(account)
+                        .and(QCardHolder.cardHolder.invalid.isFalse()));
     }
 }

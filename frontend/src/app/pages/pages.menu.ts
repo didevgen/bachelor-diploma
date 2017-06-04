@@ -48,7 +48,25 @@ export const PAGES_MENU = [
             expanded: false,
             order: 3,
           }
-        }
+        },
+        children: [
+          {
+            path: 'all',
+            data: {
+              menu: {
+                title: 'All Holders',
+              }
+            }
+          },
+          {
+            path: 'invalid',
+            data: {
+              menu: {
+                title: 'Invalid Holders',
+              }
+            }
+          }
+        ]
       },
       {
         path: 'history',

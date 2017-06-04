@@ -1,7 +1,7 @@
 <spinner [show]="loading"></spinner>
 <div class="row">
   <div *ngIf="!showTable && this.rows" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    <empty [title]="'No subscriptions'" [link]="'pages/holders'" [text]="'Click here to add'"></empty>
+    <empty [title]="'No subscriptions'" [link]="'pages/holders/all'" [text]="'Click here to add'"></empty>
   </div>
   <div *ngIf="showTable" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
     <h1>My subscriptions</h1>

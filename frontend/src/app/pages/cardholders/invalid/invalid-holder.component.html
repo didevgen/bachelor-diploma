@@ -1,0 +1,34 @@
+<spinner [show]="loading"></spinner>
+<div class="form-group" *ngIf="rows && rows.length > 0">
+  <label for="nameFilter">Name</label>
+  <input type="text" [(ngModel)]="nameFilter" (ngModelChange)="nameChanged($event)" class="form-control" id="nameFilter"
+         placeholder="Card number">
+</div>
+<empty *ngIf="rows && rows.length === 0" [title]="'No invalid holders'" [text]="'We are glad for you'"></empty>
+<div style="width: 100%" *ngIf="rows && rows.length !== 0">
+  <ngx-datatable
+    [rows]="rows"
+    [headerHeight]="50"
+    [columnMode]="'flex'"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    class="material"
+    [externalPaging]="true"
+    [count]="count"
+    [offset]="offset"
+    [limit]="limit"
+    (page)='setPage($event)'>
+    <ngx-datatable-column name="Card numbers" prop="cardNumbers" [flexGrow]="1">
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <span *ngIf="value.length === 0">No card numbers</span>
+        <div *ngIf="value.length > 0">
+          <div class="row" *ngFor="let item of value">
+            <div class="col-sm-12">
+              {{item}}
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>

@@ -57,6 +57,7 @@ public class EventController {
                 CardHolder invalid = createInvalidHolder();
                 Card card  = new Card();
                 card.setCardNumber(event.getCardNumber());
+                invalid.setAccount(account);
                 cardHolderDAO.insert(invalid);
                 card.setHolder(invalid);
                 cardDAO.insert(card);

@@ -2,6 +2,7 @@ package ua.nure.providence.models.business;
 
 import ua.nure.providence.daos.CardDAO;
 import ua.nure.providence.daos.HistoryDAO;
+import ua.nure.providence.models.authentication.Account;
 import ua.nure.providence.models.authentication.User;
 import ua.nure.providence.models.base.BaseEntity;
 import ua.nure.providence.models.hierarchy.StructuralCategory;
@@ -35,6 +36,9 @@ public class CardHolder extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "cardHolder")
     private List<History> histories = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Account account;
 
     public CardHolder() {
     }
@@ -85,6 +89,18 @@ public class CardHolder extends BaseEntity {
 
     public void setInvalid(Boolean invalid) {
         this.invalid = invalid;
+    }
+
+    public Boolean getInvalid() {
+        return invalid;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     @PreRemove

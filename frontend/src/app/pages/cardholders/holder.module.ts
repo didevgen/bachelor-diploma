@@ -11,6 +11,8 @@ import { SpinnerModule } from '../ui/spinner/spinner.module';
 import { DataTableModule } from 'angular2-datatable';
 import { HolderComponent } from './holder.component';
 import { HolderClient } from './holder.client';
+import { InvalidHolderComponent } from './invalid/invalid-holder.component';
+import { Holders } from './base/holders.component';
 
 @NgModule({
   imports: [
@@ -25,7 +27,9 @@ import { HolderClient } from './holder.client';
     routing
   ],
   declarations: [
-    HolderComponent
+    Holders,
+    HolderComponent,
+    InvalidHolderComponent
   ],
   providers: [
     HolderClient

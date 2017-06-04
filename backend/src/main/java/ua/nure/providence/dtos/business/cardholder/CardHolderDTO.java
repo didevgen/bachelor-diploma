@@ -1,10 +1,8 @@
 package ua.nure.providence.dtos.business.cardholder;
 
-import org.joda.time.DateTime;
 import ua.nure.providence.dtos.BaseUuidDTO;
 import ua.nure.providence.dtos.business.structure.SimpleCategoryDTO;
 import ua.nure.providence.models.authentication.User;
-import ua.nure.providence.models.base.UUIDEntity;
 import ua.nure.providence.models.business.Card;
 import ua.nure.providence.models.business.CardHolder;
 

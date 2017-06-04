@@ -30,6 +30,9 @@ public class Account extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
     private List<StructuralCategory> categories = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
+    private List<CardHolder> holders = new ArrayList<>();
+
     public Account() {
     }
 
@@ -71,5 +74,13 @@ public class Account extends BaseEntity {
 
     public void setCategories(List<StructuralCategory> categories) {
         this.categories = categories;
+    }
+
+    public List<CardHolder> getHolders() {
+        return holders;
+    }
+
+    public void setHolders(List<CardHolder> holders) {
+        this.holders = holders;
     }
 }

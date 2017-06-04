@@ -84,6 +84,30 @@ public class CardHolderController extends BaseController {
         return ResponseEntity.ok(new BaseListDTO<>(result, limit, offset, count));
     }
 
+    @RequestMapping(value = "/invalid/all", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<BaseListDTO<CardHolderDTO>> getInvalidCardHolders(
+            @RequestParam(value = "cardNumber", required = false) String cardNumber,
+            @RequestParam(value = "limit", required = false, defaultValue = "0") long limit,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") long offset) {
+        if (limit == 0) {
+            limit = Long.MAX_VALUE;
+        }
+        LoginToken token = (LoginToken) SecurityContextHolder.getContext().getAuthentication();
+        long count = dao.getCount(token.getAuthenticatedUser().getAccount());
+        List<CardHolderDTO> result = dao.getInvalidHolders(token.getAuthenticatedUser().getAccount(), cardNumber, limit, offset).stream()
+                .map(holder -> {
+                    CardHolderDTO dto = new CardHolderDTO().convert(holder, token.getAuthenticatedUser());
+                    DateTime latestActivity = historyDAO.getLastHolderActivity(holder);
+                    if (latestActivity != null) {
+                        dto.setLastActivity(latestActivity.toString());
+                    }
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new BaseListDTO<>(result, limit, offset, count));
+    }
+
     @RequestMapping(value = "{uuid}", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<CardHolderDTO> updateCardHolder(@PathVariable(name = "uuid") String uuid, @RequestBody() CardHolderUpdateDTO dto) {
@@ -115,7 +139,7 @@ public class CardHolderController extends BaseController {
                     }
                     cardHolder.getCategories().add(category);
                 });
-
+        cardHolder.setInvalid(false);
         dao.update(cardHolder);
         return ResponseEntity.ok(new CardHolderDTO().convert(cardHolder));
     }
