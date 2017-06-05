@@ -20,6 +20,8 @@ export class CategoryFormComponent extends UnsubscribableComponent implements On
 
   public uuid: string;
 
+  public categoryUuid: string;
+
   constructor(private fb: FormBuilder,
               private router: Router,
               private activatedRoute: ActivatedRoute,
@@ -32,10 +34,19 @@ export class CategoryFormComponent extends UnsubscribableComponent implements On
 
   public ngOnInit(): void {
     this.uuid = this.activatedRoute.snapshot.params['uuid'];
+    this.categoryUuid = this.activatedRoute.snapshot.params['categoryUuid'];
     this.initForm();
-    if (this.uuid) {
-      this.categoryClient.getCategory(this.uuid).subscribe((result: DetailCategory) => {
-        this.updateForm(result);
+    if (this.uuid || this.categoryUuid) {
+      this.categoryClient.getCategory(this.uuid || this.categoryUuid).subscribe((result: DetailCategory) => {
+        if (this.categoryUuid) {
+          const parent: Category = {name: result.name, uuid: result.uuid};
+          const category: DetailCategory = new DetailCategory();
+          category.parent = parent;
+          this.updateForm(category);
+          this.categoryForm.controls['parent'].disable();
+        } else {
+          this.updateForm(result);
+        }
       });
     }
   }

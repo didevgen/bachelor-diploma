@@ -25,6 +25,11 @@ export const routes: Routes = [
     component: CategoryFormComponent,
     children: [],
     pathMatch: 'full'
+  }, {
+    path: 'create/:categoryUuid/new',
+    component: CategoryFormComponent,
+    children: [],
+    pathMatch: 'full'
   }
 ];
 

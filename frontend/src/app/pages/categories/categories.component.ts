@@ -47,6 +47,10 @@ export class CategoriesComponent extends UnsubscribableComponent implements OnIn
     }));
   }
 
+  public getNewCategoryLink(): string {
+    return `/pages/categories/create/${this.uuid}/new`;
+  }
+
   public onCategoryDeleted(uuid: string) {
     if (!this.isParentCategory) {
       this.currentCategory.children = this.currentCategory.children.filter(category => category.uuid !== uuid);

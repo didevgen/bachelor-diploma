@@ -35,8 +35,8 @@
               <category [data]="item" (onCategoryDeleted)="onCategoryDeleted($event)"></category>
             </div>
           </div>
-          <empty *ngIf="currentCategory.children.length === 0" [title]="'No categories'"
-                 [text]="'Check card holder presence'"></empty>
+          <empty *ngIf="currentCategory.children.length === 0" [link]="getNewCategoryLink()" [title]="'No categories'"
+                 [text]="'Click here to add'"></empty>
         </div>
       </ng-template>
     </ngb-tab>
