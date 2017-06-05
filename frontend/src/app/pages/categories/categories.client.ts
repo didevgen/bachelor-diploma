@@ -19,6 +19,10 @@ export class CategoryClient {
     return this.http.delete(`/api/v1/categories/${uuid}`);
   }
 
+  public updateCategory(uuid: string, data: any): Observable<any> {
+    return this.http.put(`/api/v1/categories/${uuid}`, data);
+  }
+
   public getCategory(uuid: string): Observable<DetailCategory> {
     return this.http.get(`/api/v1/categories/${uuid}`);
   }

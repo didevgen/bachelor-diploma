@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppTranslationModule } from '../../app.translation.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgaModule } from '../../theme/nga.module';
-import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 
 import { routing } from './categories.routing';
 
@@ -16,6 +15,7 @@ import { SpinnerModule } from '../ui/spinner/spinner.module';
 import { DataTableModule } from 'angular2-datatable';
 import { CategoryFormComponent } from './category-form/category-form.component';
 import { ToasterModule } from 'angular2-toaster';
+import { NguiAutoCompleteModule } from '../../services/autocomplete/auto-complete.module';
 
 @NgModule({
   imports: [
@@ -24,9 +24,9 @@ import { ToasterModule } from 'angular2-toaster';
     ReactiveFormsModule,
     AppTranslationModule,
     NgaModule,
-    NguiAutoCompleteModule,
     NgbModule.forRoot(),
     NgxDatatableModule,
+    NguiAutoCompleteModule,
     DataTableModule,
     SpinnerModule,
     ToasterModule,

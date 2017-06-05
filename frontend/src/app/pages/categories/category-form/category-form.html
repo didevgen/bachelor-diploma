@@ -10,8 +10,7 @@
     <input class="form-control" ngui-auto-complete
            formControlName="parent"
            [list-formatter]="autocompleListFormatter"
-           value-property-name="uuid"
-           display-property-name="name"
+           [value-formatter]="autocompleteValueFormatter"
            placeholder="Parent category"
            [source]="observableSource.bind(this)"/>
   </div>
@@ -24,8 +23,7 @@
             <input class="form-control with-danger-addon" ngui-auto-complete
                    formControlName="child"
                    [list-formatter]="autocompleListFormatter"
-                   value-property-name="uuid"
-                   display-property-name="name"
+                   [display-property-name]="'name'"
                    placeholder="Child category"
                    [source]="observableSource.bind(this)"/>
             <span class="input-group-btn">
