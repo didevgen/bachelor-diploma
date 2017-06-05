@@ -29,12 +29,21 @@
     <ngb-tab>
       <ng-template ngbTabTitle>Categories</ng-template>
       <ng-template ngbTabContent>
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-          <div class="row is-flex" *ngIf="currentCategory.children.length !== 0">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="currentCategory.children.length !== 0">
+          <div class="row">
+            <div class="col-sm-2 card new-category">
+              <div class="card-block">
+                <a [routerLink]="['/pages/categories/create/', uuid, 'new']"><i class="ion-plus-circled"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="row is-flex">
             <div class="col-sm-4 card" *ngFor="let item of currentCategory.children">
               <category [data]="item" (onCategoryDeleted)="onCategoryDeleted($event)"></category>
             </div>
           </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="currentCategory.children.length === 0">
           <empty *ngIf="currentCategory.children.length === 0" [link]="getNewCategoryLink()" [title]="'No categories'"
                  [text]="'Click here to add'"></empty>
         </div>
