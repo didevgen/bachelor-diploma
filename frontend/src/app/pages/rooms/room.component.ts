@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UnsubscribableComponent } from '../../theme/unsubscribable.component';
 import { ListResult, PageData } from '../../models/datatable/list.data';
 import { IBaseList } from '../components/base/base-list.component';
 import { NamedCardHolder } from '../../models/cardh-holders/holders.model';
 import { RoomClient } from './room.client';
 import { Room } from '../../models/rooms/room.models';
+import { RoomFormComponent } from './room-form/room-form.component';
 
 @Component({
   selector: 'rooms',
@@ -40,6 +42,12 @@ export class RoomComponent extends UnsubscribableComponent implements OnInit, IB
     }
   }
 
+  public deleteRoom(uuid: string): void {
+    this.subscribers.push(this.roomClient.deleteRoom(uuid).subscribe(() => {
+      this.getRooms();
+    }));
+  }
+
   public setPage(pageInfo: PageData): void {
     pageInfo.offset = pageInfo.limit * pageInfo.offset;
     this.loading = true;
@@ -50,10 +58,10 @@ export class RoomComponent extends UnsubscribableComponent implements OnInit, IB
     this.loading = true;
     this.subscribers.push(
       this.roomClient.getRooms(pageInfo, this.nameFilter)
-      .finally(() => this.loading = false)
-      .subscribe((rooms: ListResult<Room>) => {
-        this.handleListResult(rooms);
-      }));
+        .finally(() => this.loading = false)
+        .subscribe((rooms: ListResult<Room>) => {
+          this.handleListResult(rooms);
+        }));
   }
 
   private handleListResult(rooms: ListResult<Room>): void {

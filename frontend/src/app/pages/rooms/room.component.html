@@ -1,8 +1,21 @@
 <spinner [show]="loading"></spinner>
 <div class="form-group">
-  <label for="nameFilter">Name</label>
-  <input type="text" [(ngModel)]="nameFilter" (ngModelChange)="nameChanged($event)" class="form-control" id="nameFilter"
-         placeholder="Name">
+  <div class="row">
+    <div class="col-3">
+      <a class="btn btn-success" [routerLink]="['/pages/rooms/new']">
+        <i class="ion-plus-circled"></i>
+        Create new room
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <label for="nameFilter">Name</label>
+      <input type="text" [(ngModel)]="nameFilter" (ngModelChange)="nameChanged($event)" class="form-control"
+             id="nameFilter"
+             placeholder="Name">
+    </div>
+  </div>
 </div>
 <empty *ngIf="rows && rows.length === 0" [title]="'No rooms'" [text]="'Add some'"></empty>
 <div style="width: 100%" *ngIf="rows && rows.length !== 0">
@@ -25,6 +38,14 @@
       <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
         <a *ngIf="value > 0" [routerLink]="['/pages/holders/room/', row.uuid, 'online']">{{value}}</a>
         <span *ngIf="value === 0">{{value}}</span>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Online" prop="online" [flexGrow]="1">
+      <ng-template ngx-datatable-header-template>
+      </ng-template>
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <a [routerLink]="['/pages/rooms', row.uuid, 'edit']" style="margin-right: 2px; cursor: pointer"><i class="ion-edit"></i></a>
+        <span (click)="deleteRoom(row.uuid)" style="margin-right: 2px; cursor: pointer"><i class="ion-trash-a"></i></span>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>

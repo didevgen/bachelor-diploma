@@ -1,0 +1,21 @@
+<div class="row" *ngIf="!loading">
+  <div class="col-sm-12 col-md-6">
+    <form [formGroup]="form">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" formControlName="name" class="form-control" placeholder="Name">
+      </div>
+      <div class="form-group">
+        <label>Building</label>
+        <input type="text" formControlName="building" class="form-control" placeholder="Building">
+      </div>
+      <div class="form-group">
+        <label>Floor</label>
+        <input type="number" min="0" max="100" formControlName="floor" class="form-control" placeholder="Floor">
+      </div>
+    </form>
+    <div class="form-group">
+      <button class="btn btn-success" (click)="createRoom()" [disabled]="form.invalid">Submit</button>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,22 @@ export class RoomClient {
 
   }
 
+  public createRoom(data: any): Observable<Room> {
+    return this.http.post('/api/v1/rooms', data);
+  }
+
+  public updateRoom(uuid: string, data: any): Observable<Room> {
+    return this.http.put(`/api/v1/rooms/${uuid}`, data);
+  }
+
+  public deleteRoom(uuid: string): Observable<any> {
+    return this.http.delete(`/api/v1/rooms/${uuid}`);
+  }
+
+  public getRoom(uuid: string): Observable<Room> {
+    return this.http.get(`/api/v1/rooms/${uuid}`);
+  }
+
   public getRooms(pageInfo: PageData, searchString: string = ''): Observable<ListResult<Room>> {
     let url = `/api/v1/rooms?`;
     if (pageInfo.limit !== undefined) {
