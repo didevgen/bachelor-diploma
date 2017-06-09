@@ -69,6 +69,105 @@ export const PAGES_MENU = [
         ]
       },
       {
+        path: 'users',
+        data: {
+          menu: {
+            title: 'Users',
+            icon: 'ion-person-stalker',
+            selected: false,
+            expanded: false,
+            order: 2,
+          }
+        }
+      },
+      {
+        path: 'zk',
+        data: {
+          menu: {
+            title: 'Door Lockers',
+            icon: 'ion-lock-combination',
+            selected: false,
+            expanded: false,
+            order: 2,
+          }
+        }
+      },
+    ]
+  }
+];
+
+/*
+export const PAGES_MENU = [
+  {
+    path: 'pages',
+    children: [
+      {
+        path: 'dashboard',
+        data: {
+          menu: {
+            title: 'Dashboard',
+            icon: 'ion-android-home',
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        }
+      },
+      {
+        path: 'categories',
+        data: {
+          menu: {
+            title: 'Categories',
+            icon: 'ion-clipboard',
+            selected: false,
+            expanded: false,
+            order: 1,
+          }
+        }
+      },
+      {
+        path: 'rooms',
+        data: {
+          menu: {
+            title: 'Rooms',
+            icon: 'ion-ios-home',
+            selected: false,
+            expanded: false,
+            order: 2,
+          }
+        }
+      },
+      {
+        path: 'holders',
+        data: {
+          menu: {
+            title: 'Card Holders',
+            icon: 'ion-card',
+            selected: false,
+            expanded: false,
+            order: 3,
+          }
+        },
+        children: [
+          {
+            path: 'all',
+            data: {
+              menu: {
+                title: 'All Holders',
+              }
+            }
+          },
+          {
+            path: 'invalid',
+            data: {
+              menu: {
+                title: 'Invalid Holders',
+              }
+            }
+          }
+        ]
+      },
+      {
         path: 'history',
         data: {
           menu: {
@@ -396,3 +495,4 @@ export const PAGES_MENU = [
     ]
   }
 ];
+*/

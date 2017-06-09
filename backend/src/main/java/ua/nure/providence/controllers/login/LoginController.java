@@ -70,10 +70,12 @@ public class LoginController extends BaseController {
 
     @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<UserDTO> authorizeGoogle(@RequestBody TokenDTO tokenDTO, HttpServletResponse response) throws Exception {
+    public ResponseEntity<UserDTO> authorizeGoogle(@RequestBody TokenDTO tokenDTO, HttpServletResponse response)
+            throws Exception {
         GoogleIdToken.Payload payLoad;
         try {
-            payLoad = IdTokenVerifierAndParser.getPayload(env.getProperty("security.oauth2.client.clientId"), tokenDTO.getToken());
+            payLoad = IdTokenVerifierAndParser.getPayload(env.getProperty("security.oauth2.client.clientId"),
+                    tokenDTO.getToken());
         } catch (Exception ex) {
             throw new RestException(HttpStatus.UNAUTHORIZED, 401002, "Invalid token was provided");
         }
@@ -84,7 +86,8 @@ public class LoginController extends BaseController {
             throw new RestException(HttpStatus.NOT_FOUND, 404001, "Specified user not found");
         }
 
-        redisRepository.insert(tokenDTO.getToken(), user.getUuid(), payLoad.getExpirationTimeSeconds() * 1000 - System.currentTimeMillis());
+        redisRepository.insert(tokenDTO.getToken(), user.getUuid(), payLoad.getExpirationTimeSeconds()
+                * 1000 - System.currentTimeMillis());
         AuthToken authToken = new AuthToken(tokenDTO.getToken(),
                 user.getUuid());
 

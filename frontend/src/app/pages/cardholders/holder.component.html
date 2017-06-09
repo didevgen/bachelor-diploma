@@ -1,8 +1,21 @@
 <spinner [show]="loading"></spinner>
 <div class="form-group" *ngIf="!roomId">
-  <label for="nameFilter">Name</label>
-  <input type="text" [(ngModel)]="nameFilter" (ngModelChange)="nameChanged($event)" class="form-control" id="nameFilter"
-         placeholder="Name">
+  <div class="row" style="margin-bottom: 10px">
+    <div class="col-sm-12">
+      <a class="btn btn-success" [routerLink]="['/pages/holders/new']">
+        <i class="ion-plus-circled"></i>
+        Create new holder
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <label for="nameFilter">Name</label>
+      <input type="text" [(ngModel)]="nameFilter" (ngModelChange)="nameChanged($event)" class="form-control"
+             id="nameFilter"
+             placeholder="Name">
+    </div>
+  </div>
 </div>
 <empty *ngIf="rows && rows.length === 0" [title]="'No holders'" [text]="'Add some'"></empty>
 <div style="width: 100%" *ngIf="rows && rows.length !== 0">
@@ -19,7 +32,7 @@
     [limit]="limit"
     (page)='setPage($event)'>
     <ngx-datatable-column name="Name" prop="fullName" [flexGrow]="1"></ngx-datatable-column>
-    <ngx-datatable-column name="Categories" prop="categories" [flexGrow]="1">
+    <ngx-datatable-column name="Categories" prop="categories" [flexGrow]="2">
       <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
         <div class="row" *ngFor="let item of value">
           <div class="col-sm-12">
@@ -46,6 +59,22 @@
           <input type="checkbox" name="isSubscribed" [checked]="value" (change)="subscribeToCardHolder(value, row)">
           <div class="slider round"></div>
         </label>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Subscribed" prop="subscribed" [flexGrow]="1">
+      <ng-template ngx-datatable-header-template>
+      </ng-template>
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <div class="row">
+          <div class="col-xs-6">
+            <a [routerLink]="['/pages/holders/', row.uuid, 'edit']"
+               style="margin-right: 20px; margin-left: 20px; font-size: 24px; cursor: pointer"><i class="ion-edit"></i></a>
+          </div>
+          <div class="col-xs-6">
+            <span (click)="deleteRoom(row.uuid)" style="margin-right: 2px; font-size: 24px; cursor: pointer"><i
+              class="ion-trash-a"></i></span>
+          </div>
+        </div>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>

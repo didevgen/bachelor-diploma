@@ -28,7 +28,8 @@ public class AuthFilter extends GenericFilterBean{
     private UserDAO userDAO;
 
     @Override
-    public void doFilter(ServletRequest httpServletRequest, ServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilter(ServletRequest httpServletRequest, ServletResponse httpServletResponse, FilterChain filterChain)
+            throws ServletException, IOException {
         HttpServletResponse response = (HttpServletResponse) httpServletResponse;
         String curToken = ((HttpServletRequest)httpServletRequest).getHeader("x-auth-token");
         if (curToken == null) {

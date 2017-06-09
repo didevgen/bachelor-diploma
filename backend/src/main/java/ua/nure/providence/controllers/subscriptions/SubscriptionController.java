@@ -68,7 +68,10 @@ public class SubscriptionController {
         User user = ((LoginToken) SecurityContextHolder.getContext().getAuthentication()).getAuthenticatedUser();
         CardHolder cardHolder = cardHolderDAO.getHolder(data.getData());
         User originalUser = userDao.get(user.getUuid());
-        originalUser.getHolderSubscriptions().add(cardHolder);
+        if (originalUser.getHolderSubscriptions().stream()
+                .noneMatch(item -> item.getUuid().equals(cardHolder.getUuid()))) {
+            originalUser.getHolderSubscriptions().add(cardHolder);
+        }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

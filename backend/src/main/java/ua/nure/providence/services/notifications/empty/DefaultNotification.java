@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by User on 03.06.2017.
  */
-public class EmptyNotification implements INotification {
+public class DefaultNotification implements INotification {
     @Override
     public void sendNotification(History history, List<String> subscribers, CardHolder holder) {
 

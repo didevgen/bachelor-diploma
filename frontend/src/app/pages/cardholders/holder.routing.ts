@@ -4,6 +4,7 @@ import { ModuleWithProviders } from '@angular/core';
 import { HolderComponent } from './holder.component';
 import { InvalidHolderComponent } from './invalid/invalid-holder.component';
 import { Holders } from './base/holders.component';
+import { HolderFormComponent } from './form/holder-form.component';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,16 @@ export const routes: Routes = [
   }, {
     path: 'room/:roomId/online',
     component: HolderComponent,
+    children: [],
+    pathMatch: 'full'
+  },{
+    path: ':uuid/edit',
+    component: HolderFormComponent,
+    children: [],
+    pathMatch: 'full'
+  },{
+    path: 'new',
+    component: HolderFormComponent,
     children: [],
     pathMatch: 'full'
   }

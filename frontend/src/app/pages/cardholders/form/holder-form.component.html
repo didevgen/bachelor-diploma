@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-sm-12 col-md-6">
+    <form [formGroup]="form">
+      <div class="form-group">
+        <label>Full name</label>
+        <input type="text" formControlName="fullName" class="form-control" placeholder="Text">
+      </div>
+      <div formArrayName="cards">
+        <div *ngFor="let card of form.controls.cards.controls; let i=index">
+          <div [formGroupName]="i">
+            <div class="form-group">
+              <label>Card {{i + 1}}</label>
+              <div class="input-group">
+                <input type="text" formControlName="card" class="form-control" placeholder="Card number">
+                <span class="input-group-btn">
+                  <button class="btn btn-danger" (click)="removeCard(i)" type="button">Remove</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <button (click)="addCard()" class="btn btn-success">Add card</button>
+      </div>
+      <div formArrayName="categories" style="padding-top: 10px">
+        <div *ngFor="let child of form.controls.categories.controls; let i=index">
+          <div [formGroupName]="i">
+            <div class="form-group">
+              <label>Category {{i + 1}}</label>
+              <div class="input-group">
+                <input type="text" formControlName="category" class="form-control" placeholder="Category">
+                <span class="input-group-btn">
+                  <button class="btn btn-danger" (click)="removeCategory(i)" type="button">Remove</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <button (click)="addCategory()" class="btn btn-success">Add category</button>
+      </div>
+    </form>
+  </div>
+</div>

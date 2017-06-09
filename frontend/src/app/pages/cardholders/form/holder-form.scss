@@ -1,0 +1,30 @@
+:host /deep/ {
+  .ngui-auto-complete > ul {
+    max-height: 200px;
+    overflow-y: scroll;
+    color: black;
+    padding: 10px;
+    cursor: pointer;
+    border: 0px solid #ccc;
+  }
+  .ngui-auto-complete > ul li {
+    padding: 5px 5px;;
+  }
+  .ngui-auto-complete > ul li.selected {
+    background-color: #4893cc;
+    color: #ffffff;
+  }
+  .ngui-auto-complete > ul li:hover {
+    background-color: #4893cc;
+    color: #ffffff;
+  }
+  .ngui-auto-complete-wrapper {
+    width: 100%;
+    input {
+      width: 100% !important;
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+      z-index: 0;
+    }
+  }
+}

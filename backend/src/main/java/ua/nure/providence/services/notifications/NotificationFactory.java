@@ -1,7 +1,8 @@
 package ua.nure.providence.services.notifications;
 
 import ua.nure.providence.enums.DeviceType;
-import ua.nure.providence.services.notifications.empty.EmptyNotification;
+import ua.nure.providence.services.notifications.basic.BasicNotification;
+import ua.nure.providence.services.notifications.empty.DefaultNotification;
 import ua.nure.providence.services.notifications.onesignal.OneSignalNotification;
 
 /**
@@ -15,10 +16,10 @@ public class NotificationFactory {
                 return new OneSignalNotification();
             }
             case BASIC: {
-                return new EmptyNotification();
+                return new BasicNotification();
             }
             default: {
-                return new EmptyNotification();
+                return new DefaultNotification();
             }
         }
     }
