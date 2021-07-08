@@ -28,6 +28,34 @@
 
             INSERT INTO providence.event_types(id, uuid, code, eventName, description)
             VALUES (6, uuid_generate_v4(), 5, 'Open during Normal Open Time Zone ', 'If the current door is set a normally open period, the door will open automatically after the setting start time, and trigger this normal event. ');
-        </sql>
+            --(0, 'Punch normally'),
+(1, 'Punch in the normal-open time segment'),
+(2, 'First-card normal'),
+(3, 'Multi-card '),
+(4, 'Emergency password'),
+(5, 'Open the door in the normal-open time segment'),
+(6, 'Trigger the linkage event'),
+(7, 'Remote control event '),
+(8, 'Unknown error'),
+(9, 'Unknown value'),
+(20, 'The punch interval is extremely short'),
+(21, 'Punch in a non-effective time segment'),
+(22, 'Illegal time zone'),
+(23, 'Illegal access'),
+(24, 'Anti-passback'),
+(25, 'Fail to interlock'),
+(26, 'Authenticate by multiple cards'),
+(27, 'The card is not registered'),
+(28, 'The opening state times out'),
+(29, 'The card has expired'),
+(101, 'Open the door by the duress password'),
+(102, 'Open the door accidentally'),
+(200, 'The door has been opened'),
+(201, 'The door has been closed'),
+(202, 'Open the door by a button upon leaving'),
+(206, 'Device on'),
+(220, 'The auxiliary input point is off'),
+(221, 'The auxiliary input point is short-circuited')--
+            </sql>
     </changeSet>
 </databaseChangeLog>
